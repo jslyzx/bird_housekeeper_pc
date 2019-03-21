@@ -1,0 +1,84 @@
+
+<script src="../../../../Scripts/repaire_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<style>
+    .fywz {
+        position: absolute;
+    }
+
+</style>
+<!--结束-->
+<div class="layui-fluid" style="background-color:#ffffff;">
+    <div class="m-search">
+        <form class="layui-form hcs-form" action="" lay-filter="search" id="repaire-search-form">
+            <div class="m-search-item">
+                <select name="Urgent" lay-filter="aihao">
+                    <option value="0">请选择</option>
+                    <option value="1">紧急</option>
+                    <option value="2">一般</option>
+                </select>
+            </div>
+            <div class="m-search-item" style="width:200px;">
+                    <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区名,房间号，姓名，手机号" id="CellName">
+              </div>
+              <div class="m-search-item" >
+                    <label class="layui-form-label">预约门时间</label>
+                    <div class="layui-input-inline" style="width: 144px;">
+                            <input type="text" name="BeginTime" autocomplete="off" class="layui-input" placeholder="开始时间" id="tBeginTime">
+                        </div>
+                        <div class="layui-input-inline" style="width: 144px;">
+                                <input type="text" name="EndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="tEndTime">
+                            </div>
+                </div>
+                <div class="m-search-item" >
+                        <div class="layui-input-inline" >
+                                <input type="text" name="projectname" autocomplete="off" class="layui-input" placeholder="报修项" id="projectname">
+                            </div>
+                    </div>
+            <div class="m-search-item">
+                <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+            
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <script id="repairebuttonview" type="text/html">
+        {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+    </script>
+    <div id="toolbar">
+            <div class="layui-btn-group">
+                <div id="guest-button-view" style="overflow:hidden;"></div>
+               
+            </div>
+        </div>
+        <script type="text/html" id="repairebtnintable">
+            <ul class="layui-nav toolbar-nav">
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="show-more">操作</a>
+                    <dl class="layui-nav-child"></dl>
+                </li>
+            </ul>
+    </script>
+    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+        <ul class="layui-tab-title" style="margin-bottom:0;">
+            <li value="999" class="layui-this">所有</li>
+            <li value="0">待接单</li>
+            <li value="1">已接单</li>
+            <li value="2">已完成</li>
+        </ul>
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="repaire-main-table" lay-filter="demoEvent"></table>
+        </div>
+    </div>
+    <div>
+
+    </div>
+
+</div>
+

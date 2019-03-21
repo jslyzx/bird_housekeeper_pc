@@ -1,0 +1,61 @@
+
+   <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+   <script type="text/html" template >
+       {{#  LoadData(d.params.tableid,d.params.layerindex)}}
+   </script>
+   
+       <form class="layui-form hcs-form form-wrapper" action="">
+           <div class="form-content">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">门店名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" lay-verify="required" autocomplete="off" class="layui-input" placeholder="名称" id="Name">
+                    </div>
+                </div>
+            </div>
+            </div>
+           <div class="form-bottom">
+               <div class="form-wrap">
+                   <button class="layui-btn layui-btn-primary" id="cancelbtn" >取消</button>
+                   <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+               </div>
+           </div>
+       </form>
+   
+  
+
+<script>
+
+function LoadData(tableid,layerindex){
+           layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+           var url = "api/Menu/Querymenu";
+           var $ = layui.jquery;
+           var form = layui.form;
+           form.render('');
+           doc.tjgd();
+           $("#cancelbtn").click(function(){
+    layer.close(layerindex);
+   })
+           debugger;
+           //监听提交
+        form.on('submit(save)', function (data) {
+         var saveoption={
+         url:'api/store/save',
+         data:data.field,
+         tableid:tableid,
+         callBack:function(){
+            layer.close(layerindex);
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+   });
+   
+  
+       });
+   }       
+   </script>

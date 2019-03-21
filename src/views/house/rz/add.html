@@ -1,0 +1,82 @@
+
+   <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+   <script type="text/html" template >
+       {{#  LoadData(d.params.houseid,d.params.tableid,d.params.layerindex)}}
+   </script>
+   
+       <form class="layui-form hcs-form" action="">
+           <div class="form-content">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;" >操作类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type" lay-verify="required" id="type">
+                             <option value="">请选择</option>
+                            <option value="新增房源">新增房源</option>
+                            <option value="编辑房源">编辑房源</option>
+                            <option value="新增合同">新增合同</option>
+                            <option value="重置合同">重置合同</option>
+                            <option value="删除合同">删除合同</option>
+                            <option value="新增业主合同">新增业主合同</option>
+                            <option value="重置业主合同">重置业主合同</option>
+                            <option value="删除业主合同">删除业主合同</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">操作内容</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="content" lay-verify="required" autocomplete="off" class="layui-input" placeholder="操作内容" id="content">
+                    </div>
+                </div>
+                
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width:auto;">房源编号</label>
+                        <div class="layui-input-inline">
+                                <input type="text" name="houseid" lay-verify="required" autocomplete="off" class="layui-input" placeholder="房源编号" id="houseid">
+                        </div>
+                    </div>
+                </div>
+            
+               </div>
+           <div class="form-bottom">
+               <div class="form-wrap">
+                   <button class="layui-btn layui-btn layui-btn-primary"  lay-filter="cancel">取消</button>
+                   <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+               </div>
+           </div>
+       </form>
+   
+  
+
+<script>
+
+function LoadData(houseid,tableid,layerindex){
+           layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+      
+           var $ = layui.jquery;
+           var form = layui.form;
+           form.render('');
+           doc.tjgd();
+           $("#houseid").val(houseid);
+          form.on('submit(save)', function (data) {
+           var saveoption={
+           url:'api/RzService/add',
+           data:data.field,
+           tableid:tableid,
+           callBack:function(){
+            layer.close(layerindex);
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+ });
+    
+       });
+   }       
+   </script>

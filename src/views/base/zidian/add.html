@@ -1,0 +1,81 @@
+
+   <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+   <script type="text/html" template >
+       {{#  LoadData(d.params.tableid,d.params.layerindex)}}
+   </script>
+   
+       <form class="layui-form hcs-form" action="">
+           <div class="form-content">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;" >字典类型</label>
+                    <div class="layui-input-inline">
+                        <div id="FellowPerson-view" class="form-wrapper" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">字典值</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Name" lay-verify="required" autocomplete="off" class="layui-input" placeholder="名称" id="Name">
+                    </div>
+                </div>
+            </div>
+            </div>
+           <div class="form-bottom">
+               <div class="form-wrap">
+                   <button class="layui-btn layui-btn layui-btn-primary"  lay-filter="cancel">取消</button>
+                   <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+               </div>
+           </div>
+       </form>
+   
+  
+       <script id="FellowPersonscript" type="text/html">
+        <select name="ParaType" lay-verify="required" lay-search>
+            <option value="">请选择</option>
+            {{#  layui.each(d, function(index, item1){ }}
+            <option value="{{item1.Code}}">{{item1.Name}}</option>
+            {{# });   }}  
+        </select>
+    </script>
+<script>
+
+function LoadData(tableid,layerindex){
+           layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+           var url = "api/Menu/Querymenu";
+           var $ = layui.jquery;
+           var form = layui.form;
+           form.render('');
+           var url1 ="api/BaseData/Querytype";
+           doc.tjgd();
+           doc.objectQuery(url1, {"PageSize":1000,"PageIndex":1  }, function (data) {
+            var getTpl = FellowPersonscript.innerHTML
+           ,view = document.getElementById('FellowPerson-view');
+            laytpl(getTpl).render(data.numberData, function (html) {
+                view.innerHTML = html;
+            });
+             form.render('');
+            });
+           debugger;
+           //监听提交
+        form.on('submit(save)', function (data) {
+     
+        data.field.IsActive=1;
+         var saveoption={
+         url:'api/BaseData/SaveData',
+         data:data.field,
+         tableid:tableid,
+         callBack:function(){
+            layer.close(layerindex);
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+ });
+    
+       });
+   }       
+   </script>

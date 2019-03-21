@@ -1,0 +1,149 @@
+
+<script src="../../../../Scripts/fukuan_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .yspan{margin-right:20px;}
+</style>
+<script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+<script id="billreceivescript" type="text/html">
+    {{# var doc = layui.htcsLG;}}
+    <form class="layui-form layui-form-pane hcs-form form-panel" action=""> 
+    <div class="form-content">
+                    <div class="wrap">
+                        <div class="title">
+                            <h3 class="red">
+                                基本信息
+                            </h3>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="text-align:left;width:auto;">账单房源</label>
+                                <div class="layui-input-inline" style="width:270px;">
+                                   
+                                    <input type="tel" name="phone"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d[1].HouseName)}}" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">租客姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d[1].RecentName)}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="text-align:left;width:auto;">账单周期</label>
+                                <div class="layui-input-inline" style="width: 122px;">
+                                    <input type="text" name="price_min" autocomplete="off" class="layui-input gray" value="{{doc.cvttime(d[1].BeginTime)}}" disabled>
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline" style="width:122px;">
+                                    <input type="text" name="price_max" autocomplete="off" class="layui-input gray" value="{{doc.cvttime(d[1].EndTime)}}" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">应付款时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{doc.cvttime(d[1].PayTime)}}" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">支付金额</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{doc.cvttime(d[1].PayTime)}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="text-align:left;width:auto;">费用类型</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="租金2期" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-collapse" lay-accordion="">
+                            <div class="layui-colla-item">
+                              <h2 class="layui-colla-title">银行卡信息</h2>
+                              <div class="layui-colla-content layui-show">
+                                <span class="yspan">收款人:{{doc.ns(d.payee)}}</span>
+                                <span class="yspan">银行：{{doc.ns(d.accounts)}}</span>
+                                <span class="yspan">账号:{{doc.ns(d.bank)}}</span>
+                              </div>
+                            </div>
+                        </div>
+                          </div>
+                            <div class="title">
+                                <h3 class="red">
+                                    费用项
+                                </h3>
+                            </div>
+                            <table id="billlist-receive-table" lay-filter="demoEvent"></table>
+                            <div class="title">
+                                <h3 class="red">
+                                    支付信息
+                                </h3>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">办理人</label>
+                                    <div class="layui-input-inline">
+                                        <select name="TranSactor">
+                                            {{#  layui.each(d[0], function(index, item1){ }}
+                                            <option value="{{item1.Id}}">{{item1.RealName}}</option>
+                                            {{# });   }}  
+        
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">支付方式</label>
+                                    <div class="layui-input-inline">
+                                        <select name="PayType" >
+                                            <option value="">现金</option>
+                                            <option value="0">支付宝</option>
+                                            <option value="1" selected="">微信</option>
+        
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">流水号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="Liushui"  autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">支付日期</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="PayTime" id="PayTime" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">备注</label>
+                                    <div class="layui-input-inline">
+                                        <textarea placeholder="请输入内容" class="layui-textarea" name="Remark" id="Remark"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                 </div>
+                <div class="form-bottom">
+                    <div class="form-wrap">
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" >取消</button>
+                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                    </div>
+                </div>
+               <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="名称" id="Id" style="display:none;" value="{{d.Id}}">
+</form>
+</script>
+    <div id="bill-receive-view" class="form-wrapper" >
+    </div>
+
+

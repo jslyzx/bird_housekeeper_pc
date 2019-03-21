@@ -1,0 +1,235 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+       .child-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ .child-view  thead tr{height: 45px;}
+.child-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+
+    </style>
+<script>
+     var tuizulist = [];
+      function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;
+            var form = layui.form;
+            var deletebilllist=[];
+            var table=layui.table;
+            var url =  "api/Sysuser/QueryUser";
+          
+            var data = { "Id": id };
+            var allresult = [];
+            var Password="";
+            var clos=[[ //表头
+               { type: 'numbers' , width: 80, title: '编号', }
+               , {
+               field: 'SysRoleId',
+               width: 380,
+               title: '角色名称'
+               ,templet: '#checkboxTplxx',unresize:true} 
+            ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } ]];
+             //加载详情
+             doc.objectQuery(url, data, function (result) {   
+                 debugger;
+                var realdata = result.numberData;
+                Password=realdata.Password;
+                var getTpl = sysuereditscript.innerHTML,
+                view = document.getElementById('sysuer-edit-view');
+                laytpl(getTpl).render(realdata, function (html) {
+                    view.innerHTML = html;
+                });  
+                 //角色列表
+               doc.objectQuery("api/Sysrole/Querylistrolenopage", {}, function (data) {
+               debugger;
+               tuizulist = data.numberData;
+               var roledata=[];
+               if(realdata.listrole1!=undefined){
+                  roledata=realdata.listrole1
+               }
+               var options={"data":roledata,"tableid":"#sysuserchildedittable","clos":clos,"height":500};
+               doc.childtable(options);   
+               EventBtn(realdata.storeid);
+            }); 
+            });
+           
+            function getarr(){
+                var list=[];
+                var tkTable = $('[lay-id="sysuserchildedittable"] .layui-table-body .layui-table tr');
+                $.each(tkTable,function(index, item){
+                  list.push({
+                    type: 0,
+                    SysRoleId: $(item).find('[data-field="SysRoleId"] select option:selected').val()
+                  })
+                });
+                return list;
+            }
+            function EventBtn(storeid)
+            {
+            doc.objectQuery("api/cellname/Querylist", {"PageSize":100000,"PageIndex":1}, function (result) {  
+                debugger; 
+                var realdata = result.numberData;
+                var getTpl = storescript.innerHTML,
+                view = document.getElementById('viewstoreid');
+                laytpl(getTpl).render(realdata, function (html) {
+                    view.innerHTML = html;
+                });  
+                $("#storeid").val(storeid);
+                form.render('select');
+            });
+            var tabbleid="sysuserchildedittable";
+             //类别
+             form.on('select(billlay)', function (obj) {
+                debugger;
+                var oldData = table.cache["sysuserchildedittable"];
+                var id = $(obj.elem).attr("Idvalue") - 1;
+                var _obj = {
+                    "numbers": id,
+                    "rolename": $(obj.elem).find("option:selected").text(),
+                    "SysRoleId":$(obj.elem).find("option:selected").val()
+                };
+                //重载更新后数据
+                doc.updateobj(oldData, _obj, ["rolename","SysRoleId"]);
+            })
+         //监听提交
+          form.on('submit(save)', function (data) {
+        debugger;
+        data.field.Id=id;
+        var datafield=data.field;
+        datafield.Password=Password;
+        datafield.listrole=getarr(); ; 
+        datafield.deletebilllist=deletebilllist;
+        var tjdata =datafield;
+        var saveoption={
+          url:'api/Sysuser/addUser',
+          data:tjdata,
+          tableid:tableid,
+          callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+});
+  //监听删除按钮
+  table.on('tool(demoEvent1)', function(obj){ 
+  debugger;
+  var data = obj.data; //获得当前行数据
+  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+  var tr = obj.tr; //获得当前行 tr 的DOM对象
+  if(layEvent === 'del'){ //删除
+     obj.del();
+    if(data.Id!=0){
+        deletebilllist.push(data);
+    }
+  }
+});
+//添加新行事件
+$("#sysuser-childedit-edit").click(function(){
+         debugger;
+         var oldData =table.cache[tabbleid];  
+         var data1={"Id":0,"SysUserId":12,"SysRoleId":0,"edtype":1,"rolename":""};
+          oldData.push(data1);  
+          table.reload(tabbleid,{  
+              data : oldData  ,
+              limit: oldData.length
+         });
+});
+}
+        });
+      }
+</script>
+ <script id="storescript" type="text/html">
+    <div class="layui-inline"> 
+            <label class="layui-form-label">门店选择</label> 
+            <div class="layui-input-inline"> 
+                
+                   <select name="storeid" id="storeid" lay-search>
+                           <option value="">请选择</option>
+                           {{#  layui.each(d, function(index, item1){ }}
+                           <option value="{{item1.Id}}">{{item1.Name}}</option>
+                           {{# });   }}   
+                   </select>
+            </div> 
+      </div> 
+</script>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+         <script type="text/html" id="checkboxTplxx">
+            <!-- 这里的 select 的状态只是演示 -->
+            <select lay-filter="billlay" Idvalue="{{d.LAY_INDEX}}" lay-verify="required">
+                  <option value="{{d.SysRoleId}}">{{d.rolename}}</option>
+                  {{# layui.each(tuizulist,function(index, item1){ }}
+                  <option value="{{item1.Id}}">{{item1.RoleName}}</option>
+                  {{# }); }}
+            </select>
+        </script>
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+    <script id="sysuereditscript" type="text/html">
+        {{# var doc = layui.htcsLG;}}
+        <form class="layui-form  layui-form-pane hcs-form form-panel" action="">                
+            <div class="form-content">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">手机</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="Mobile" autocomplete="off" class="layui-input" id="Mobile" value="{{d.Mobile}}">
+                        </div>
+                        <label class="layui-form-label">真实姓名</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="RealName" lay-verify="required" autocomplete="off" class="layui-input" id="RealName" value="{{doc.ns(d.RealName)}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" >邮箱</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="Email" autocomplete="off" class="layui-input" id="Email" value="{{doc.ns(d.Email)}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <div id="viewstoreid"></div>
+                    </div>
+                <div class="layui-tab layui-tab-card" style="margin-top:0;">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">角色</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div id="toolbar" class="child-toolbar">
+                                <div class="layui-btn-group">
+                                    <a class="layui-btn layui-btn-primary" id="sysuser-childedit-edit" >
+                                        <i class="layui-icon">&#xe654;</i>添加
+                                    </a>
+                                </div>
+                            </div>
+                            <table id="sysuserchildedittable" lay-filter="demoEvent1"></table>
+                        </div>
+                        
+                    </div>
+                </div>      
+            </div>
+        </div>
+            <div class="form-bottom">
+                    <div class="form-wrap">
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-submit="">取消</button>
+                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                    </div>
+          </div>
+        </form>    
+</script>
+<div id="sysuer-edit-view"></div>
+  

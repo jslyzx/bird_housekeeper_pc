@@ -1,0 +1,8 @@
+
+.form-bottom{background-color:#e2e2e2;width:100%;
+	border-top:1px solid #e2e2e2; height: 60px; bottom: 0;position: absolute;
+}
+.content{height:700px;overflow-y: scroll;}
+.layui-layer-content{position: relative;}
+.form-wrap{padding:20px;float:right;padding-top:10px;padding-bottom:10px;}
+.content{padding-top: 20px;}

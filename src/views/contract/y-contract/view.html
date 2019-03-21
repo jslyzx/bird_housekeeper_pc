@@ -1,0 +1,265 @@
+
+    <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+    <script src="../../../../Scripts/jquery-1.10.2.js"></script>    
+     <style>
+         .wrapguding{display:none;}
+         .zafeitit{color:#FFB800;font-weight:500;}
+         .zisyajin{display: none;}
+     </style>
+  <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+  </script>
+  <script type="text/html" template>
+    <link href="../../../../Content/codemirror.css" rel="stylesheet" />
+  </script>
+  <script src="../../../Scripts/ycontractview.js"></script>
+ 
+ <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.ParentRoomid,d.params.layerindex)}}
+  </script>
+  <script id="billbtnscribt1" type="text/html">
+  </script>
+  <script type="text/html" id="billbtnintable1">
+          <ul class="layui-nav toolbar-nav">
+              <li class="layui-nav-item">
+                  <a href="javascript:;" class="show-more">操作</a>
+                  <dl class="layui-nav-child"></dl>
+              </li>
+          </ul>
+  </script>
+  <div id="toolbar1">
+      <div class="layui-btn-group">
+          <div id="bill-button-view" style="overflow:hidden;"></div>
+      </div>
+  </div>
+    <div class="layui-tab layui-tab-card" style="margin:0px;" lay-filter="test1">
+        <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="111">合同信息</li>
+           
+            <li lay-id="333">账单信息</li>
+        </ul>
+        <div class="layui-tab-content"style="padding:0;">
+            <div class="layui-tab-item layui-show" >
+                <div id="zcontract-add-view1" >
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-tab layui-tab-brief" lay-filter="tabletab">
+                    <ul class="layui-tab-title" style="margin-bottom:0;">
+                            <li value="2" class="layui-this">所有</li>
+                            <li value="0">未完成</li>
+                            <li value="1">已完成</li>
+                    </ul>
+                    <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                        <table id="bill-main-table-cont" lay-filter="demoEvent3"></table>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        
+    </div>
+    
+    <script id="zcontractaddscript1" type="text/html">
+        {{#   var doc = layui.htcsLG;  var util = layui.util;}}
+        <div class="form-wrapper">
+        <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+            <div class="form-content">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>业主信息</legend>
+                </fieldset>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline" style="width: 144px;">
+                            <input type="tel" name="Name" lay-verify="required" placeholder="必填" value="{{d[2].Name}}" autocomplete="off" class="layui-input" id="Name">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" >手机号</label>
+                        <div class="layui-input-inline" style="width: 150px;">
+                            <input type="tel" name="Phone" lay-verify="required" autocomplete="off" value="{{d[2].Phone}}" class="layui-input" id="Phone" placeholder="必填">
+                        </div>
+                    </div>   
+                    <div class="layui-inline">
+                        <label class="layui-form-label" >证件信息</label>
+                        <div class="layui-input-inline" style="width:90px;margin-right:0px;">
+                            <select  id="DocumentType" name="DocumentType" placeholder="选填">
+                                <option value="0">身份证</option>
+                                <option value="1">军官证</option>
+                                <option value="2">护照</option>
+                             
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width:150px;">
+                            <input type="tel" name="Document"  value="{{doc.ns(d[2].Document)}}" placeholder="选填" autocomplete="off" class="layui-input" id="Document">
+                        </div>
+                    </div>
+                    </div>
+               
+               
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">收款人</label>
+                            <div class="layui-input-inline" style="width:200px;">
+                                <input type="text" class="layui-input" value="{{doc.ns(d[1].payee)}}" id="payee" name="payee" placeholder="选填">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">开户银行</label>
+                            <div class="layui-input-inline" style="width:150px;">
+                                <select lay-verify="" id="bank" name="bank">
+                                    <option value="">请选择</option>
+                                    {{#  layui.each(d[3], function(index, item1){ }}
+                                    <option value="{{item1.Name}}">{{item1.Name}}</option>
+                                    {{#  });   }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">银行卡账号</label>
+                            <div class="layui-input-inline" style="width:200px;">
+                                <input type="text" class="layui-input" value="{{doc.ns(d[1].accounts)}}" id="accounts" name="accounts" placeholder="选填">
+                            </div>
+                        </div>
+                        
+                    </div>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>合同信息</legend>
+                </fieldset>
+                
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">合同时间</label>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <input type="tel" name="BeginTime" lay-verify="required" value="{{util.toDateString(d[1].BeginTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="BeginTime" placeholder="合同开始时间">
+        
+                        </div>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <input type="tel" name="EndTime" lay-verify="EndTime"   value="{{util.toDateString(d[1].EndTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="EndTime" placeholder="合同结束时间">
+                        </div>
+                        <div class="layui-btn-group">
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="1">1月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="3">3月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="6">6月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="12">一年</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item yuezu">
+                    <div class="layui-inline ">
+                       
+                        <label class="layui-form-label" >付款方式</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <select lay-verify="required" id="PinLv" name="PinLv" lay-filter="Type">
+                                <option value="">请选择</option>
+                                {{#  layui.each(d[1].pinlv, function(index, item1){ }}
+                                <option value="{{item1.key}}">{{item1.Value}}</option>
+                                {{#  });   }}
+                            </select>
+                        </div>
+                       
+                        <label class="layui-form-label">月租金</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent" id="Recent">
+                        </div>
+                       
+                    </div>
+                </div>
+                
+                      <div class="layui-form-item">
+                      <label class="layui-form-label">常规押金</label>
+                      <div class="layui-input-inline" style="width: 100px;">
+                          <input type="tel" name="Deposit"  value="{{d[1].Deposit}}" lay-verify="required|number"  autocomplete="off" class="layui-input" id="cyajin">
+                      </div>
+                    </div>
+          
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">支付时间</label>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <select lay-verify="required" id="Recivetype" name="Recivetype" lay-filter="Recivetype">
+                                <option value="1">按账单开始时间提前收租</option>
+                                <option value="2">按固定日期收租</option>
+                            </select>
+                        </div>
+                        
+                        <div class="layui-input-inline" style="width:100px;" id="howtian">
+                                <select lay-verify="required" id="BeforeDay" name="BeforeDay">
+                                    <option value="0">0天</option>
+                                    <option value="1">1天</option>
+                                    <option value="2">2天</option>
+                                    <option value="3">3天</option>
+                                </select>
+                            </div>                          
+                        
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                     <label class="layui-form-label">杂费</label>
+                     <div class="layui-input-block">
+                         {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==0){ }}
+                         
+                             <input type="checkbox"  name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                         {{# } });   }}
+                     </div>
+                </div>
+                
+                 <div class="zafeicontent">
+        
+                 </div>
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">其他押金</label>
+                    <div class="layui-input-block">
+                        {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==1){ }}
+                            <input type="checkbox" name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="yajin" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                        {{#  } });   }}
+                    </div>
+                  </div>
+                  <div class="yajincontent">
+        
+                  </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <input type="tel" name="Remark" autocomplete="off"  value="{{d[1].Remark}}" class="layui-input" id="Remark">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">附件</label>
+                            <div class="layui-input-block">
+                                <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image">
+                            </div>
+                            <div class="layui-input-block">
+                                    <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
+                                    <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+        
+            
+            <div class="form-bottom">
+               
+                        <div class="form-wrap" id="btnintableview">
+              
+                        </div>
+              
+            </div>
+        </div>
+        </form>
+    </div>
+    </script>
+   
+   
+
+
+<script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
+<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  
+
+

@@ -1,0 +1,62 @@
+
+<script src="../../../../Scripts/contract.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<style>
+    .fywz {
+        position: absolute;
+    }
+</style>
+<!--结束-->
+<div class="layui-fluid" style="background-color:#ffffff;">
+    <div class="m-search">
+        <form class="layui-form hcs-form" action="" lay-filter="search" id="Zafei-search-form">
+            
+           
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <script id="Zafeibtnscribt" type="text/html">
+        {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+    </script>
+    <script type="text/html" id="btnintable">
+        <ul class="layui-nav toolbar-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" class="show-more">操作</a>
+                <dl class="layui-nav-child"></dl>
+            </li>
+        </ul>
+</script>
+    <script type="text/html" id="switchTpl">
+        <!-- 这里的 checked 的状态只是演示 -->
+        <input type="checkbox" name="isdefault" datas={{d.Id}} value="{{d.isdefault}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="sexDemo" {{ d.isdefault == 1 ? 'checked' : '' }}>
+      </script>
+      
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="Zafei-button-view" style="overflow:hidden;"></div>
+            
+           
+        </div>
+    </div>
+    
+    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+        <ul class="layui-tab-title" style="margin-bottom:0;">
+            <li value="999" class="layui-this">所有</li>
+         
+        </ul>
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="Zafei-main-table"  lay-filter="demoEvent"></table>
+        </div>
+    </div>
+    <div>
+
+    </div>
+
+</div>
+

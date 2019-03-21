@@ -1,0 +1,95 @@
+
+   <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+   <script type="text/html" template >
+       {{#  LoadData(d.params.tableid,d.params.layerindex)}}
+   </script>
+   
+       <form class="layui-form hcs-form" action="">
+           <div class="form-content">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;" >默认结算方式</label>
+                    <div class="layui-input-inline">
+                        <select name="Type" lay-verify="required" id="Type">
+                                <option value="">请选择</option>
+                            <option value="1">按固定费用结算</option>
+                            <option value="2">预充值</option>
+                            <option value="3">按抄表结算</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">杂费名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Name" lay-verify="required" autocomplete="off" class="layui-input" placeholder="名称" id="Name">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">费用项类型</label>
+                    <div class="layui-input-inline">
+                        <select name="TuiType" lay-verify="required" id="TuiType">
+                            <option value="">请选择</option>
+                        <option value="0">普通项</option>
+                        <option value="1">退款项</option>
+                       
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">是否押金</label>
+                    <div class="layui-input-inline">
+                            <input type="radio" name="IsYajin" value="1" title="是" lay-verify="required" id="IsYajin">
+                            <input type="radio" name="IsYajin" value="0" title="否" lay-verify="required" id="IsYajin">
+                    </div>
+                </div>
+            </div>
+            
+               </div>
+           <div class="form-bottom">
+               <div class="form-wrap">
+                   <button class="layui-btn layui-btn layui-btn-primary"  lay-filter="cancel">取消</button>
+                   <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+               </div>
+           </div>
+       </form>
+   
+  
+
+<script>
+
+function LoadData(tableid,layerindex){
+           layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+           var url = "api/Menu/Querymenu";
+           var $ = layui.jquery;
+           var form = layui.form;
+           form.render('');
+           doc.tjgd();
+           debugger;
+           //监听提交
+        form.on('submit(save)', function (data) {
+        debugger;
+        if(data.field.IsYajin==undefined){
+            layer.msg('请选择是否押金');
+            return false;
+        }
+        data.field.IsActive=1;
+         var saveoption={
+         url:'api/Zafei/Savezafei',
+         data:data.field,
+         tableid:tableid,
+         callBack:function(){
+            layer.close(layerindex);
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+ });
+    
+       });
+   }       
+   </script>

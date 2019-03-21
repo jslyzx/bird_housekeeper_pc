@@ -1,0 +1,154 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+       .child-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ .child-view  thead tr{height: 45px;}
+.child-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+
+    </style>
+<script>
+     var tuizulist = [];
+      function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;
+            var form = layui.form;
+            var deletebilllist=[];
+            var table=layui.table;
+            var url1 =  "api/House/userQueryfgy";
+            var url =  "api/BaseData/Queryfgy";
+            var doc = layui.htcsLG;
+            
+            var allresult = [];
+            var Password="";
+            var clos=[[ //表头
+                 { type: 'checkbox'}
+                ,{ field: 'Id', width: 100, title: '编号' }
+              , { field: 'CellName', width: 180, title: '小区' }
+              , { field: 'Name', width: 280, title: '地址'}
+             ,{ width: 100, title: '房源类型',templet: Ugenttemp  }
+            ]];
+             //加载详情
+            doc.objectQuery(url, {}, function (result) {   
+                var realdata = result.numberData;
+                var getTpl = sysuereditscript.innerHTML,
+                view = document.getElementById('sysuer-edit-view');
+                laytpl(getTpl).render(realdata, function (html) {
+                    view.innerHTML = html;
+                });  
+                form.render('');
+                //加载房源列表
+                doc.objectQuery(url1, {"HouseKeeper":id}, function (data) {
+                var options={"data": data.numberData,"tableid":"#sysuserchildedittable","clos":clos,"height":500};
+                doc.childtable(options);   
+                EventBtn();
+               }); 
+            });
+          
+            
+         //监听提交
+          form.on('submit(save)', function (data) {
+          debugger;
+          var str='';
+          var checkStatus = table.checkStatus('sysuserchildedittable')
+                    , getselect = checkStatus.data;
+                    if (getselect.length == 0) {
+                layer.msg("请选择要处理的数据");
+                return false;
+          }  
+          var arr=[];
+            $.each(getselect,function(index,value){
+                str+=value.Id+",";
+          });
+          if(str.length>0){
+            str=str.substr(0, str.length - 1);  
+          }
+          data.field.Ids=str;
+          data.field.Other1=data.field.HouseKeeper;
+          data.field.Spname='sp_zhuanyi';
+          var datafield=data.field;
+          var tjdata =datafield;
+          var saveoption={
+          url:'api/Procedure/zhuanyifgy',
+          data:tjdata,
+          tableid:tableid,
+          callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+});
+
+        });
+      }
+      function Ugenttemp(value) {
+        if (value.RecentType == 2) {
+            return '<div>' + "合租" + '</div>'
+        } 
+        if (value.RecentType == 1) {
+            return '<div>' + "整租" + '</div>'
+        } 
+        if (value.RecentType == 3) {
+            return '<div>' + "独栋" + '</div>'
+        } 
+       
+    }
+</script>
+
+ 
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+        <script id="sysuereditscript" type="text/html">
+        <form class="layui-form  layui-form-pane hcs-form form-panel" action="">                
+            <div class="form-content">
+                <div class="layui-form-item">
+                    <div class="layui-inline"> 
+                        <label class="layui-form-label">接收人</label> 
+                        <div class="layui-input-inline"> 
+                               <select name="HouseKeeper" id="HouseKeeper" lay-search lay-verify="required" >
+                                       <option value="">请选择</option>
+                                       {{#  layui.each(d, function(index, item1){ }}
+                                       <option value="{{item1.Id}}">{{item1.RealName}}</option>
+                                       {{# });   }}   
+                               </select>
+                        </div> 
+                  </div>
+                </div>
+                
+                <div class="layui-tab layui-tab-card" style="margin-top:0;">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">管理房源</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div id="toolbar" class="child-toolbar">
+                              
+                            </div>
+                            <table id="sysuserchildedittable" lay-filter="demoEvent1"></table>
+                        </div>
+                        
+                    </div>
+                </div>      
+            </div>
+        </div>
+            <div class="form-bottom">
+                    <div class="form-wrap">
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-submit="">取消</button>
+                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">转移房源</button>
+                    </div>
+          </div>
+        </form>    
+</script>
+    <div id="sysuer-edit-view" class="child-view form-wrapper">
+    </div>

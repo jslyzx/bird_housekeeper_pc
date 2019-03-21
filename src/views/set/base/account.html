@@ -1,0 +1,102 @@
+
+<title>系统设置</title>
+<script src="../../../../Scripts/liushui_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/money.css" rel="stylesheet" />
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a lay-href="base/money/"><cite>钱包</cite></a>
+    <a><cite>钱包总账</cite></a>
+  </div>
+</div>
+
+<div class="layui-row layui-col-space10 rowtop">
+    <div class="layui-col-md1 text-center">
+        <ul class="setting-catagery-list">
+            <li><a lay-href="base/money/" class="current">钱包总帐</a></li>
+           
+            <li><a lay-href="set/base/receive">提现记录</a></li>
+            <li><a lay-href="set/base/receive">收款账号</a></li>
+        </ul>
+    </div>
+    <div class="layui-col-md11">
+            <div class="i-title">
+                <div class="left">
+                    <div class="block">
+                    <p class="number">
+                    <div class="number" style="font-size: 16px; font-weight: 500; color: rgb(0, 0, 0);">  
+                        <span style="font-size: 26px; color: rgb(243, 0, 26);"> 
+                        <span id="count303216">0.00</span> 
+                        <span></span> </span>  
+                    </div>
+                    </p>
+                    <p class="text"> 钱包余额(元)</p>
+                     </div>
+                     <div class="divider"></div>
+                     <div class="block"><p class="number"><div class="number" style="font-size: 16px; font-weight: 500; color: rgb(0, 0, 0);">  <span style="font-size: 26px; color: rgb(243, 0, 26);"> <span id="count238924">0.00</span> <span></span> </span>  </div></p><p class="text"> 可转出余额(元)</p></div><div class="block padding-left-1">
+                            <a href="" class="layui-btn layui-btn-danger">转出到银行卡</a>
+                        </div><div class="divider"></div><div class="block"><p class="number"><div class="number" style="font-size: 16px; font-weight: 500; color: rgb(0, 0, 0);">  <span style="font-size: 26px; color: rgb(243, 0, 26);"> <span id="count983032">0.00</span> <span></span> </span>  </div></p><p class="text"> 累计收益(元)</p>
+                    </div>
+                    <div class="block padding-left-1">
+                    </div>
+                </div>
+            </div>
+            <div class="m-search" style="background-color: #e0e7ec;padding-top: 20px;padding-bottom: 20px;">
+                    <form class="layui-form hcs-form" action="" lay-filter="search" id="guest-search-form">
+                        <div class="m-search-item">
+                            <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="编号" id="Id" style="width:auto;">
+                        </div>
+                        <div class="m-search-item">
+                            <input type="text" name="Trader" autocomplete="off" placeholder="交易对象" class="layui-input" id="Name" style="width:auto;">
+                        </div>
+                        <div class="m-search-item">
+                            <input type="text" name="PayMentNumber" autocomplete="off" placeholder="支付流水号" class="layui-input" id="ddd" style="width:auto;">
+                        </div>
+                        <div class="m-search-item">
+                                <input type="text" name="CostName" autocomplete="off" placeholder="费用名称" class="layui-input" id="ddd" style="width:auto;">
+                        </div>
+                        <div class="m-search-item">
+                            <select name="Source" lay-verify="" id="Source">
+                               <option value="">收支类型</option>                           
+                               <option value="收入">收入</option>
+                               <option value="支出" >支出</option>
+                        </select>  
+                        </div>
+                        <div class="m-search-item">
+                            <input type="text" name="CreateTime" placeholder="创建时间" autocomplete="off" class="layui-input" id="CreateTime">
+                        </div>
+                        <div class="m-search-item">
+                            <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+                        </div>
+                        
+                        <div style="clear:both;"></div>
+                    </form>
+                </div>
+                 
+    <script id="guestbtnscribt" type="text/html">
+       
+    </script>
+<script type="text/html" id="btnintable">
+        <ul class="layui-nav toolbar-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" class="show-more">操作</a>
+                <dl class="layui-nav-child"></dl>
+            </li>
+        </ul>
+</script>
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="guest-button-view" style="overflow:hidden;"></div>
+           
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabletab" style="background-color: white;">
+        
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="guest-main-table" lay-filter="demoEvent"></table>
+        </div>
+    </div>
+    </div>
+   
+  </div>

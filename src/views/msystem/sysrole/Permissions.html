@@ -1,0 +1,80 @@
+
+    <link href="../../../../zTree_v3/css/demo.css" rel="stylesheet" />
+    <link href="../../../../zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="../../../../zTree_v3/js/jquery-1.4.4.min.js"></script>
+    <script src="../../../../zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="../../../../zTree_v3/js/jquery.ztree.excheck.js"></script>
+
+    <SCRIPT LANGUAGE="JavaScript">
+        function LoadData(roleid,tableid,layerindex){
+            layui.use(['form', 'layer','htcsradio','laytpl', 'jquery', 'form', 'htcsLG'], function () {
+            var zTreeObj;
+            var laypage = layui.laypage, layer = layui.layer;
+            var laytpl = layui.laytpl;
+         
+            var doc = layui.htcsLG;
+            // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+            var setting = {
+                check: {
+                    autoCheckTrigger: false, chkboxType: { "Y": "ps", "N": "ps" },
+                    chkStyle: "checkbox", enable: true,
+                    nocheckInherit: false, chkDisabledInherit: false,
+                    radioType: "leve"
+                }
+            };
+            var url = "api/Sysrole/Querypreetion";
+            doc.objectQuery(url, { RoleId: roleid }, function (data) {
+                    debugger;
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data.numberData);
+                    $.fn.zTree.init($("#treeDemo"), setting, data.numberData);
+                    $("#save").click(function () {
+                        debugger;
+                        $("#test").html(JSON.stringify(zTreeObj.getCheckedNodes(true)));
+                        var saveurl="api/Sysrole/Savepreetion";
+                        var changedata= zTreeObj.getChangeCheckedNodes();
+                        var savedata = zTreeObj.getCheckedNodes(true);
+                        var alldata = {};
+                        alldata.savedata = savedata;
+                        alldata.changedata = changedata;
+                        alldata.RoleId=roleid;
+                        $("#test").html(alldata);
+                        var saveoption={
+                           url:saveurl,
+                           data:alldata,
+                           tableid:tableid,
+                           callBack:function(resultData){
+                           if (resultData.Code == 0) {
+                              layer.close(layerindex);
+                          }
+                         }
+                        }
+                        doc.Submit1(saveoption);
+                    });
+                });
+        });
+
+
+
+        }
+      
+    </SCRIPT>
+<script type="text/html" template >
+    {{#  LoadData(d.params.RoleId,d.params.tableid,d.params.layerindex)}}
+</script>
+    <div class="content_wrap form-wrapper">
+        <div class="form-content">
+                <div class="zTreeDemoBackground left">
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div>
+                    <div id="test"></div>
+        </div>
+        <div class="form-bottom">
+        <div class="form-wrap">
+                    <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-filter="cancel">取消</button>
+                    <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+         </div>
+       </div>
+    </div>
+   
+    
+

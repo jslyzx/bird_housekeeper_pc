@@ -1,0 +1,80 @@
+﻿<style>
+    .fywz {
+        position: absolute;
+    }
+
+    .othersearch {
+        margin-bottom: 10px;
+    }
+
+    body .demo-class .layui-layer-btn .layui-layer-btn1 {
+        background: #59acff;
+        color: #FFF;
+    }
+
+    body .demo-class .layui-layer-btn .layui-layer-btn0 {
+        border: 1px solid #e7e7e7;
+        color: #666;
+        background-color: #FFF;
+    }
+</style>
+<title>系统用户</title>
+<script src="../../../../Scripts/sysuser_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<!--结束-->
+<div class="layui-fluid" style="background-color:#ffffff;">
+    <div class="m-search othersearch">
+        <form class="layui-form hcs-form" action="" lay-filter="search" id="zsysuser-search-form">
+            <div class="m-search-item">
+                <label class="layui-form-label" style="width:auto;">用户编号</label>
+                <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="" id="Name" style="width:auto;">
+                
+            </div>
+            <div class="m-search-item">
+                    <label class="layui-form-label" style="width:auto;">真实姓名</label>
+                    <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="" id="Name" style="width:auto;">
+                </div>
+                <div class="m-search-item">
+                        <label class="layui-form-label" style="width:auto;">手机号</label>
+                        <input type="text" name="Mobile" autocomplete="off" class="layui-input" placeholder="" id="Mobile" style="width:auto;">
+               </div>
+            <div class="m-search-item">
+                <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <script id="sysuerbtnscribt" type="text/html">
+        {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+    </script>
+    <script type="text/html" id="btnintable">
+        <ul class="layui-nav toolbar-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" class="show-more">操作</a>
+                <dl class="layui-nav-child"></dl>
+            </li>
+        </ul>
+    </script>
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="sysuser-button-view" style="overflow:hidden;"></div>
+          
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+        <ul class="layui-tab-title" style="margin-bottom:0;">
+            <li value="999" class="layui-this">所有</li>
+        </ul>
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="sysuser-table" lay-filter="demoEvent"></table>
+        </div>
+    </div>
+  
+
+</div>

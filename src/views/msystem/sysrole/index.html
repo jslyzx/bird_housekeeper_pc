@@ -1,0 +1,74 @@
+﻿<style>
+    .fywz {
+        position: absolute;
+    }
+
+    .othersearch {
+        margin-bottom: 10px;
+    }
+
+    body .demo-class .layui-layer-btn .layui-layer-btn1 {
+        background: #59acff;
+        color: #FFF;
+    }
+
+    body .demo-class .layui-layer-btn .layui-layer-btn0 {
+        border: 1px solid #e7e7e7;
+        color: #666;
+        background-color: #FFF;
+    }
+</style>
+<script src="../../../../Scripts/sysrole_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<!--结束-->
+<div class="layui-fluid" style="background-color:#ffffff;">
+    <div class="m-search othersearch">
+        <form class="layui-form hcs-form" action="" lay-filter="search" id="zsysrole-search-form">
+            <div class="m-search-item">
+                <label class="layui-form-label" style="width:auto;">角色名称</label>
+                <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="" id="Name" style="width:auto;">
+            </div>
+         
+           
+            <div class="m-search-item">
+                <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <script id="zsysrolebtnscribt" type="text/html">
+        {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+    </script>
+    <script type="text/html" id="btnintable">
+        <ul class="layui-nav toolbar-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" class="show-more">操作</a>
+                <dl class="layui-nav-child"></dl>
+            </li>
+        </ul>
+    </script>
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="bill-button-view" style="overflow:hidden;"></div>
+           
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+        <ul class="layui-tab-title" style="margin-bottom:0;">
+            <li value="999" class="layui-this">所有</li>
+        </ul>
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="sysrole-index-table" lay-filter="demoEvent"></table>
+        </div>
+    </div>
+    <div>
+
+    </div>
+
+</div>

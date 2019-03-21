@@ -1,0 +1,89 @@
+<style>
+        .fywz {
+            position: absolute;
+        }
+       body{overflow-y: scroll;}
+    </style>
+    <title>租客合同</title>
+    <script src="../../../Scripts/yContract_business.js"></script>
+    <script src="../../../../Scripts/Common/public-base.js"></script>
+    <link href="../../../Content/Home.css" rel="stylesheet" />
+    <body style="overflow-y: scroll;">
+        <!--结束-->
+        <div class="layui-fluid" style="background-color:#ffffff;">
+                <div class="m-search">
+                        <form class="layui-form hcs-form" action="" lay-filter="search" id="zcontract-search-form">
+                             <div class="m-search-item" style="width:200px;">
+                                        <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区,房间，创建人，姓名，手机号" id="CellName">
+                             </div>
+                             <div class="m-search-item">
+                                    <select name="HouseType" lay-verify="" lay-filter="HouseType">         
+                                        <option value="">房源类型</option>
+                                        <option value="1">整租</option>
+                                        <option value="2">合租</option>
+                                        <option value="3">独栋</option>
+                                    </select>
+                             </div> 
+                             <div class="m-search-item" >
+                                    <label class="layui-form-label">起租时间</label>
+                                    <div class="layui-input-inline" style="width: 144px;">
+                                            <input type="text" name="BeginTime" autocomplete="off" class="layui-input" placeholder="开始时间" id="BeginTime1">
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 144px;">
+                                                <input type="text" name="EndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="EndTime1">
+                                            </div>
+                                </div>
+                                <div class="m-search-item" >
+                                        <label class="layui-form-label">退租日期</label>
+                                        <div class="layui-input-inline" style="width: 144px;">
+                                                <input type="text" name="tBeginTime" autocomplete="off" class="layui-input" placeholder="开始时间" id="tBeginTime">
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 144px;">
+                                                    <input type="text" name="tEndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="tEndTime">
+                                                </div>
+                                    </div>
+                             
+                            <div class="m-search-item">
+                                <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </form>
+                    </div>
+            <script id="zcontractbtnscribt" type="text/html">
+                {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+            </script>
+            <script type="text/html" id="btnintable">
+                <ul class="layui-nav toolbar-nav">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" class="show-more">操作</a>
+                        <dl class="layui-nav-child"></dl>
+                    </li>
+                </ul>
+            </script>
+            <div id="toolbar">
+                <div class="layui-btn-group">
+                    <div id="zcontract-button-view" style="overflow:hidden;"></div>
+                    
+                </div>
+            </div>
+            <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+                <ul class="layui-tab-title" style="margin-bottom:0;">
+                    <li value="0" class="layui-this">所有</li>
+                    <li value="5">在租</li>
+                    <li value="4" >待搬入</li>
+                    <li value="7">已退租</li>
+                    <li value="9">退款中</li>
+                    
+                </ul>
+                <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                    <table id="zcontract-index-table" lay-filter="demoEvent"></table>
+                </div>
+            </div>
+        </div>
+    </body>

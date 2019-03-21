@@ -1,0 +1,739 @@
+
+    <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+    <script src="../../../../Scripts/jquery-1.10.2.js"></script>    
+     <style>
+         .wrapguding{display:none;}
+         .zafeitit{color:#FFB800;font-weight:500;}
+         .zisyajin{display: none;}
+
+         
+      
+         .rizu{display: none;}
+     </style>
+  <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+  </script>
+  <script>
+      function LoadData(id,tableid,layerindex,btnOption){
+        layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form'], function () {
+                var laytpl = layui.laytpl;
+                var doc = layui.htcsLG;
+                var url = "api/Contract/GetEnum";
+                var xqurl="api/Contract/QuerybyId";
+                var $ = layui.jquery;
+                var jQuery=layui.jquery;
+                var form = layui.form;
+                var alldata=[];
+                var util = layui.util;
+                var houseid=0;
+                var getTpl = zcontractaddscript.innerHTML
+               , view = document.getElementById('zcontract-add-view');
+               var laydate = layui.laydate;
+                doc.objectQuery(url, { }, function (data) {
+                     alldata.push(data.numberData);
+                     doc.objectQuery(xqurl, {"Id":id }, function (data) {
+                        alldata.push(data.numberData);
+                        houseid=alldata[1].HouseId;
+                        var Teant={};
+                        if(alldata[1].Teant!=null){
+                        Teant.Work=alldata[1].Teant.Work;
+                        Teant.Hobby=alldata[1].Teant.Hobby;
+                        Teant.Social=alldata[1].Teant.Social;
+                        Teant.Name=alldata[1].Teant.Name;
+                        Teant.Phone=alldata[1].Teant.Phone;
+                        Teant.Sex=alldata[1].Teant.Sex;
+                        Teant.BatethDay =util.toDateString(alldata[1].Teant.BatethDay, 'yyyy-MM-dd');
+                        Teant.Weinxin=alldata[1].Teant.Weinxin;        
+                    }
+                    alldata.push(Teant);
+                        laytpl(getTpl).render(alldata, function (html) {
+                        view.innerHTML = html;
+                        
+                    //执行一个laydate实例
+                    laydate.render({
+                        elem: '#BatethDay' //指定元素
+                    });
+                    laydate.render({
+                        elem: '#BeginTime' //指定元素
+                    });
+                    laydate.render({
+                        elem: '#EndTime' //指定元素
+                    }); 
+                    });
+                    debugger;
+                    form.render('');
+                    
+                    $("#Document").val(alldata[1].Teant.Document);
+                    $("#DocumentType").val(alldata[1].Teant.DocumentType);
+                    $("#Work").val(alldata[2].Work);
+                    $("#Hobby").val(alldata[2].Hobby);
+                
+                    $("#PinLv").val(alldata[1].Pinlv);
+                    $("#DepositType").val(alldata[1].DepositType);
+                    $("#Recivetype").val(alldata[1].Recivetype);
+                   
+                    $("#BeforeDay").val(alldata[1].BeforeDay);
+                    
+                  
+                    $("#yType").val(alldata[1].Type);
+                    debugger;       
+                    //查询附件个数
+                    if(alldata[1].Enclosure!=null){
+                        $("#Image").val(alldata[1].Enclosure);
+                        var arr=new Array();
+                        var str=alldata[1].Enclosure; 
+                        str=str.substr(0, str.length - 1);  
+                        arr=str.split(';');
+                        $("#imgnumber").html(arr.length);
+                    }
+                    debugger;
+                    if(alldata[1].Teant.Zidcard!=null){
+                        $("#zjImage").val(alldata[1].Teant.Zidcard);
+                        var arr1=new Array();
+                        var str=alldata[1].Teant.Zidcard;
+                        str=str.substr(0, str.length - 1);  
+                        arr1=str.split(';');
+                        $("#imgzjnumber").html(arr1.length);
+                    }
+                    form.render('');
+                    rizutype(alldata[1].Type);
+                    //初始化杂费
+                    initzafei();
+                    //初始化押金
+                    inityajin();
+                    Create();
+                    EventOther();
+                }); 
+                });
+                function initzafei(){
+                        debugger;
+                        var name ="";
+                        var type = 0;
+                        var yajin=0;
+                        var id = "";
+                        var title="";
+                    $.each(alldata[1].Otherfee,function(index,item){
+                        if(item.IsYajin==0){
+                        name=item.Name;
+                        type=item.Type;
+                        yajin=item.IsYajin;
+                        title=item.Name;
+                        $("[name='"+name+"']").attr("checked",true); 
+                        var id = "zafei-" + name;
+                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" id="' + id + 'zafeiPinlv" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                        $(".zafeicontent").append(content);
+                        initvalue(id,type,item.Amount,item.Pinlv,item.Reading,util.toDateString(item.ChaobiaoTime, 'yyyy-MM-dd'),item.Price);
+                        form.render('');
+                        Eventzafei(type,id,yajin);
+                        }
+                    });
+                }
+                function inityajin(){
+                        debugger;
+                        var name ="";
+                        var type = 0;
+                        var yajin=0;
+                        var id = "";
+                        var title="";
+                        $.each(alldata[1].Yajin,function(index,item){
+                        if(item.IsYajin==1){
+                        name=item.Name;
+                        type=item.Type;
+                        yajin=item.IsYajin;
+                        title=item.Name;
+                        $("[name='"+name+"']").attr("checked",true); 
+                        var id = "yajin-" + name;
+                        var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input" class="zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                        $(".yajincontent").append(content);
+                        $( "#" +id+" .yajinJine").val(item.Amount);
+                        initvalue(id,type,item.Amount,item.Pinlv,item.Reading,item.ChaobiaoTime,0);
+                        form.render('');
+                        Eventzafei(type,id,yajin);
+                        }
+                    });
+                }
+                function initvalue(id,type,Amount,Pinlv,Reading,ChaobiaoTime,Price){
+                    var rid = "#" + id;
+                    $(rid + "zafeiType").val(type);
+                    $(rid+" .zafeiJine").val(Amount);
+                    $(rid+" .zafeiPinlv").val(Pinlv);
+                    $(rid+" .zafeidushu").val(Reading);
+                    $(rid+" .zafeiPrice").val(Price);
+                    $(rid+" .Chaobiao").val(ChaobiaoTime);
+                    
+
+                }
+                function Create() {
+                    form.on('checkbox(zafei)', function (data) {
+                        debugger;
+                        var dom = data.elem;
+                        var name = dom.name;
+                        var type = dom.attributes.ztype.nodeValue;
+                        var yajin=dom.attributes.zyajin.nodeValue;
+                        var id = "zafei-" + name;
+                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + dom.title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随押金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline zafeiPrice" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                      
+                        if (dom.checked == true)
+                        {
+                            $(".zafeicontent").append(content);
+                        } else {
+                            $("#"+id).remove();
+                        }
+                        form.render('');
+                        $("#"+id+" .zafeiType").val(type);
+                        Eventzafei(type,id,yajin);
+                    });
+                    form.on('checkbox(yajin)', function (data) {
+                        debugger;
+                        var dom = data.elem;
+                        var name = dom.name;
+                        var type = dom.attributes.ztype.nodeValue;
+                        var yajin=dom.attributes.zyajin.nodeValue;
+                        var id = "yajin-" + name;
+                        var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + dom.title + '</label><div class="layui-input-inline zafeiType" style="width: 140px;"><input type="tel" name="yajinJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div>';
+                      
+                        if (dom.checked == true)
+                        {
+                            $(".yajincontent").append(content);
+                        } else {
+                            $("#"+id).remove();
+                        }
+                        form.render('');
+                        $(id+" .zafeiType").val(type);
+                        Eventzafei(type,id,yajin);
+                });
+                }
+             
+               form.on('select(Recivetype)', function(data){
+                   debugger;
+                   var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option>';
+                   var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5号</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option>';
+                   if(data.value==2){
+                          $("#BeforeDay").empty();
+                          $("#BeforeDay").append(hao);
+                   }
+                   if(data.value==1){
+                    $("#BeforeDay").empty();
+                     $("#BeforeDay").append(tian);
+                    }
+                    form.render('select');
+                });
+                function rizutype(value){
+                    if(value==0){
+                    $(".yuezu").hide();
+                    $(".rizu").show();
+                    //不验证
+                    $("#Type").removeAttr("lay-verify");
+                    $("#PinLv").removeAttr("lay-verify");
+                    $("#DepositType").removeAttr("lay-verify");
+                    $("#Recent").removeAttr("lay-verify");
+                     //验证
+                    $("#Recent1").attr("lay-verify","required");
+                    $("#Type").val(0);
+                    //常规押金可编辑
+                    $("#cyajin").removeClass("gray");
+                    $("#cyajin").attr("disabled",false);
+                }
+                //月租
+                if(value==1){
+                    $(".yuezu").show();
+                    $(".rizu").hide();
+                      //不验证
+                    $("#Recent1").removeAttr("lay-verify"); 
+                    //验证
+                    $("#Recent").attr("lay-verify","required");
+                    $("#Type").attr("lay-verify","required");
+                    $("#DepositType").attr("lay-verify","required");
+                    $("#PinLv").attr("lay-verify","required");
+                    $("#yType").val(1);
+                    //常规押金不可编辑
+                    $("#cyajin").addClass("gray");
+                    $("#cyajin").attr("disabled",true);
+                }
+                form.render('');
+                }
+               function EventOther(){
+                    //快捷键
+                 $(".btkj").click(function(){
+                    var idvalue=$(this).attr("idvalue");
+                    if($("#BeginTime").val()!=""){
+                        debugger;
+                        var dt = getDate($("#BeginTime").val());
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt,);
+                        $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
+                    }
+                })
+                //关闭
+                $("#cancelbtn").click(function(){
+                    debugger;
+                layer.close(layerindex);
+                return false;
+                });
+                function getDate(strDate){    
+                    var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
+                    function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
+                    return date;    
+                }
+                     //计算押金
+                     $(document).on('change','.Recent',function(){
+                        var zujin=$(".Recent").val();
+                        var yaji=$("#DepositType").val();
+                        $("#cyajin").val(zujin*yaji);
+                    });
+                    form.on('select(DepositType)', function(data){
+                        var zujin=$(".Recent").val();
+                        var yaji=$("#DepositType").val();
+                        $("#cyajin").val(zujin*yaji);
+                    });
+                form.on('select(timeType)', function(data){
+                debugger;
+                //日租
+                rizutype(data.value);
+                 
+                 form.render('select');
+                });
+                
+               
+                $("#addimage").click(function () {
+                    debugger;
+                 var addid="layui-contract-addimage";
+                 var view = layui.view;
+                 layer.open({
+                    id:addid,
+                    type: 1,
+                    title: '上传文件',
+                    skin: 'two-layer',
+                    //anim: 4,
+                    shadeClose: true,//开启遮罩关闭
+                    //shade: ['0.5'],
+                    maxmin: true, //开启最大化最小化按钮
+                    area:['800px', '500px'],
+                    success: function(layero,index){
+                        view(this.id).render('upload/index', {
+                            img:$("#Image").val(),
+                            type:1,
+                            layerindex:index
+                        });
+                      }
+                });  
+               });
+               $("#addzjimage").click(function () {
+                    debugger;
+                 var addid="layui-contract-addzjimage";
+                 var view = layui.view;
+                 indexclose=layer.open({
+                    id:addid,
+                    type: 1,
+                    title: '上传文件',
+                    skin: 'two-layer',
+                    //anim: 4,
+                    shadeClose: true,//开启遮罩关闭
+                    //shade: ['0.5'],
+                    maxmin: true, //开启最大化最小化按钮
+                    area:['800px', '500px'],
+                    success: function(layero,index){
+                        view(this.id).render('upload/index', {
+                            img:$("#zjImage").val(),
+                            type:2,
+                            layerindex:index
+                        });
+                      }
+                });  
+               });
+               }
+                function Eventzafei(type,id,isyajin) {
+                    debugger;
+                    var rid = "#" + id;
+                    if(isyajin==1){
+                        $(rid+" .wraprice").hide();
+                        $(rid+" .wrapbiao").hide();
+                        $(rid+" .wrap-jstype").hide();
+                        $(rid+" .wrapguding").show();
+                        $(rid+" .wrappinlv").hide();
+                        return;
+                    }
+                    if (type == 1) {
+                        $(rid+" .wraprice").hide();
+                        $(rid+" .wrapbiao").hide();
+                        $(rid+" .wrapguding").show();
+                        $(rid+" .wrappinlv").show();
+                    }
+                    if (type == 2) {
+                        $(rid+" .wrappinlv").hide();
+                        $(rid+" .wraprice").hide();
+                        $(rid+" .wrapbiao").hide();
+                        $(rid+" .wrapguding").hide();
+                    }
+                    if (type == 3) {
+                        $(rid+" .wrapguding").hide();
+                        $(rid+" .wrappinlv").hide();
+                        $(rid+" .wraprice").show();
+                        $(rid+" .wrapbiao").show();
+                        
+                    }
+                    form.on('select('+id+'zafeiType)', function (data) {
+                        debugger;
+                        if ($(rid + "zafeiType").val() == 1) {
+                            $(rid + " .wraprice").hide();
+                            $(rid + " .wrapbiao").hide();
+                            $(rid + " .wrapguding").show();
+                        }
+                        if ($(rid + "zafeiType").val() == 2) {
+                            $(rid + " .wrappinlv").hide();
+                            $(rid + " .wraprice").hide();
+                            $(rid + " .wrapbiao").hide();
+                            $(rid + " .wrapguding").hide();
+                        }
+                        if ($(rid + "zafeiType").val() == 3) {
+                            $(rid + " .wrapguding").hide();
+                            $(rid + " .wrappinlv").show();
+                            $(rid + " .wraprice").show();
+                            $(rid + " .wrapbiao").show();
+                        }
+                    });
+                    var laydate = layui.laydate;
+                    laydate.render({
+                        elem: rid+' .Chaobiao' //指定元素
+                    });
+                }
+                form.verify({
+                    EndTime : function(value, item){
+                    if(value <= $("#BeginTime").val()){
+                return "开始时间必须大于结束时间";
+            }
+        },
+        HouseName: function(value, item){
+            debugger
+                    if($("#HouseId").val()==""||$("#HouseType").val()==""){
+                return "房源不存在";
+            }}
+    })
+         //监听提交
+        form.on('submit(save)', function (data) {
+        debugger;
+        var zafeilist = [];
+        var yajin=[];
+        $.each($(".zafeicontent .zafeilist"), function (index, item) {
+        debugger;
+        var id = "#" + item.id;
+        var zafei = {};
+        zafei.Name = $(id + " .zafeitit").html();
+        zafei.Pinlv = $(id + "zafeiPinlv").val();
+        zafei.Amount = $(id + " .zafeiJine").val();
+        zafei.Type = $(id + "zafeiType").val();
+        zafei.Price = $(id + " .zafeiPrice").val();
+        zafei.Reading = $(id + " .zafeidushu").val();
+        zafei.ChaobiaoTime = $(id + " .Chaobiao").val();
+        zafei.IsYajin= $(id + " .zisyajin").html();
+        if(zafei.IsYajin==1){
+            yajin.push(zafei);
+        }else{
+            zafeilist.push(zafei);
+        }
+        });
+        
+          //押金
+        $.each($(".yajincontent .yajinlist"), function (index, item) {
+        debugger;
+        var id = "#" + item.id;
+        var zafei = {};
+        zafei.Name = $(id + " .yajintit").html();
+        zafei.Amount = $(id + " .yajinJine").val();
+        zafei.IsYajin= 1;
+        yajin.push(zafei);
+        });
+        var datafield=data.field;
+   
+        var tjdata = {
+            "Id":id,"HouseId":houseid, "Deposit":datafield.Deposit,
+        "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,
+        "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,
+        "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Social": datafield.Social, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType,"Document": datafield.Document,"Zidcard":datafield.zjImage, "Weinxin": datafield.Weinxin },
+        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType,
+        "Enclosure":datafield.Image
+         };
+         var url = doc.baseurl + "/api/Contract/SaveData";
+         var saveoption={
+          url:'api/Contract/SaveData',
+          data:tjdata,
+          tableid:tableid,
+          btnOption:btnOption,
+          callBack:function(resultData){
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+         });
+               
+        });
+      }
+      function complteimg(name,type, number){
+        layui.use(['jquery'], function () {
+            var $ = layui.jquery;
+            if(type==1){
+             $("#Image").val(name);
+             $("#imgnumber").html(number);
+            }
+            if(type==2){
+             $("#zjImage").val(name);
+             $("#imgzjnumber").html(number);
+            }
+        })
+      }
+     
+        
+</script>
+    <script id="zcontractaddscript" type="text/html">
+        {{#   var doc = layui.htcsLG;  var util = layui.util;}}
+        <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+            <div class="form-content">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>租客信息</legend>
+                </fieldset>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline" style="width: 144px;">
+                            <input type="tel" name="Name" lay-verify="required" placeholder="必填" value="{{d[2].Name}}" autocomplete="off" class="layui-input" id="Name">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" >手机号</label>
+                        <div class="layui-input-inline" style="width: 150px;">
+                            <input type="tel" name="Phone" lay-verify="required" autocomplete="off" value="{{d[2].Phone}}" class="layui-input" id="Phone" placeholder="必填">
+                        </div>
+                    </div>   
+                    <div class="layui-inline">
+                        <label class="layui-form-label" >证件信息</label>
+                        <div class="layui-input-inline" style="width:90px;margin-right:0px;">
+                            <select  id="DocumentType" name="DocumentType" placeholder="选填">
+                                <option value="0">身份证</option>
+                                <option value="1">军官证</option>
+                                <option value="2">护照</option>
+                             
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width:150px;">
+                            <input type="tel" name="Document"  value="{{doc.ns(d[2].Document)}}" placeholder="选填" autocomplete="off" class="layui-input" id="Document">
+                        </div>
+                    </div>
+                    </div>
+               
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                                <div class="layui-input-block" >
+                               
+                                <input type="radio"   name="sex" value="男" title="男"   {{ d[2].Sex==0? 'checked' : ''}} >
+                                <input type="radio" name="sex" value="女" title="女" {{ d[2].Sex==2? 'checked' : ''}}>      
+                                            
+                                </div> 
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">工作</label>
+                        <div class="layui-input-inline" style="width:150px;">
+                            <select lay-verify="" id="Work" name="Work">
+                                    <option value="">请选择</option>
+                                {{#  layui.each(d[0].work, function(index, item1){ }}
+                                <option value="{{item1.Value}}">{{item1.Value}}</option>
+                                {{#  });   }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">爱好</label>
+                        <div class="layui-input-inline" style="width:100px;">
+                            <select lay-verify="" id="Hobby" name="Hobby">
+                              <option value="">请选择</option>
+                               {{#  layui.each(d[0].Hobby, function(index, item1){ }}
+                              <option value="{{item1.Value}}">{{item1.Value}}</option>
+                               {{#  });   }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">出生年月</label>
+                        <div class="layui-input-inline" style="width:144px;">
+                            <input type="text" class="layui-input" id="BatethDay" name="BatethDay" value="{{util.toDateString(d[2].BatethDay, 'yyyy-MM-dd')}}" placeholder="选填">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">微信/QQ</label>
+                        <div class="layui-input-inline" style="width:150px;">
+                            <input type="tel" name="Weinxin" lay-verify="" autocomplete="off" value="{{doc.ns(d[2].Weinxin)}}" class="layui-input" id="Weinxin" placeholder="选填">
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>合同信息</legend>
+                </fieldset>
+                
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">合同时间</label>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <input type="tel" name="BeginTime" lay-verify="required" value="{{util.toDateString(d[1].BeginTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="BeginTime" placeholder="合同开始时间">
+        
+                        </div>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <input type="tel" name="EndTime" lay-verify="EndTime"   value="{{util.toDateString(d[1].EndTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="EndTime" placeholder="合同结束时间">
+                        </div>
+                        <div class="layui-btn-group">
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="1">1月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="3">3月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="6">6月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="12">一年</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item yuezu">
+                    <div class="layui-inline ">
+                        <label class="layui-form-label">类型</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <select lay-verify="required" id="yType"  name="Type" lay-filter="timeType">
+                                <option value="2">月租</option>
+                                <option value="1">日租</option>
+                            </select>
+                        </div>
+                        <label class="layui-form-label" >付款方式</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <select lay-verify="required" id="PinLv" name="PinLv" lay-filter="Type">
+                                <option value="">请选择</option>
+                                {{#  layui.each(d[0].pinlv, function(index, item1){ }}
+                                <option value="{{item1.key}}">{{item1.Value}}</option>
+                                {{#  });   }}
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <select lay-verify="required" id="DepositType" name="DepositType" lay-filter="DepositType">
+                                    <option value="1">押一</option>
+                                    <option value="2">押二</option>
+                                    <option value="3">押三</option>
+                                    <option value="4">押四</option>                                    
+                            </select>
+                        </div>
+                        <label class="layui-form-label">月租金</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent" id="Recent">
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="layui-form-item rizu">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <select lay-verify="required" id="Type" name="Type" lay-filter="timeType">
+                                    <option value="2">月租</option>
+                                    <option value="1">日租</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <input type="tel" autocomplete="off" class="layui-input gray" placeholder="一次结清">
+                            </div>
+                            <label class="layui-form-label">日租金</label>
+                            <div class="layui-input-inline" style="width: 100px;">
+                             <input type="tel" name="DayRecnet"  autocomplete="off" class="layui-input" id="Recent1">
+                            </div>
+                            </div>
+                      </div>
+                      <div class="layui-form-item">
+                      <label class="layui-form-label">常规押金</label>
+                      <div class="layui-input-inline" style="width: 100px;">
+                          <input type="tel" name="Deposit"  value="{{d[1].Deposit}}" lay-verify="required|number" disabled autocomplete="off" class="layui-input gray" id="cyajin">
+                      </div>
+                    </div>
+          
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">支付时间</label>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <select lay-verify="required" id="Recivetype" name="Recivetype" lay-filter="Recivetype">
+                                <option value="1">按账单开始时间提前收租</option>
+                                <option value="2">按固定日期收租</option>
+                            </select>
+                        </div>
+                        
+                        <div class="layui-input-inline" style="width:100px;" id="howtian">
+                                <select lay-verify="required" id="BeforeDay" name="BeforeDay">
+                                    <option value="0">0天</option>
+                                    <option value="1">1天</option>
+                                    <option value="2">2天</option>
+                                    <option value="3">3天</option>
+                                </select>
+                            </div>                          
+                        
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                     <label class="layui-form-label">杂费</label>
+                     <div class="layui-input-block">
+                         {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==0){ }}
+                         
+                             <input type="checkbox"  name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                         {{# } });   }}
+                     </div>
+                </div>
+                
+                 <div class="zafeicontent">
+        
+                 </div>
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">其他押金</label>
+                    <div class="layui-input-block">
+                        {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==1){ }}
+                            <input type="checkbox" name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="yajin" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                        {{#  } });   }}
+                    </div>
+                  </div>
+                  <div class="yajincontent">
+        
+                  </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <input type="tel" name="Remark" autocomplete="off"  value="{{d[1].Remark}}" class="layui-input" id="Remark">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">附件</label>
+                            <div class="layui-input-block">
+                                <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image">
+                            </div>
+                            <div class="layui-input-block">
+                                    <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
+                                    <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+        
+            
+            <div class="form-bottom">
+                <div class="form-wrap">
+                    <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancel">取消</button>
+                    <button class="layui-btn" id="save" lay-filter="save" lay-submit="">创建合同</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </script>
+    <div id="zcontract-add-view" class="form-wrapper">
+    </div>
+   
+
+
+<script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
+<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  
+
+

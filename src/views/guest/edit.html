@@ -1,0 +1,257 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    #sysuer-add-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ #sysuer-add-view  thead tr{height: 45px;}
+#sysuer-add-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+</style>
+<script>
+      function LoadData(id,tableid,layerindex,btnOption){
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;
+            var url = "api/Guest/Queryxq";
+            var form = layui.form;
+            var laydate = layui.laydate;
+            doc.objectQuery(url, {"Id":id},
+          function(data1) {
+          var alldata = [];
+          alldata.push(data1.numberData);
+          var arry=doc.parsearr1(alldata[0].Huxing);
+          var arry1=doc.parsearr1(alldata[0].Other);
+          alldata.push(arry);
+          alldata.push(arry1);
+          var getTpl = demo.innerHTML,
+          view = document.getElementById('view');
+          laytpl(getTpl).render(alldata,
+          function(html) {
+            view.innerHTML = html;
+          });
+            debugger;
+          
+           
+            $("#Sex").val(alldata[0].Sex);
+            $("#Source").val(alldata[0].Source);
+            $("#Ugent").val(alldata[0].Ugent);
+            $("#Status").val(alldata[0].Status);
+            
+            $("#Remark").val(alldata[0].Remark);
+            laydate.render({
+        elem: '#IntoTime'
+    });
+    form.render('');
+    $("#cancel").click(function(){
+            layer.close(layerindex);
+            return false;
+            });
+            doc.tjgd();   
+        });
+      
+    
+            doc.tjgd();
+            form.render();
+            var tabbleid="sysuserchildaddtable";
+             
+//监听提交
+form.on('submit(save)', function (data) {
+        debugger;
+        var datafield=data.field;
+        var huxing="";
+        var other="";
+        $('input[name="Huxing"]').each(function(index,value){
+            if(value.checked==true){
+                huxing+=value.defaultValue+","; 
+            }
+        });
+        $('input[name="Other"]').each(function(index,value){
+            if(value.checked==true){
+                other+=value.defaultValue+","; 
+            }
+        });
+        if(huxing!=""){
+            huxing=huxing.substring(0,huxing.length-1);
+        }
+        if(other!=""){
+            other=other.substring(0,other.length-1);
+        }
+        datafield.Remark=$("#Remark").val();
+        datafield.Id=id;
+        datafield.Huxing=huxing;
+        datafield.Other=other;
+        debugger;
+        var saveoption={
+          url:'api/Guest/add',
+          data:datafield,
+          tableid:tableid,
+          btnOption:btnOption,
+          callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+});
+
+
+        });
+      }
+</script>
+<body>
+      
+
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+        </script>
+        <script id="demo" type="text/html">
+            {{#   var doc = layui.htcsLG;var $= layui.jquery;}}
+        <form class="layui-form layui-form-pane hcs-form" action="">
+                <div class="form-content">
+         
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="Name" autocomplete="off" class="layui-input" id="Name" lay-verify="required" value="{{d[0].Name}}" >
+                            </div>
+                            <label class="layui-form-label">电话</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="Phone" lay-verify="required" autocomplete="off" class="layui-input" id="Phone" lay-verify="required" value="{{d[0].Phone}}">
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">性别</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <select name="Sex" lay-verify="" id="Sex" >
+                                        <option value="男">男</option>
+                                              <option value="女">女</option>
+                                             <option value="情侣" >情侣</option>
+                                             <option value="两女" >两女</option>
+                                             <option value="两男" >两男</option>
+                                             <option value="女带小孩" >女带小孩</option>
+                                             <option value="男带小孩" >男带小孩</option>
+                                             <option value="夫妻带小孩" >夫妻带小孩</option>
+                                             <option value="兄妹" >兄妹</option>
+                                             <option value="姐弟" >姐弟</option>
+                                             <option value="其他" >其他</option>
+                                         </select>  
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="layui-form-item">
+                                <label class="layui-form-label">来源</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                        <select name="Source" lay-verify="" id="Source">
+                                                     <option value="来电">来电</option>
+                                                     <option value="58同城" >58同城</option>
+                                                     <option value="赶集网" >赶集网</option>
+                                                     <option value="安居客" >安居客</option>
+                                                     <option value="官网" >官网</option>
+                                                     <option value="微信" >微信</option>
+                                                     <option value="自来客" >自来客</option>
+                                                     <option value="转介绍" >转介绍</option>
+                                                     <option value="房天下" >房天下</option>
+                                                     <option value="豆瓣" >豆瓣</option>
+                                                     <option value="百姓网" >百姓网</option>
+                                                     <option value="闲鱼" >闲鱼</option>
+                                                     <option value="微博" >微博</option> 
+                                         </select>  
+                                </div>
+                                <label class="layui-form-label" >入住时间</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="tel" name="IntoTime" value="{{d[0].IntoTime}}"  autocomplete="off" class="layui-input" id="IntoTime">
+                                </div>
+                                <label class="layui-form-label" >紧急情况</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                        
+ <select name="Ugent" lay-verify="" id="Ugent">
+    <option value="1">普通</option>
+    <option value="2">紧急</option>
+   <option value="3" >延后</option>
+     </select>  
+                                </div>
+                               
+                                
+                    </div>
+                 
+<div class="layui-form-item">
+    <label class="layui-form-label">最低价格</label>
+    <div class="layui-input-inline" style="width: 200px;">
+        <input type="tel" name="MinPrice" autocomplete="off" class="layui-input" id="MinPrice" value="{{d[0].MinPrice}}" >
+    </div>
+    <label class="layui-form-label" >最高价格</label>
+    <div class="layui-input-inline" style="width: 200px;">
+        <input type="tel" name="MaxPrice" autocomplete="off" class="layui-input" id="MaxPrice" value="{{d[0].MaxPrice}}" >
+    </div>
+    <label class="layui-form-label" >租期</label>
+    <div class="layui-input-inline" style="width: 200px;">
+        <input type="tel" name="RectDate" autocomplete="off" class="layui-input" id="RectDate" placeholder="月" value="{{d[0].RectDate}}" >
+    </div>
+    
+</div>
+<div class="layui-form-item">
+<label class="layui-form-label">户型</label>
+<div class="layui-input-block">
+<input type="checkbox" name="Huxing" title="合租次卧"  value="合租次卧" {{ $.inArray("合租次卧",d[1])==-1? '':'checked'}}  >
+<input type="checkbox" name="Huxing" title="合租主卧"  value="合租主卧"  {{ $.inArray("合租主卧",d[1])==-1? '':'checked'}} > 
+<input type="checkbox" name="Huxing" title="床位"  value="床位"   {{ $.inArray("床位",d[1])==-1? '':'checked'}} > 
+<input type="checkbox" name="Huxing" title="整租1室" value="整租1室"  {{ $.inArray("整租1室",d[1])==-1? '':'checked'}} > 
+<input type="checkbox" name="Huxing" title="整租2室" value="整租2室" {{ $.inArray("整租2室",d[1])==-1? '':'checked'}} > 
+<input type="checkbox" name="Huxing" title="整租3室" value="整租3室" {{ $.inArray("整租3室",d[1])==-1? '':'checked'}} > 
+</div>
+</div>
+
+<div class="layui-form-item">
+<label class="layui-form-label">其他</label>
+<div class="layui-input-block">
+<input type="checkbox" name="Other" title="交通便利" value="交通便利" {{ $.inArray("交通便利",d[2])==-1? '':'checked'}} >
+<input type="checkbox" name="Other" title="价格低"   value="价格低" {{ $.inArray("价格低",d[2])==-1? '':'checked'}} > 
+<input type="checkbox" name="Other" title="精装修"  value="精装修" {{ $.inArray("精装修",d[2])==-1? '':'checked'}} > 
+<input type="checkbox" name="Other" title="带宠物"  value="带宠物" {{ $.inArray("带宠物",d[2])==-1? '':'checked'}} > 
+<input type="checkbox" name="Other" title="高层"  value="高层" {{ $.inArray("高层",d[2])==-1? '':'checked'}} > 
+<input type="checkbox" name="Other" title="全女室友"  value="全女室友" {{ $.inArray("全女室友",d[2])==-1? '':'checked'}} > 
+<input type="checkbox" name="Other" title="马上住"  value="马上住" {{ $.inArray("马上住",d[2])==-1? '':'checked'}} > 
+</div>
+</div>
+<div class="layui-form-item" >
+  
+    <label class="layui-form-label">期望地址</label>
+    <div class="layui-input-inline" style="width: 200px;">
+        <input type="tel" name="HopeAdress" autocomplete="off" class="layui-input" id="HopeAdress" value="{{d[0].HopeAdress}}" >                                     
+    </div>
+    <label class="layui-form-label" >状态</label>
+    <div class="layui-input-inline" style="width: 200px;">
+            
+<select name="Status"  id="Status">
+
+<option value="1">待分配</option>
+<option value="2">跟进中</option>
+<option value="3" >已完成</option>
+</select>  
+    </div>
+    <div class="layui-input-inline" >
+        <textarea name="Remark" id="Remark"  placeholder="备注" class="layui-textarea" value="{{d[0].Remark}}"> </textarea>
+      </div>
+</div>
+
+                </div>
+            <div class="form-bottom">
+                    <div class="form-wrap">
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancel" >取消</button>
+                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                    </div>
+          </div>
+        </form>    
+    </script>
+    <div id="view">
+    </div> 
+
+</body>

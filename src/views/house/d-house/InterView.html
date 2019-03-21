@@ -1,0 +1,399 @@
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>InterView</title>
+    <link href="../../../../Content/Home.css" rel="stylesheet" />
+    <link href="../../../../Content/hsc-form.css" rel="stylesheet" />  
+    <style>
+        .buttonleft{margin-left: 30px;}
+    </style> 
+    <script>
+         function LoadData(id,ParentRoomid,layerindex){
+            layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','element'], function(){
+            var url = "api/House/Querydepent";
+            var para={"teseorpeibei":0,"type":2};
+            var tsurl='api/BaseData/Query';
+            var gqurl="api/House/publicHousexq";
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var util = layui.util;
+            var paradata = { "Id": id, "ParentRoomid": ParentRoomid };
+            var getTpl = billeditscript.innerHTML
+             , view = document.getElementById('bill-edit-view');
+             var element = layui.element;
+             var form = layui.form;
+             var table = layui.table;
+             var view1 = layui.view;
+             var alldata=[];
+             //查询特色信息
+             doc.objectQuery(tsurl, para, function (data) {
+                alldata.push(data.numberData);
+                doc.objectQuery(url, { "Id": id }, function (data) {
+                alldata.push(data.numberData);
+                doc.objectQuery(gqurl, { "Id": ParentRoomid }, function (data) {
+                alldata.push(data.numberData);
+                laytpl(getTpl).render(alldata, function (html) {
+                view.innerHTML = html;
+                form.render('');
+             });
+             $(".buttonleft").click(function (index,value) {
+           debugger;
+         
+           layer.open({
+           type: 1,
+           id:"domedit1",
+           title: '房源编辑',
+           skin: 'two-layer',
+           anim: -1,
+           shade: .1,
+           shadeClose: true,
+           maxmin: true,
+           area: ['1120px', '90%'],
+           success: function (layero, index) {
+            view1("domedit1").render('house/h-house/edit', {
+                   id: id,
+                   ParentRoomid:ParentRoomid,
+                   layerindex:index
+               });
+           }
+        });
+        });
+             });
+            });
+            });
+            element.on('tab(test1)', function(){
+               var layid=this.getAttribute('lay-id');
+               if(layid==222){ 
+                var tableoption = {
+            domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
+            { type: 'checkbox' }
+          , { field: 'Name', width: 100, title: '租客姓名' }
+          , { field: 'Phone', width: 150, title: '租客电话' }
+          , { field: 'Deposit', width: 180, title: '身份证号' }
+          , { field: 'Status', width: 110, title: '状态', templet: formatterstatus }
+          , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
+          , { field: 'Recent', width: 80, title: '租金' }
+          , { field: 'Pinlv', width: 120, title: '付款频率',templet: formatterpinlv }
+          
+    ]], height: 650, url: 'api/Contract/Query',
+        ismuilti: true,"tabfield":"Status","search":{"HouseId":id}
+    };
+    doc.InitTable(tableoption);
+    var BtnOption = {
+        area: ['990px', '910px'],
+        tableid: "zcontract-index-table",
+        ismuilti:true,
+        btnview:  "zcontract-button-view",
+        tooladd:  "zcontract-add-btn",
+        tooledit: "zcontract-edit-btn",
+        tooldelete:"zcontract-delete-btn",
+        deletespname:"sp_pldeletecontract",
+        menuid:164
+    };
+    doc.InitButton(BtnOption, zcontractbtnscribt);
+               }
+               if(layid=="333"){
+                var tableoption = {
+        domid: "#bill-main-table", formid: "#bill-search-form", arr: [[ //表头
+    { type: 'checkbox' }
+    , { title: '账单周期',width: 200,templet:formatterzhouqi }
+    , { width: 80, title: '状态', templet: formastatus }
+    , { field: 'Amount', width: 80, title: '金额' }
+    , { title: '收租时间',width: 200,templet:formatterreveice }
+  , { field: 'TeantName', width: 100, title: '租客姓名' }
+  , { field: 'Phone', width: 120, title: '租客电话' }
+        ]], height: 620, url: 'api/Bill/Querylist',
+        ismuilti: true,"tabfield":"PayStatus","search":{"HouseId":id}
+    };
+    doc.InitTable(tableoption);
+               }
+            });
+            function formatterstatus(value) {
+        //0 不限 1预订 4待搬入 5在租 6已到期 7 已退租 8以作废 9 财务审核中	
+       if (value.Status == 4) {
+           return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">待搬入</span></div>'
+       }
+       if (value.Status == 5) {
+           return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
+       }
+       if (value.Status == 6) {
+           return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">已到期</span></div>'
+       }
+       if (value.Status == 7) {
+           return '<div><span style="padding:10px;background-color:#c2c2c2;color:#ffffff;border-radius:5px;">已退租</span></div>'
+       }
+       if (value.Status == 8) {
+           return '<div><span style="padding:10px;background-color:#c2c2c2;color:#ffffff;border-radius:5px;">已作废</span></div>'
+       }
+       if (value.Status == 9) {
+           return '<div><span style="padding:10px;background-color:#FFB800;color:#ffffff;border-radius:5px;">财务审核中</span></div>'
+       }
+}
+function formatterhouse(value) {
+       var adress=value.CellName + "-" + value.BuildingNumber + "栋" + value.RoomId + "室";
+       if(value.HouseName!=""&&value.HouseName!=null){
+           adress+="-"+value.HouseName;
+       }
+       return '<div>' + adress + '</div>'
+   }
+   function formattertime(value) {
+    
+       return '<div>' +util.toDateString(value.BeginTime,'yyyy年MM月dd日')	  + "→" + util.toDateString(value.EndTime,'yyyy年MM月dd日') + '</div>';
+}
+function formatterpinlv(value) {
+    return '<div>' +value.Pinlv + '月一付</div>';
+}
+function formatterzhouqi(value) {
+            debugger;
+            if(value.BeginTime==null||value.EndTime==null){
+                return '<div>'+'</div>'
+            }
+            if(value.BeginTime=="0001-01-01 00:00:00"||value.EndTime=="0001-01-01 00:00:00"){
+                return '<div>'+'</div>'
+            }
+            debugger;
+            var begintime=util.toDateString(value.BeginTime, 'yyyy-MM-dd');
+            var endtime=util.toDateString(value.EndTime, 'yyyy-MM-dd');
+            return '<div>' + begintime+" - "+endtime + '</div>';
+        }
+        
+        function formadaoqi(value) {
+            debugger;
+            var day=0;
+                      
+            if(value.ShouldReceive == null){
+                return '<span>' + "未知" + '</span>';
+            }
+            var d1 = new Date(util.toDateString(value.ShouldReceive, 'yyyy-MM-dd'));
+            var d2 = new Date(nowDate);
+            var days = d1-d2; 
+            day= parseInt(days / (1000 * 60 * 60 * 24)); 
+            if(day == 0){
+                return '<span>' + "今日收款" + '</span>';
+            }
+            if (day< 0) {          
+                return '<span style="color:#ff5153">' + "逾期"+day+"天" + '</span>';
+            } 
+            if (day>0) {
+                return '<span>' +day+ "天后收款" + '</span>';
+            } 
+        }
+        function formastatus(value) {
+            if (value.Status == 0) {
+                return '<span>' + "未支付" + '</span>'
+            } else {
+               
+                return '<span>已支付</span>'
+            }
+        }
+        function formatterreveice(value)
+        {
+            if(value.ShouldReceive==null){
+                return "";
+            }
+           return  util.toDateString(value.ShouldReceive, 'yyyy-MM-dd')
+        }
+        
+       }); 
+    }
+    function formatterrecent(value)
+        {
+            if(value==1){
+                return "未租";
+            }
+            if(value==2){
+                return "已租";
+            }
+            if(value==3){
+                return "装修中";
+            }
+            if(value==4){
+                return "作废";
+            }
+    }
+</script>    
+   
+
+</head>
+<body>
+  <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.ParentRoomid,d.params.layerindex)}}
+  </script>
+    <div class="layui-tab layui-tab-card" style="margin:0px;" lay-filter="test1">
+        <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="111">房源信息</li>
+            <li lay-id="222">合同信息</li>
+            <li lay-id="333">在租账单</li>
+           
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show" style="padding: 10px;overflow: hidden;">
+                <script id="billeditscript" type="text/html">
+                    {{# var doc= layui.htcsLG; }}
+                         <form class="layui-form layui-form-pane hcs-form" action=""> 
+                          <input type="text" name="Id" id="Id" autocomplete="off" class="layui-input" value="{{d[1].Id}}" style="display:none" /> 
+                          <div class="wrap"> 
+                           <div class="title"> 
+                            <h3 class="red"> 房间信息 <a class="layui-btn  layui-btn-radius layui-btn-warm buttonleft">编辑</a></h3> 
+                        
+                           </div> 
+                           <div class="layui-form-item"> 
+                            <div class="layui-inline"> 
+                             <label class="layui-form-label" style="text-align:left;width:auto;">地址</label> 
+                             <div class="layui-input-inline" style="width:270px;"> 
+                              <input type="tel" name="House" autocomplete="off" class="layui-input gray" value="{{d[1].Name}}" disabled="" /> 
+                             </div> 
+                            </div> 
+                            <div class="layui-inline"> 
+                             <label class="layui-form-label">价格</label> 
+                             <div class="layui-input-inline"> 
+                              <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Price}}" disabled="" /> 
+                             </div> 
+                            </div> 
+                           </div> 
+                           <div class="layui-form-item"> 
+                            <div class="layui-inline"> 
+                             <label class="layui-form-label" style="text-align:left;width:auto;">出租状态</label> 
+                             <div class="layui-input-inline" style="width: 122px;"> 
+                              <input type="text" name="Status" id="Status" autocomplete="off" class="layui-input gray" value="{{formatterrecent(d[1].Status)}}" /> 
+                             </div> 
+                            </div> 
+                            <div class="layui-inline"> 
+                             <label class="layui-form-label">户型</label> 
+                             <div class="layui-input-inline"> 
+                              <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Huxing}}" disabled="" /> 
+                             </div> 
+                            </div> 
+                           </div> 
+                           <div class="layui-form-item"> 
+                            <div class="layui-inline"> 
+                             <label class="layui-form-label" style="text-align:left;width:auto;">朝向</label> 
+                             <div class="layui-input-inline"> 
+                              <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Orientation}}" disabled="" /> 
+                             </div> 
+                             <label class="layui-form-label" style="text-align:left;width:auto;">面积</label> 
+                             <div class="layui-input-inline"> 
+                              <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Measure}}" disabled="" /> 
+                             </div> 
+                            </div> 
+                           </div> 
+                           <div class="layui-form-item"> 
+                            <div class="layui-inline"> 
+                             <label class="layui-form-label" style="text-align:left;width:auto;">特色</label> 
+                             <div class="layui-input-block">
+                                {{#  layui.each(d[0].tese, function(index, item1){ }}
+                                    <input type="checkbox" name="{{item1.Code}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.Ibox" name="{{item1.Code}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                                {{#  });   }}
+                            </div>
+                            </div> 
+                            <div class="layui-form-item"> 
+                                <div class="layui-inline"> 
+                                 <label class="layui-form-label" style="text-align:left;width:auto;">配备</label> 
+                                 <div class="layui-input-block">
+                                    {{#  layui.each(d[0].peipei, function(index, item1){ }}
+                                    {{#  var index=doc.SearchData1(d[1].listpeibei,"Name",item1.Name); if(index!=""){ }}
+                                    <input type="checkbox" name="{{item1.Code}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" checked zyajin="{{item1.IsYajin}}">
+                                    {{# }else{ }}
+                                        <input type="checkbox" name="{{item1.Code}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                                    {{# }; });   }}
+                                </div>
+                                </div>
+                           </div> 
+                          </div> 
+                          <div class="wrap"> 
+                            <div class="title"> 
+                             <h3 class="red"> 公区信息 </h3> 
+                            </div> 
+                            <div class="layui-form-item"> 
+                                    <div class="layui-inline"> 
+                                            <label class="layui-form-label">商圈</label> 
+                                            <div class="layui-input-inline"> 
+                                             <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{doc.ns(d[2].BusinessArea)}}" disabled="" /> 
+                                            </div> 
+                                            <div class="layui-inline"> 
+                                               <label class="layui-form-label">小区</label> 
+                                               <div class="layui-input-inline"> 
+                                                <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].CellName}}" disabled="" /> 
+                                               </div> 
+                                           </div> 
+                            </div>
+                            <div class="layui-form-item"> 
+                                    <div class="layui-inline"> 
+                                            <label class="layui-form-label">房型</label> 
+                                            <div class="layui-input-inline"> 
+                                             <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].ShiNumber}}室{{d[2].TingNumber}}厅{{d[2].WeiNumber}}卫" disabled="" /> 
+                                        </div>
+                                        <div class="layui-inline"> 
+                                            <label class="layui-form-label">楼层</label> 
+                                            <div class="layui-input-inline"> 
+                                             <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].AllFloor}}/{{d[2].NowFloor}}" disabled="" /> 
+                                        </div>
+                                       
+                            </div>
+                            <div class="layui-form-item"> 
+                                    <div class="layui-inline"> 
+                                            <label class="layui-form-label">面积</label> 
+                                            <div class="layui-input-inline"> 
+                                             <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].Measure}}" disabled="" /> 
+                                        </div>
+                             </div>
+                             <div class="layui-form-item"> 
+                                
+                            </div>
+                            <div class="layui-form-item"> 
+                                <div class="layui-inline"> 
+                                 <label class="layui-form-label">地址</label> 
+                                 <div class="layui-input-inline"> 
+                                  <input type="text" name="Status" id="Status" autocomplete="off"  class="layui-input gray" value="{{doc.ns(d[2].ProvinceName)}}{{d[2].CityName}}{{d[2].Adress}}" /> 
+                                 </div> 
+                                </div> 
+                               
+                              
+                               </div>   
+                         </form> 
+                    </script>
+                    <div id="bill-edit-view">
+                    </div>
+            </div>
+            <div class="layui-tab-item">
+                    <div class="layui-tab layui-tab-brief" lay-filter="tabletab">
+                            <ul class="layui-tab-title" style="margin-bottom:0;">
+                                <li value="999" class="layui-this">全部合同</li>
+                                <li value="222" class="">在租合同</li>
+                                <li value="222" class="">历史合同</li>
+                            </ul>
+                          
+
+                            <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                                <table id="zcontract-index-table" lay-filter="demoEvent"></table>
+                            </div>
+                    </div>
+            </div>
+            <div class="layui-tab-item">
+                    <div class="layui-tab layui-tab-brief" lay-filter="tabletab">
+                            <ul class="layui-tab-title" style="margin-bottom:0;">
+                                <li value="999" class="layui-this">待处理账单</li>
+                                <li value="222" class="">未处理账单</li>
+                                <li value="222" class="">已处理账单</li>
+                            </ul>
+                            <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                                <table id="bill-main-table" lay-filter="demoEvent"></table>
+                            </div>
+                    </div>
+            </div>
+            <div class="layui-tab-item">
+              
+            </div>
+           
+        </div>
+        
+    </div>
+</body>
+</html>

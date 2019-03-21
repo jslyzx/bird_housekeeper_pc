@@ -1,0 +1,76 @@
+
+<script src="../../../../Scripts/autotaskservice_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<style>
+    .fywz {
+        position: absolute;
+    }
+</style>
+<!--结束-->
+<div class="layui-fluid" style="background-color:#ffffff;">
+    <div class="m-search">
+        <form class="layui-form hcs-form" action="" lay-filter="search" id="autotaskservice-search-form">
+            <div class="m-search-item">
+                <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="账单编号" id="Id" style="width:auto;">
+            </div>
+            <div class="m-search-item">
+                <input type="text" name="dd" autocomplete="off" placeholder="房间" class="layui-input" id="dd" style="width:auto;">
+            </div>
+            <div class="m-search-item">
+                <input type="text" name="ddd" autocomplete="off" placeholder="租客姓名" class="layui-input" id="ddd" style="width:auto;">
+            </div>
+            <div class="m-search-item">
+                <input type="text" name="ShouldReceive" placeholder="日期" autocomplete="off" class="layui-input" id="ShouldReceive">
+            </div>
+            <div class="m-search-item">
+                <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+            </div>
+            <div class="m-search-item" style="float:right;line-height:38px;">
+                <label id="yuqitype">
+
+                </label>
+            </div>
+            <div style="clear:both;"></div>
+        </form>
+    </div>
+    <script id="autotaskservicebtnscribt" type="text/html">
+        {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+    </script>
+    <script type="text/html" id="btnintable">
+        <ul class="layui-nav toolbar-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" class="show-more">操作</a>
+                <dl class="layui-nav-child"></dl>
+            </li>
+        </ul>
+     </script>
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="autotaskservice-button-view" style="overflow:hidden;"></div>
+            
+           
+        
+          
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+        <ul class="layui-tab-title" style="margin-bottom:0;">
+            <li value="0" class="layui-this">所有</li>
+            
+        </ul>
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="autotaskservice-main-table" lay-filter="demoEvent"></table>
+        </div>
+    </div>
+    <div>
+
+    </div>
+
+</div>
+

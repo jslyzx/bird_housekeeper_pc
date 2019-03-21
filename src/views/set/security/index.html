@@ -1,0 +1,187 @@
+
+<title>设置我的资料</title>
+<script id="sysuereditscript" type="text/html"> 
+  {{#   var doc = layui.htcsLG;}}
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">公司资料</div>
+        <div class="layui-card-body" pad15>
+          <form class="layui-form layui-form-pane hcs-form" action="">
+          <div class="layui-form" lay-filter="">
+           
+            <div class="layui-form-item">
+              <label class="layui-form-label " style="width:120px;">在线支付</label>
+              <div class="layui-input-inline">
+                {{# if(d.OnlinePay==1){ }}
+                <input type="checkbox" name="OnlinePay"  lay-filter="OnlinePay" lay-skin="switch" lay-text="开启|关闭"  checked>
+                {{# }else{ }}
+                <input type="checkbox" name="OnlinePay"  lay-filter="OnlinePay" lay-skin="switch" lay-text="开启|关闭"  >
+                {{# } }}
+              </div>
+             
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" style="width:120px;">电子合同</label>
+              <div class="layui-input-inline">
+                  {{# if(d.onlinesign==1){ }}
+                  <input type="checkbox" name="onlinesign"  lay-filter="onlinesign" lay-skin="switch" lay-text="开启|关闭"  checked>
+                  {{# }else{ }}
+                  <input type="checkbox" name="onlinesign" lay-filter="onlinesign" lay-skin="switch" lay-text="开启|关闭"  >
+                  {{# } }}
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label" style="width:120px;">公司编号</label>
+              <div class="layui-input-inline">
+                <input type="text" name="nickname" value="{{d.Id}}" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
+              </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:120px;">电子合同数量</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="nickname" value="{{d.contractnumber}}" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                  <label class="layui-form-label" style="width:120px;">短信数量</label>
+                  <div class="layui-input-inline">
+                    <input type="text" name="nickname" value="{{d.smsnumber}}" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:120px;">支付认证</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="nickname" value="贤心" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
+                    </div>
+                  </div>
+                  
+                  <div class="layui-form-item">
+                      <label class="layui-form-label" style="width:120px;">企业认证</label>
+                      <div class="layui-input-inline">
+                        <input type="text" name="nickname" value="贤心" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
+                      </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label class="layui-form-label" style="width:120px;">认证手机号</label>
+                      <div class="layui-input-inline">
+                              <input type="text" value="{{doc.ns(d.phone)}}" name="phone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="" disabled class="layui-input">
+                          </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label class="layui-form-label" style="width:120px;">验证码</label>
+                      <div class="layui-input-inline">
+                            <input type="text" name="yzm" value="" lay-verify="required" autocomplete="off" placeholder=""  class="layui-input gray">
+                      </div>
+                      <div class="layui-input-inline">
+                              <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode2">获取验证码</button>                                  </div>
+                      
+              </div>  
+                  <div class="layui-form-item">
+                      <div class="layui-input-block">
+                              <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>        </div>
+                    </div>
+                  </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+<div id="sysuer-edit-view" >
+</div>
+<script>
+  layui.use(['laypage', 'layer','htcsLG', 'laytpl', 'jquery', 'form'], function () {
+    var doc = layui.htcsLG;
+    var url = "api/Enterprise/querycompany";
+    var form = layui.form;
+    var laytpl = layui.laytpl;
+    var admin = layui.admin;
+    var $ = layui.$;
+    var setter = layui.setter;
+    var $body = $('body');
+    var onlinesign=0;
+    var OnlinePay=0;
+    var Id=0;
+    form.render('');
+    doc.objectQuery(url, {}, function (data) {
+             debugger;
+             onlinesign=data.numberData.onlinesign;
+             OnlinePay=data.numberData.OnlinePay;
+             Id=data.numberData.Id;
+             var getTpl = sysuereditscript.innerHTML
+           , view = document.getElementById('sysuer-edit-view');
+             laytpl(getTpl).render(data.numberData, function (html) {
+                 view.innerHTML = html;
+             }); 
+            form.render('');
+             //监听指定开关
+            form.on('switch(onlinesign)', function(data){
+              debugger;
+              if(this.checked==true){
+                onlinesign=1;
+              }else{
+                onlinesign=0;
+              }
+             
+            });
+            form.on('switch(OnlinePay)', function(data){
+              if(this.checked==true){
+                OnlinePay=1;
+              }else{
+                OnlinePay=0;
+              }
+          
+            });
+            //监听提交
+            form.on('submit(save)', function (data) {
+            data.field.Id=Id;
+            data.field.onlinesign=onlinesign;
+            data.field.OnlinePay=OnlinePay;
+            var saveoption={
+            url:'api/account/function',
+            data:data.field,
+            tableid:"",
+            callBack:function(){
+              
+           }
+         }
+         doc.Submit(saveoption);
+         return false;
+         });
+          //开通在线缴费
+       $body.on('click', '#LAY-user-getsmscode2', function(){
+       cmdsend(5);
+       });
+         function cmdsend(type){
+    var $phone = $('#LAY-user-login-cellphone')
+    ,phone = $phone.val();
+    var subdata = {"Phone": phone,"Type":type};
+    if(!/^1\d{10}$/.test(phone)){
+      $phone.focus();
+      return layer.msg('请先输入正确的手机号');
+    }
+    var baseurl = setter.baseurl;
+    //请求发送短信的接口
+    admin.req({
+      url: baseurl+'api/SysUser/Sendyzm' //实际使用请改成服务端真实接口
+      ,type: "POST"
+      ,
+       dataType: 'json'
+      ,data: subdata
+      ,done: function(res){        
+        layer.msg('验证码已成功发送至您的手机', {
+          offset: '15px'
+          ,icon: 1
+          ,time: 3000
+        });
+      }
+    });
+  }    
+      
+    });
+  })
+</script>

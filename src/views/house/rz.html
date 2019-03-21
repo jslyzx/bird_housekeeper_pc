@@ -1,0 +1,38 @@
+
+<script src="../../../../Scripts/rz_business.js"></script>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<style>
+    .fywz {
+        position: absolute;
+    }
+</style>
+<!--结束-->
+<div class="layui-fluid" style="background-color:#ffffff;">
+    <script id="guestbtnscribt" type="text/html">
+        {{#  layui.each(d, function(index, item){}}
+        {{# if(item.Multiple === 1){}}
+        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+        </button>
+        {{# }}}
+        {{#   });   }}
+    </script>
+       <script type="text/html" id="btnintable">
+        <ul class="layui-nav toolbar-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;" class="show-more">操作</a>
+                <dl class="layui-nav-child"></dl>
+            </li>
+        </ul>
+    </script>
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="guest-button-view" style="overflow:hidden;"></div>
+           
+        </div>
+    </div>
+    <table id="guest-main-table" lay-filter="demoEvent"></table>
+ 
+
+</div>
+

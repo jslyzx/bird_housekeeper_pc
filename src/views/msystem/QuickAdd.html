@@ -1,0 +1,150 @@
+﻿<link href="../Content/Home.css" rel="stylesheet" />
+<script>
+    var $ = layui.jquery;
+    var view = layui.view;
+    $("ul.hcs-menu li").mouseover(function () {
+        
+        $(this).addClass("mouseovermenu");
+    });
+    $("ul.hcs-menu li").mouseout(function () {
+
+        $(this).removeClass("mouseovermenu");
+    });
+    $("#addhouseh").click(function () {
+        layer.closeAll();
+        layer.open({
+         id:'addhousehh',
+         type: 1,
+         title: '添加合租房源',
+         skin: 'two-layer',             
+         shadeClose: true,//开启遮罩关闭              
+         maxmin: true, //开启最大化最小化按钮
+         area:['1100px', '90%'],
+         success: function(layero,index){
+         debugger;
+         view(this.id).render('house/h-house/add', {
+         layerindex:index
+         });
+         }
+       }); 
+       
+    });
+    $("#addhousez").click(function () {
+        layer.closeAll();
+        layer.open({
+         id:'addhousezz',
+         type: 1,
+         title: '添加整租房源',
+         skin: 'two-layer',             
+         shadeClose: true,//开启遮罩关闭              
+         maxmin: true, //开启最大化最小化按钮
+         area:['1100px', '90%'],
+         success: function(layero,index){
+         debugger;
+         view(this.id).render('house/z-house/add', {
+         layerindex:index
+         });
+         }
+       }); 
+       
+    });
+    //添加独栋房源
+    $("#addhoused").click(function () {
+        layer.closeAll();
+        layer.open({
+         id:'addhousedd',
+         type: 1,
+         title: '添加独栋房源',
+         skin: 'two-layer',             
+         shadeClose: true,//开启遮罩关闭              
+         maxmin: true, //开启最大化最小化按钮
+         area: ['800px', '70%'],
+         maxHeight: '90%',
+         success: function(layero,index){
+         view(this.id).render('house/d-house/add', {
+         layerindex:index
+         });
+         }
+       }); 
+    });
+    $("#addhetong").click(function () {
+        debugger;
+        layer.closeAll();
+        layer.open({
+         id:'addhetongg',
+         type: 1,
+         title: '添加合同',
+         skin: 'two-layer',             
+         shadeClose: true,//开启遮罩关闭              
+         maxmin: true, //开启最大化最小化按钮
+         area:['1100px', '90%'],
+         success: function(layero,index){
+         debugger;
+         view(this.id).render('contract/z-contract/add', {
+         layerindex:index
+         });
+         }
+       }); 
+
+    });
+    $("#addzzhetong").click(function () {
+        debugger;
+        layer.closeAll();
+        layer.open({
+         id:'addzzhetongg',
+         type: 1,
+         title: '添加合同',
+         skin: 'two-layer',             
+         shadeClose: true,//开启遮罩关闭              
+         maxmin: true, //开启最大化最小化按钮
+         area:['1100px', '90%'],
+         success: function(layero,index){
+         debugger;
+         view(this.id).render('contract/y-contract/add', {
+         layerindex:index
+         });
+         }
+       }); 
+
+    });
+    $("#addguest").click(function () {
+        layer.closeAll();
+        layer.open({
+         id:'addguestt',
+         type: 1,
+         title: '添加客源',
+         skin: 'two-layer',             
+         shadeClose: true,//开启遮罩关闭              
+         maxmin: true, //开启最大化最小化按钮
+         area:['1100px', '90%'],
+         success: function(layero,index){
+         debugger;
+         view(this.id).render('guest/add', {
+           layerindex:index
+         });
+         }
+       }); 
+
+    });
+</script>
+<ul class="hcs-menu">
+    <li id="addhouseh">
+      <a><i class="layui-icon layui-icon-form"></i> 合租房源</a>
+    </li>
+    <li id="addhousez">
+       <a><i class="layui-icon layui-icon-form"></i> 整租房源</a>
+    </li>
+    <li id="addhoused">
+       <a><i class="layui-icon layui-icon-form"></i> 独栋房源</a>
+    </li>
+    <li id="addhetong">
+      <a><i class="layui-icon layui-icon-form"></i>租客合同</a>
+    </li>
+    <li id="addzzhetong">
+      <a><i class="layui-icon layui-icon-form"></i>业主合同</a>
+    </li>
+    <li id="addguest">
+      <a><i class="layui-icon layui-icon-form"></i>客源</a>
+    </li>
+
+</ul>

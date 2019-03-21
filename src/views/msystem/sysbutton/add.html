@@ -1,0 +1,111 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+    <script>
+        function LoadData(id,tableid,layerindex){
+            layui.use(['laypage', 'layer', 'laytpl','htcsLG', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var url = "api/Menu/Querymenu";
+            var $ = layui.jquery;
+            var form = layui.form; 
+            debugger;
+            //加载数据
+            doc.objectQuery(url, null, function (data) {
+                debugger;
+                var getTpl = demo.innerHTML
+           , view = document.getElementById('view');
+                laytpl(getTpl).render(data.numberData, function (html) {
+                    view.innerHTML = html;
+                form.render('');
+            });
+            doc.tjgd();
+  
+        });
+        //监听提交
+        form.on('submit(save)', function (data) {
+      debugger;
+
+      if (data.field.ParentId != 0 ) {
+          data.field.Jishu = 2;
+      }
+      if (data.field.SystemId!= 0 && data.field.Jishu != 2) {
+          data.field.Jishu = 1;
+      }
+      var url = "api/Sysuserbutton/edit";
+      var datafield=data.field;
+      var saveoption={
+          url:url,
+          data:datafield,
+          tableid:tableid,
+          callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+  });
+});
+}
+    </script>
+      <script type="text/html" template >
+        {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+    </script>
+    <script id="demo" type="text/html">
+        <form class="layui-form hcs-form layui-form-pane" action="">
+            <div class="form-content">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">按钮名称</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="BtnName" autocomplete="off" class="layui-input" id="BtnName">
+                        </div>
+                        <label class="layui-form-label">按钮ID</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="BtnNo" lay-verify="required" autocomplete="off" class="layui-input" id="BtnNo">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                            <label class="layui-form-label" >按钮URL</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="ButtonUrl" lay-verify="required" autocomplete="off" class="layui-input" id="ButtonUrl">
+                            </div>
+                        <label class="layui-form-label">所属菜单</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <select name="MenuId" lay-verify="required" id="MenuId" lay-search="">
+                                <option value="0">请选择</option>
+                                {{#  layui.each(d, function(index, item1){ }}
+                                <option value="{{item1.Id}}">{{item1.title}}</option>
+                                {{#   });   }}
+                            </select>
+                        </div>  
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        
+                        <label class="layui-form-label">图标</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="BtnIcon" lay-verify="required" autocomplete="off" class="layui-input" id="BtnIcon" value="{{d[0].BtnIcon}}">
+                        </div>
+                        <label class="layui-form-label">排序</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="orderby" lay-verify="required" autocomplete="off" class="layui-input" id="orderby" value="{{d[0].orderby}}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-bottom">
+                <div class="form-wrap">
+                    <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-filter="cancel">取消</button>
+                    <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                </div>
+            </div>
+        </form>
+    </script>
+    <div id="view">
+    </div>

@@ -1,0 +1,78 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+<script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+<script id="editzafeiscript" type="text/html">
+ {{# var doc = layui.htcsLG;}}
+ <form class="layui-form hcs-form" action="">
+         <div class="form-content">
+          <div class="layui-form-item">
+             
+              <div class="layui-inline">
+                  <label class="layui-form-label" style="width:auto;">门店名称</label>
+                  <div class="layui-input-inline">
+                      <input type="text" name="name" lay-verify="required" autocomplete="off" class="layui-input" placeholder="名称" id="Name" value="{{doc.ns(d.Name)}}">
+                  </div>
+              </div>
+              
+          </div>
+          
+          
+             </div>
+         <div class="form-bottom">
+             <div class="form-wrap">
+                <button class="layui-btn layui-btn-primary" id="cancelbtn" >取消</button>
+                <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+             </div>
+         </div>
+     </form>
+ 
+</script>
+<div id="edit-zafei-view">
+</div>
+
+
+<script>
+
+function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form'], function () {
+        var laytpl = layui.laytpl;
+        var doc = layui.htcsLG;
+        var url = "api/store/Queryid";
+        var $ = layui.jquery;
+        var form = layui.form;
+        doc.objectQuery(url, {"Id":id}, function (data) {
+             debugger;
+             var getTpl = editzafeiscript.innerHTML
+           , view = document.getElementById('edit-zafei-view');
+             laytpl(getTpl).render(data.numberData, function (html) {
+                 view.innerHTML = html;
+             });
+             
+                 //监听提交
+        form.on('submit(save)', function (data) {
+         data.field.Id=id;
+         var saveoption={
+         url:'api/store/save',
+         data:data.field,
+         tableid:tableid,
+         callBack:function(){
+            layer.close(layerindex);
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+ });
+ $("#cancelbtn").click(function(){
+    layer.close(layerindex);
+   })
+              form.render('');
+              doc.tjgd();
+         });
+     
+ 
+    });
+}       
+</script>

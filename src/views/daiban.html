@@ -1,0 +1,77 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script>
+    function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl','htcsLG', 'jquery', 'form'], function () {
+        var laytpl = layui.laytpl;
+        var doc = layui.htcsLG;
+        var url = "api/Menu/Querymenu";
+        var $ = layui.jquery;
+        var form = layui.form; 
+        var laydate = layui.laydate;   
+            laydate.render({
+              elem: '#Pdate',
+              type:'datetime'
+        });
+    //监听提交
+    form.on('submit(save)', function (data) {
+  var url = "api/Bw/add";
+  var datafield=data.field;
+  var saveoption={
+      url:url,
+      data:datafield,
+      tableid:tableid,
+      callBack:function(resultData){
+      
+        if (resultData.Code == 0) {
+            layer.close(layerindex);
+        }
+    }
+   }
+  doc.Submit(saveoption);
+  return false;
+});
+//取消
+$("#cancelbtn").click(function(){
+    layer.close(layerindex);
+  return false;
+})
+});
+}
+</script>
+  <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+    <form class="layui-form hcs-form layui-form-pane" action="">
+        <div class="form-content">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期</label>
+                    <div class="layui-input-inline" style="width: 200px;">
+                        <input type="tel" name="Pdate" autocomplete="off" class="layui-input" id="Pdate">
+                    </div>
+                  
+                </div>
+                 <div class="layui-inline">
+                            <label class="layui-form-label">地址</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="orderby" lay-verify="required" autocomplete="off" class="layui-input" id="orderby" value="">
+                            </div>
+                 </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">内容</label>
+                        <div class="layui-input-inline" style="width:400px;">
+                                <textarea name="Content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="form-bottom">
+            <div class="form-wrap">
+                <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancelbtn">取消</button>
+                <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+            </div>
+        </div>
+    </form>

@@ -1,0 +1,491 @@
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .form-content .layui-table-cell {
+        overflow: visible !important;
+    }
+
+    .form-content thead tr {
+        height: 45px;
+    }
+
+    .form-content tbody tr {
+        height: 55px;
+    }
+
+    .layui-form-select ul {
+        z-index: 999999
+    }
+
+    .layui-tab-content * {
+        overflow: visible !important
+    }
+
+    .layui-form-select dl {
+        overflow-y: auto !important
+    }
+</style>
+<script>
+    var tuizulist = [];
+    var util;
+    var laydate;
+
+    function LoadData(id, tableid, layerindex) {
+        layui.use(['laydate', 'laypage', 'htcsLG', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var url = "api/OwerContract/QuerybyId";
+            var $ = layui.jquery;
+            var form = layui.form;
+            var table = layui.table;
+            var deletebilllist = [];
+            util = layui.util;
+            var tableid = "zcontract-index-table";
+            var myDate = new Date();
+            var tuizutime = myDate.toLocaleDateString();   //实际退租时间
+            var tktypel = 0;//退租类型
+            laydate = layui.laydate;
+            var DataObj;
+            var getTpl = billtuiscript.innerHTML
+                , view = document.getElementById('bill-tui-view');
+            //加载表头数据
+            doc.objectQuery(url, {"Id": id}, function (data) {
+                laytpl(getTpl).render(data.numberData, function (html) {
+                    view.innerHTML = html;
+                });
+                laydate.render({
+                    elem: '#fukuanTime' //指定元素
+                    , value: myDate
+                });
+                form.render('');
+                //加载退租项数据
+                doc.objectQuery("api/Zafei/Zafeilist", {}, function (data) {
+                    tuizulist = data.numberData;
+                    //初始化退租项
+                    InitChild(tktypel, tuizutime);
+                    Event();
+                });
+                $("#cancelbtn").click(function () {
+                    layer.close(layerindex);
+                    return false;
+                });
+            });
+
+            //下拉框点击事件
+            function Event() {
+                //添加退租项新行事件
+                $("#billlist-tuizut-add").click(function () {
+                    var oldData = table.cache["billlisttuittable"];
+                    var data1 = {"Id": 0, "Name": "", "BeginTime": "", "EndTime": "", "Amount": "0", "Type": 0};
+                    oldData.push(data1);
+                    table.reload('billlisttuittable', {
+                        data: oldData,
+                        limit: oldData.length
+                    });
+                    form.render('');
+                    $('.date').each(function () {
+                        laydate.render({
+                            elem: this
+                        });
+                    });
+                });
+                //添加收租项新行事件
+                $("#billlist-tuizus-add").click(function () {
+
+                    var oldData = table.cache["billlisttuzustable"];
+                    var data1 = {"Id": 0, "Name": "", "BeginTime": "", "EndTime": "", "Amount": "0", "Type": 1};
+                    oldData.push(data1);
+                    table.reload('billlisttuzustable', {
+                        data: oldData,
+                        limit: oldData.length
+                    });
+                    $('.date').each(function () {
+                        laydate.render({
+                            elem: this
+                        });
+                    });
+                });
+            }
+
+//监听退租原因
+            form.on('select(tktypel)', function (data) {
+
+                tktypel = data.Value;
+                InitChild(tktypel, tuizutime);
+            });
+           
+
+            //修改金额更新数据
+            function changeamount(dom, amount, type) {
+                var oldData = type === 'sk' ? table.cache["billlisttuzustable"] : table.cache["billlisttuittable"];
+                var id = dom.attr("Idvalue") - 1;
+                var _obj = {"numbers": id, "Amount": amount};
+                //重载更新后数据
+                doc.updateobj(oldData, _obj, ["Amount"]);
+                
+            }
+
+            //删除收款项
+            table.on('tool(demoEvent2)', function (obj) {
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'del') { //删除
+                    obj.del();
+                    if (data.Id != 0) {
+                        deletebilllist.push(data);
+                    }
+                    Calculation();
+                }
+
+            });
+            //监听删除按钮
+            table.on('tool(demoEvent1)', function (obj) {
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'del') { //删除
+                    obj.del();
+                    if (data.Id != 0) {
+                        deletebilllist.push(data);
+                    }
+                    Calculation();
+                }
+
+            });
+//监听单选按钮
+            form.on('radio(FukuanType)', function (data) {
+
+                if (data.value == 1) {
+                    $("#miaosu").html("实际支付时间");
+                }
+                if (data.value == 0) {
+                    $("#miaosu").html("预约支付时间");
+                }
+            });
+
+//重新计算金额
+            function Calculation() {
+                var tuikdata = table.cache["billlisttuittable"];
+                var shoukdata = table.cache["billlisttuzustable"];
+                var amount = 0;
+                $.each(shoukdata, function (index, value) {
+                    if (value.Amount != undefined) {
+                        amount += Number(value.Amount);
+                        amount = Number(amount.toFixed(2));
+                    }
+                });
+                $.each(tuikdata, function (index, value) {
+                    if (value.Amount != undefined) {
+                        amount -= Number(value.Amount);
+                        amount = Number(amount.toFixed(2));
+                    }
+                });
+                $("#Amount").val(amount);
+            }
+
+//监听提交
+            form.on('submit(save)', function (data) {
+                var datafield = data.field;
+                var tkTable = $('[lay-id="billlisttuittable"] .layui-table-body .layui-table tr');
+                var skTable = $('[lay-id="billlisttuzustable"] .layui-table-body .layui-table tr');
+                var list = [];
+                var tmp;
+                $.each(tkTable,function(index, item){
+                  list.push({
+                    type: 0,
+                    Amount: $(item).find('[data-field="Amount"] input').val(),
+                    BeginTime: $(item).find('[data-field="BeginTime"] input').val(),
+                    EndTime: $(item).find('[data-field="EndTime"] input').val(),
+                    BillType: $(item).find('[data-field="Name"] select option:selected').val(),
+                    BillCode: $(item).find('[data-field="Name"] select option:selected').val()
+                  })
+                });
+                $.each(skTable,function(index, item){
+                  list.push({
+                    type: 1,
+                    Amount: $(item).find('[data-field="Amount"] input').val(),
+                    BeginTime: $(item).find('[data-field="BeginTime"] input').val(),
+                    EndTime: $(item).find('[data-field="EndTime"] input').val(),
+                    BillType: $(item).find('[data-field="Name"] select option:selected').val(),
+                    BillCode: $(item).find('[data-field="Name"] select option:selected').val()
+                  })
+                });
+                datafield.list = list;
+                var saveoption = {
+                    url: 'api/OwerContract/tuizu',
+                    data: datafield,
+                    tableid: tableid,
+                    callBack: function (resultData) {
+
+                        if (resultData.Code == 0) {
+                            layer.close(layerindex);
+                        }
+                    }
+                }
+                doc.Submit(saveoption);
+                return false;
+            });
+
+            function InitChild(tktypel, tuizutime) {
+
+                var turl = "api/OwerContract/Querytuizu";
+                var clos = [[ //表头
+                    {type: 'numbers', width: 80, title: '编号',},
+                    {field: 'Name', width: 200, title: '收款类别', templet: '#checkboxTplxx', unresize: true}
+                    , {field: 'BeginTime', width: 200, title: '开始时间', templet: '#titleTpl', unresize: true,}
+                    , {field: 'EndTime', width: 200, title: '结束时间', templet: '#endtimetemp', unresiz: true}
+                    , {field: 'Amount', width: 150, title: '金额', templet: '#jinet'}
+                    , {width: 150, align: 'center', toolbar: '#barDemo', title: '操作'}
+                ]];
+                var clos1 = [[ //表头
+                    {type: 'numbers', width: 80, title: '编号',},
+                    {field: 'Name', width: 200, title: '收款类别', templet: '#checkboxTplxx', unresize: true}
+                    , {field: 'BeginTime', width: 200, title: '开始时间', templet: '#titleTpl', unresize: true,}
+                    , {field: 'EndTime', width: 200, title: '结束时间', templet: '#endtimetemp', unresiz: true}
+                    , {field: 'Amount', width: 150, title: '金额', templet: '#jine'}
+                    , {width: 150, align: 'center', toolbar: '#barDemo', title: '操作'}
+                ]];
+                doc.objectQuery(turl, {"contractid": id, "tktypel": tktypel, "tuizutime": tuizutime}, function (data) {
+                    var rdata = data.numberData;
+                    var amount = 0;
+
+                    var tdata = [], sdata = [];
+                    $.each(rdata, function (index, value) {
+                        var Type = value.Type;
+                        if (Type == 0) {
+                            tdata.push(value);
+                        }
+                        ;
+                        if (Type == 1) {
+                            sdata.push(value);
+                        }
+                        amount += value.Amount;
+                    });
+                    $("#Amount").val(amount);
+
+                    var options = {"data": tdata, "tableid": "#billlisttuittable", "clos": clos};
+                    doc.childtable(options);
+                    var options1 = {"data": sdata, "tableid": "#billlisttuzustable", "clos": clos1};
+                    doc.childtable(options1);
+                    laydate.render({
+                        elem: '#tuizutime' //指定元素
+                        , done: function (value, date, endDate) {
+
+                            tuizutime = value;
+                            InitChild(tktypel, tuizutime);
+                        }
+                    });
+                    form.render("");
+                    lay('.date').each(function () {
+                        laydate.render({
+                            elem: this
+                        });
+                    });
+                    doc.tjgd();
+                });
+
+            }
+
+            $(document).on('change','.RowAmount',function(){
+              var type = $(this).data('type');
+              changeamount($(this), $(this).val(), type);
+              Calculation(type);
+            });
+        });
+    }
+
+    function dztime(value) {
+
+        if (value == "") {
+            return "";
+        } else {
+            return util.toDateString(value, "yyyy-MM-dd")
+        }
+    }
+</script>
+<!--结束-->
+<script type="text/html" template>
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+<!--收款项金额-->
+<script type="text/html" id="jine">
+    <input type="text" name="Amount" Idvalue="{{d.LAY_INDEX}}" required lay-verify="required" value="{{d.Amount}}"
+           autocomplete="off" class="layui-input RowAmount" data-type="sk">
+</script>
+<!--退款项金额-->
+<script type="text/html" id="jinet">
+    <input type="text" name="Amount" Idvalue="{{d.LAY_INDEX}}" required lay-verify="required" value="{{d.Amount}}"
+           autocomplete="off" class="layui-input RowAmount" data-type="tk">
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="titleTpl">
+    <input type="text" id="BeginTime{{d.LAY_INDEX}}" required lay-verify="required" class="layui-input date"
+           value="{{dztime(d.BeginTime)}}"></input>
+</script>
+<script type="text/html" id="endtimetemp">
+    <input type="text" id="EndTime{{d.LAY_INDEX}}" required lay-verify="required" class="layui-input date"
+           value="{{dztime(d.EndTime)}}"></input>
+
+</script>
+<script type="text/html" id="checkboxTplxx">
+    <select lay-filter="billlay" Idvalue="{{d.LAY_INDEX}}" required lay-verify="required" style="width:100px;"
+            class="formselect">
+        <option value="{{d.Name}}">{{d.Name}}</option>
+        {{# layui.each(tuizulist, function(index, item1){ }}
+        <option value="{{item1.Name}}">{{item1.Name}}</option>
+        {{# }); }}
+    </select>
+</script>
+<script id="billtuiscript" type="text/html">
+    {{#  var doc = layui.htcsLG;}}
+    <form class="layui-form  layui-form-pane hcs-form form-panel" action="">
+        <div class="form-content">
+            <input type="text" name="ContractId" id="ContractId" autocomplete="off" class="layui-input" value="{{d.Id}}"
+                   style="display:none">
+            <div class="wrap">
+                <div class="title">
+                    <h3 class="red">
+                        基本信息
+                    </h3>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">合同结束时间</label>
+                        <div class="layui-input-inline" style="width:100px;">
+
+                            <input type="tel" name="EndTime" autocomplete="off" class="layui-input gray"
+                                   value="{{dztime(d.EndTime)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">已收押金</label>
+                        <div class="layui-input-inline" style="width:150px;">
+                            <input type="text" name="email" autocomplete="off" class="layui-input gray"
+                                   value="{{doc.ns(d.RecentName)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">费用类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="email" autocomplete="off" class="layui-input gray" value="租金2期"
+                                   disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                   
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">实际退租时间</label>
+                        <div class="layui-input-inline" style="width: 122px;">
+                            <input type="text" name="tuizutime" id="tuizutime" autocomplete="off" class="layui-input"
+                                   value="{{dztime(d.EndTime)}}">
+                        </div>
+
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width:auto;">退租类型</label>
+                        <div class="layui-input-inline">
+                            <select name="tktypel" lay-verify="required">
+                                <option value="0">到期</option>
+                                <option value="1">违约</option>
+                                <option value="2">转租</option>
+                                <option value="3">协议退房</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">收款时间</label>
+                        <div class="layui-input-inline">
+                            <select name="tktypel" lay-verify="required">
+                                <option value="">请选择</option>
+                                <option value="0">现在收款</option>
+                                <option value="1">预约收款</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                   
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width:auto;" id="miaosu">实际支付时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="fukuanTime" id="fukuanTime" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width:auto;">支付方式</label>
+                        <div class="layui-input-inline">
+                            <select name="PayType" lay-filter="PayType">
+                                <option value="支付宝">支付宝</option>
+                                <option value="微信">微信</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">备注</label>
+
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" name="Bank" class="layui-textarea"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">收款总额</label>
+                        <div class="layui-input-inline" style="width: 122px;">
+                            <input type="text" name="Amount" id="Amount" autocomplete="off" class="layui-input gray"
+                                 disabled  value="0">
+                        </div>
+                        <label class="layui-form-label" style="text-align:left;width:auto;color:red;">*该笔为收款总额 (正数为收入, 负数为支出)</label>
+                    </div>
+                </div>
+            </div>
+            <!--退款项-->
+            <div class="layui-tab-content">
+                <div class="title">
+                    <h3 class="red">
+                        退款项
+                    </h3>
+                </div>
+                <div id="toolbar">
+                    <div class="layui-btn-group">
+                        <a class="layui-btn layui-btn-xs" id="billlist-tuizut-add">
+                            <i class="layui-icon">&#xe654;</i>添加退款项
+                        </a>
+                    </div>
+                </div>
+                <table id="billlisttuittable" lay-filter="demoEvent1"></table>
+                <!--收款项-->
+                <div class="title">
+                    <h3 class="red">
+                        收款项
+                    </h3>
+                </div>
+                <div id="toolbar">
+                    <div class="layui-btn-group">
+                        <a class="layui-btn layui-btn-xs" id="billlist-tuizus-add">
+                            <i class="layui-icon">&#xe654;</i>添加收款项
+                        </a>
+                    </div>
+                </div>
+                <table id="billlisttuzustable" lay-filter="demoEvent2"></table>
+
+            </div>
+        </div>
+
+        <div class="form-bottom">
+            <div class="form-wrap">
+                <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancel" lay-submit="">
+                    取消
+                </button>
+                <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+            </div>
+        </div>
+    </form>
+</script>
+<div id="bill-tui-view" class="form-wrapper">
+</div>

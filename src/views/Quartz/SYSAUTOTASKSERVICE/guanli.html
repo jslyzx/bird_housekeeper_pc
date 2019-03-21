@@ -1,0 +1,235 @@
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .layui-table-cell{
+   overflow:visible !important;
+}
+#bill-edit-view thead tr{height: 45px;}
+#bill-edit-view tbody tr{height: 55px;}
+.layui-form-select ul{
+	z-index:999999
+}
+</style>
+<script>
+    function LoadData(datas,tableid,layerindex){
+        debugger;
+    layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form'], function () {
+    var laytpl = layui.laytpl;
+    var doc = layui.htcsLG;
+    var setter = layui.setter;
+    var baseurl = setter.baseurl;
+    var $ = layui.jquery;
+    var form = layui.form;
+    var table=layui.table;
+    var deleteautotaskserviceist=[];
+    var url="api/autotaskservice/SysSchedules";
+    var searchdata={"server":datas.ServerIp,"port":datas.Port,"scheduler":datas.Scheduler};
+    var tableoption = {
+        domid: "#autotaskserviceistedittable", formid: "#zcontract-search-form","search":searchdata, arr: [[ //表头
+               {field: 'Scheduler', width: 150, title: '服务实例', }
+               , { field: 'Name', width: 150, title: '名称'}
+                , { field: 'Group', width: 100, title: '任务组'}
+               , { width: 100, title: '状态', field: 'Status' }
+               , { width: 200, title: '触发器类型', field: 'TriggerType' }
+               , { width: 200, title: '开始时间', field: 'StartTime' }
+               , { width: 200, title: '下次执行时间', field: 'NextFire' }
+               , { width: 200, title: '最后执行时间', field: 'LastFire' }
+               ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } 
+               ]], height: 650, url:url,
+        ismuilti: true,isadd:false
+    };
+    doc.InitTable(tableoption);
+//监听操作按钮
+table.on('tool(demoEvent1)', function(obj){ 
+  debugger;
+  var data = obj.data; //获得当前行数据
+  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+  var tr = obj.tr; //获得当前行 tr 的DOM对象
+  if(layEvent === 'run'){ //执行
+    Scheculer.run(data);
+  }
+  if(layEvent === 'start'){ //启动
+    Scheculer.start(data);
+  }
+  if(layEvent === 'stop'){ //停止
+    Scheculer.stop(data);
+  }
+});
+
+function formatterstatus(value) {
+        if (value == 1) {
+            return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
+        } else {
+            return '<div><span style="padding:10px;background-color:#ff4b5e;color:#ffffff;border-radius:5px;">已预订</span></div>';
+        }
+        
+    }
+function formattertime(value) {
+     
+        return '<div>' + value.BeginTime + "→" + value.EndTime + '</div>';
+    }
+    //启动自动任务后执行
+function doStartFinal(element) {
+    doc.InitTable(tableoption);
+}
+//停止自动任务后执行
+function doStopFinal(element) {
+    doc.InitTable(tableoption);
+}
+(Scheculer = {
+    start: function (tServer) {
+        tServer.server=datas.ServerIp;
+        tServer.Port=datas.Port;
+        tServer.op="start";
+        this.op(tServer, function (data) {debugger; doStartFinal();layer.msg('任务已执行'+data.Message); });
+    },
+    run: function (tServer) {
+        tServer.server=datas.ServerIp;
+        tServer.Port=datas.Port;
+        tServer.op="run";
+        this.op(tServer, function (data) {layer.msg('任务已执行'+data.Message); });
+    },
+    stop: function (tServer) {
+        tServer.server=datas.ServerIp;
+        tServer.Port=datas.Port;
+        tServer.op="stop";
+        this.op(tServer, function (data) {debugger; doStopFinal(); layer.msg('任务已执行'+data.Message);});
+    },
+    restartWindowServer: function () {
+        //console.log("ok");
+        if (taskServer.SHOWNAME == "" || taskServer.WINGCOMPANYID == "" || taskServer.SERVERNAME == "")
+        {
+            $.messager.alert("温馨提示,所需数据不完整！");
+            return ;
+        }
+        console.log(taskServer);
+        //return;
+
+        $.ajax({
+            url: siteConfig.apiurl + 'api/OpenService/OperateWingService?serviceName=' + taskServer.SERVERNAME,
+            type: "GET",
+            async: false,
+            dataType: 'jsonp',
+            jsonp: 'callBack',
+            beforeSend: function () {
+                var h = document.body.clientHeight;
+                $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: h }).appendTo("body");
+                $("<div class=\"datagrid-mask-msg\"></div>").html("正在发送请求，请稍候。。。").appendTo("body").css({
+                    display: "block",
+                    left: ($(document.body).outerWidth(true) - 190) / 2,
+                    top: (h - 45) / 2
+                });
+            },
+            success: function (result) {
+                //LG.centreLoader.close();
+                var resultData = result;
+                if (result.Code = "0") {
+                    $.messager.alert("温馨提示", result.Message);
+                } else {
+                    $.messager.alert("温馨提示", result.Message);
+                }
+            },
+            complete: function (data) {
+                $('.datagrid-mask-msg').remove();
+                $('.datagrid-mask').remove();
+            },
+            error: function (a, b, c) {
+                LG.centreLoader.close();
+                $.messager.alert("温馨提示", b.responseText);
+            }
+        });
+    },
+    stopall: function () {
+        var total = $("#mainGrid").datagrid('getData').total;
+        if (total <= 0) {
+            taskTip.show("暂时没有可以停止的任务");
+            return;
+        }
+        var tServer = getTaskServer("stopall", "", "");
+        
+        this.op(tServer, function (data) { doStopAllFinal(); showResult('任务已全部停止', data); });
+    },
+    closeServer: function () {
+        $.messager.confirm("温馨提示", "您确定要关闭windows服务?", function (r) {
+            if (r) {
+                var tServer = getTaskServer("close", "", "");
+                console.log(taskServer);
+                console.log(tServer);
+                //return;
+                //Scheculer.op(tServer, function (data) { showResult('服务已经关闭', data); });
+                $.ajax({
+                    url: siteConfig.apiurl + 'api/OpenService/OperateWingService?serviceName=' + taskServer.SERVERNAME + '&actionflag=2',
+                    type: "GET",
+                    async: false,
+                    dataType: 'jsonp',
+                    jsonp: 'callBack',
+                    beforeSend: function () {
+                        var h = document.body.clientHeight;
+                        $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: h }).appendTo("body");
+                        $("<div class=\"datagrid-mask-msg\"></div>").html("正在发送请求，请稍候。。。").appendTo("body").css({
+                            display: "block",
+                            left: ($(document.body).outerWidth(true) - 190) / 2,
+                            top: (h - 45) / 2
+                        });
+                    },
+                    success: function (result) {                    
+                        var resultData = result;
+                        if (result.Code = "0") {
+                            $.messager.alert("温馨提示", result.Message);
+                        } else {
+                            $.messager.alert("温馨提示", result.Message);
+                        }
+                    },
+                    complete: function (data) {
+                        $('.datagrid-mask-msg').remove();
+                        $('.datagrid-mask').remove();
+                    },
+                    error: function (a, b, c) {
+                        LG.centreLoader.close();
+                        $.messager.alert("温馨提示", b.responseText);
+                    }
+                });
+            }
+        });
+    },
+    op: function (data, succ) {
+        var opDes = { stop: "任务停止", start: "任务启动", stopall: '全部停止', run: '任务执行', close: '关闭服务' };
+        console.log(opDes[data.op] + "中,请稍后......");
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            data: data,
+            url: baseurl+"api/autotaskservice/ChangeScheduler",
+            success: function (result) {
+              
+                if (succ) {
+                    succ(result);
+                }
+            },
+            error: function (a, b, c) {
+               
+                LG.warn("系统错误");
+            }
+        });
+    }
+});
+});
+}
+
+</script>
+<!--结束-->
+<script type="text/html" template >
+    {{#  LoadData(d.params.datas,d.params.tableid,d.params.layerindex)}}
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="run">立即执行</a>
+    {{# if(d.Status=="Stop"){  }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="start">开启</a>
+    {{# } else { }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="stop">停止</a>
+    {{# } }}
+</script>
+<table id="autotaskserviceistedittable" lay-filter="demoEvent1"></table>
+<div id="autotaskservice-edit-view">
+</div>
+          

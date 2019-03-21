@@ -1,0 +1,137 @@
+
+   <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   <style>
+       .yxr-red {
+         color: #ff4b5e!important;
+     }
+     .hand {
+    cursor: pointer;
+    }
+   </style>
+   <script type="text/html" template >
+       {{#  LoadData(d.params.tableid,d.params.layerindex)}}
+   </script>
+   <script id="sysuereditscript" type="text/html">
+    <div class="layui-tab" lay-filter="demo">
+            <ul class="layui-tab-title">
+              <li class="layui-this" lay-id="1">转到支付宝</li>
+              <li lay-id="2">转到微信</li>
+              <li lay-id="3">转到银行卡</li>
+            </ul>
+            <div class="layui-tab-content">
+              <div class="layui-tab-item layui-show">
+                  <span style="font-weight:bold;padding:5px;"> 账户名:{{d.zfbname}} </span>
+                  <span style="font-weight:bold;padding:5px;"> 账号: {{d.zfb}}</span>
+              </div>
+              <div class="layui-tab-item">
+                    <span style="font-weight:bold;padding:5px;"> 账户名:{{d.wxname}} </span>
+                    <span style="font-weight:bold;padding:5px;"> 账号: {{d.wx}}</span>
+              </div>
+              <div class="layui-tab-item">  
+                <span style="font-weight:bold;padding:5px;"> 银行:{{d.name}} </span>
+                <span style="font-weight:bold;padding:5px;"> 账户名: {{d.bank}}</span>
+                <span style="font-weight:bold;padding:5px;"> 账号: {{d.account}}</span>
+              </div>
+            </div>
+    </div>
+   </script> 
+   <div id="sysuer-edit-view" >
+    </div>
+   <div  class="child-view form-wrapper">
+        <form class="layui-form  layui-form-pane hcs-form form-panel" action="">            
+           <div class="form-content">
+               
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">转出金额
+                        </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="amount" lay-verify="required" autocomplete="off" class="layui-input" placeholder="转出金额" id="Name">
+                    </div>
+                    <div class="layui-input-inline">
+                            <a class="hand yxr-red"><span>全部提现</span></a>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width:auto;">支付密码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="password" lay-verify="required" autocomplete="off" class="layui-input" placeholder="支付密码" id="Name">
+                        </div>
+                        <a class="hand yxr-red"  lay-href="set/base/paypassword" >忘记支付密码？去设置</a>
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                            可实时到账金额: 0元
+                            若转出金额大于“可实时到账金额”, 按以下规则到账:
+                            (i) 15:00前提现: T+1到账; (ii) 15:00后提现: T+2到账
+                    </div>
+            </div>
+            </div>
+           <div class="form-bottom">
+               <div class="form-wrap">
+                   <button class="layui-btn layui-btn-primary" id="cancelbtn" >取消</button>
+                   <button class="layui-btn"  lay-filter="save" lay-submit="">确认转出</button>
+               </div>
+           </div>
+       </form>
+    </div>
+  
+
+<script>
+
+function LoadData(tableid,layerindex){
+           layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form','element'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+           var url = "api/Menu/Querymenu";
+           var $ = layui.jquery;
+           var form = layui.form;
+           var element = layui.element;
+           var type=1;
+           var url = "api/Enterprise/querycompany";
+           doc.objectQuery(url, {}, function (data) {
+             debugger;
+             var realdata=data.numberData;
+             var getTpl = sysuereditscript.innerHTML
+             ,view = document.getElementById('sysuer-edit-view');
+             laytpl(getTpl).render(data.numberData, function (html) {
+                 view.innerHTML = html;
+             }); 
+             form.render('');
+              //一些事件监听
+             element.on('tab(demo)', function(data){
+                type=this.getAttribute('lay-id');
+             });
+             $("#cancelbtn").click(function(){
+             layer.close(layerindex);
+             })
+             //监听提交
+            form.on('submit(save)', function (data) {
+            debugger;
+            data.field.type=type;
+            var saveoption={
+            url:'api/Account/withdrawal',
+            data:data.field,
+            tableid:tableid,
+            callBack:function(data){
+                if(data.Code==0){
+                    layer.close(layerindex);
+                }
+           
+            }
+     }
+     doc.Submit(saveoption);
+     return false;
+     });   
+    
+    });
+         
+   
+  
+       });
+   }       
+   </script>

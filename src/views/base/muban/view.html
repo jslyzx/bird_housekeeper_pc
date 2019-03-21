@@ -1,0 +1,160 @@
+<!-- <script src="../../../../Scripts/test.js"></script> -->
+<script type="text/html" template>
+  <link href="../../../../Content/codemirror.css" rel="stylesheet" />
+</script>
+<style>
+  .layui-layer-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* padding: 15px; */
+    background: #ffffff;
+    position: relative;
+    overflow: hidden !important;
+    padding-bottom: 58px;
+    box-sizing: border-box;
+  }
+  .contract-template-content {
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+  .edit-item {
+    display: flex;
+    width: 100%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    min-height: 100%;
+    box-sizing: border-box;
+  }
+  .markdown-editor,
+  .markdown-html {
+    /* flex: 1; */
+    width: 49%;
+    min-height: 300px;
+    height: auto;
+  }
+  .markdown-editor .CodeMirror {
+    height: auto;
+    min-height: 300px;
+    cursor: text;
+  }
+  .markdown-editor .CodeMirror-scroll {
+    height: auto;
+    overflow-y:  hidden;
+    overflow-x: auto;
+    min-height: 300px;
+    cursor: text;
+  }
+  .CodeMirror-scroll {
+    overflow: scroll!important;
+    margin-bottom: -30px;
+    margin-right: -30px;
+    padding-bottom: 30px;
+    height: 100%;
+    outline: none;
+    position: relative;
+  }
+  .markdown-html {
+    border-left: 1px solid #d2c2d2;
+    padding: 10px;
+    color: #000;
+  }
+  .markdown-html h1 {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+  .markdown-html p+p, .markdown-html p+pre {
+    margin-top: 10px;
+  }
+  .markdown-html p {
+    font-size: 14px;
+    color: #000;
+    line-height: 1.5;
+  }
+  .markdown-html h2 {
+    margin: 20px 0 15px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .contract-template-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #f2f2f2;
+    padding: 10px 15px;
+    text-align: right;
+    width: 100%;
+    box-sizing: border-box;
+  }
+</style>
+<script type="text/html" template>
+  {{# LoadData(d.params.tableid, d.params.layerindex, d.params.title, d.params.content)}}
+</script>
+<form class="layui-form layui-form-pane">
+  <div class="contract-template-header">
+    <form class="layui-form">
+      <select name='template'>
+        <option value="">系统模板</option>
+      </select>
+    </form>
+  </div>
+  <div class="contract-template-content">
+    <div class="edit-item">
+      <div class="markdown-editor" style="display: none">
+        <textarea id="code"></textarea>
+      </div>
+      <div class="markdown-html"></div>
+    </div>
+  </div>
+  <div class="contract-template-footer">
+    <button class="layui-btn" id="closebtn" lay-filter="close" lay-submit="">关闭</button>
+  </div>
+</form>
+
+<script>
+  function LoadData(tableid,layerindex, title, content) {
+    layui.use(['codemirror', 'markdown', 'marked', 'htcsLG', 'form'], function () {
+      let $ = layui.$;
+      let CodeMirror = layui.codemirror;
+      let marked = layui.marked;
+      let doc = layui.htcsLG;
+      let form = layui.form;
+      markedRender = new marked.Renderer();
+      marked.setOptions({
+        renderer: markedRender,
+        gfm: true,
+        tables: true,
+        breaks: true,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: false
+      })
+      CodeMirror.commands.autocomplete = function(cm) {
+        cm.showHint({hint: CodeMirror.hint.anyword});
+      }
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        value: content,
+        lineNumbers: false,
+        lineWrapping: true,  // 长句子折行
+        // theme: "twilight",
+        autofocus: true,
+        // addModeClass: true,
+        // mode: { name: 'text/x-markdown'},
+        // extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
+      });
+      editor.on('change', function (cm, co) {
+        $('.markdown-html').html(marked(cm.getValue()));
+      });
+
+      $('.markdown-html').html(marked(content));
+      $("#closebtn").click(function(){
+        layer.close(layerindex);
+      })
+      
+    })
+  }
+</script>

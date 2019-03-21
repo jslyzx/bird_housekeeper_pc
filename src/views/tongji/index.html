@@ -1,0 +1,467 @@
+﻿<style>
+     .first {
+    margin-bottom: 12px;
+}
+ .text {
+     width: 200px;
+    font-size: 30px;
+    color: #555;
+    letter-spacing: -.11px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    
+}
+</style>
+<script>
+    layui.use(['laydate','carousel', 'echarts', 'table','htcsLG','util','element'], function () {
+        var $ = layui.$
+        , carousel = layui.carousel
+        , echarts = layui.echarts;
+        var table = layui.table;
+        var doc=layui.htcsLG;
+        var url="api/PCHome/Query";
+        var url1="api/PCHome/Query1";
+        var url2="api/appFinance/todayQuery";
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var element = layui.element;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#monthstatic' //指定元素
+            ,type: 'month'
+            ,value: new Date()
+        });
+        
+        //加载数据
+        doc.objectQuery(url, {  }, function (result) {
+            debugger;
+            var data = result.numberData;
+            callback(data);
+        });
+        //加载数据1
+        doc.objectQuery(url1, {"month":$("#monthstatic").val()  }, function (result) {
+            debugger;
+            var data = result.numberData;
+            callback1(data);
+        });
+        element.on('tab(test1)', function(){
+               debugger;
+               var layid=this.getAttribute('lay-id');
+               if(layid==222){ 
+ //加载财务数据
+ doc.objectQuery(url2, {"month":$("#monthstatic").val()  }, function (result) {
+            debugger;
+            var data = result.numberData;
+            callback2(data);
+        });
+               }
+            });
+       
+        function callback2(data){
+            //今日统计
+            option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        x: 'left',
+        data:['应收款','已收','待收款']
+    },
+    series: [
+        {
+            name:'数据',
+            type:'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+               
+                {value:data.NowFinance.Payed, name:'已收'},
+                {value:data.NowFinance.Notpay,name:'待收款'},
+             
+            ]
+        }
+    ]
+};
+//  {value:data.NowFinance.Receivable, name:'应收款'},
+var myChart2 = echarts.init(document.getElementById('main6'));
+myChart2.setOption(option);
+           //过去七天统计
+        var intoarr=[];
+        var outarr=[];
+        var month=[];
+        $.each(data.SevenFinance,function(index,value){
+            intoarr.push(value.Receivable);
+            outarr.push(value.ShouldPay);
+            month.push(util.toDateString(value.Date,'MM月'));
+        });
+        option1 = {
+        xAxis: [
+        {
+            type : 'category',
+            data : month,
+            axisTick: {
+                alignWithLabel: true
+            }
+        }
+    ],
+    legend: {
+        data: ['待收', '待付']
+    },
+    yAxis:[
+        {
+            type : 'value'
+        }
+    ],
+    series: [
+        {
+            type: 'bar',
+            name: '待收',
+            itemStyle:{
+                        normal:{
+                            label: {
+                                show : true,
+                                position : 'top',
+                              
+                            }
+                        },
+                    },
+            data: intoarr
+        },
+        {
+            
+            type: 'bar',
+            name: '待付',
+            itemStyle:{
+                        normal:{
+                            label: {
+                                show : true,
+                                position : 'top',
+                               
+                            }
+                        },
+                    },
+            data: outarr
+        }
+    ]
+}
+     var myChart1 = echarts.init(document.getElementById('main5'));
+     myChart1.setOption(option1);
+        }
+        function callback1(data){
+            //第二部分，调用封装好的代码：
+            toCanvas('canvas',50,"空置率");
+            toCanvas('canvas1',40,"续租率");
+            toCanvas1('canvas2',50,"结余");
+            toCanvas1('canvas3',50,"结余");
+        }
+        function callback(data){      
+        //拿房删房统计
+        var intoarr=[];
+        var outarr=[];
+        var month=[];
+        $.each(data.Table,function(index,value){
+            intoarr.push(value.INTOHOUSE);
+            outarr.push(value.OUTHOUSE);
+            month.push(util.toDateString(value.month,'MM月'));
+        });
+        option1 = {
+        xAxis: [
+        {
+            type : 'category',
+            data : month,
+            axisTick: {
+                alignWithLabel: true
+            }
+        }
+    ],
+    legend: {
+        data: ['拿房', '删房']
+    },
+    yAxis:[
+        {
+            type : 'value'
+        }
+    ],
+    series: [
+        {
+            type: 'bar',
+            name: '拿房',
+            itemStyle:{
+                        normal:{
+                            label: {
+                                show : true,
+                                position : 'top',
+                              
+                            }
+                        },
+                    },
+            data: intoarr
+        },
+        {
+            
+            type: 'bar',
+            name: '删房',
+            itemStyle:{
+                        normal:{
+                            label: {
+                                show : true,
+                                position : 'top',
+                               
+                            }
+                        },
+                    },
+            data: outarr
+        }
+    ]
+}
+     var myChart1 = echarts.init(document.getElementById('szchart'));
+     myChart1.setOption(option1);
+     //入住率
+        var ruzhu=[];
+        var monthruzhu=[];
+        $.each(data.Table1,function(index,value){
+            var persntvalue=value.Percent;
+            ruzhu.push(persntvalue);
+            monthruzhu.push(util.toDateString(value.month,'MM月'));
+        });
+     option10 = {
+    xAxis: {
+        type: 'category',
+        data: monthruzhu
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data:ruzhu,
+        type: 'line',
+        itemStyle:{
+                        normal:{
+                            label: {
+                                show : true,
+                                position : 'top',
+                                formatter: '{c}'  
+                            }
+                        },
+                    }
+    }]
+};
+var myChart2 = echarts.init(document.getElementById('ruzhulv'));
+     myChart2.setOption(option10);
+     table.render({
+            elem: '#test'
+   , data: data.Table2
+   , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+   , cols: [[
+   { field: 'mtype', title: '类型',templet: function(d){
+         if(d.mtype==1){
+             return  "收房";
+         }
+         if(d.mtype==2){
+            return  "出房";
+         }
+         return  "收房";
+      }}
+     , { field: 'today', title: '昨日' }
+     , { field: 'week', title: '本周' }
+     , { field: 'mmonth', title: '本月' }
+   ]]
+     });
+     table.render({
+         elem: '#test1'
+       , data: data.Table3
+       , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+       , cols: [[
+       { field: 'v_all', title: '总数量' }
+         , { field: 'Vacancy', title: '装修中' }
+         , { field: 'Configuration', title: '空置中' }
+         , { field: 'Rent', title: '已出租' }
+       ]]
+     });
+}
+   
+   
+    
+    
+    
+    });
+   
+</script>
+<script>
+   
+   
+</script>
+<style>
+    .layui-tab-title li{}
+    .row-margen{margin-bottom:10px;}
+</style>
+<title>统计</title>
+
+<div class="layui-tab layui-tab-card" style="margin-top:10px;border-width: 0px;" lay-filter="test1">
+    <ul class="layui-tab-title" style="left:50%; margin-left: -40px;border-bottom-width: 0px;">
+        <li class="layui-this">运营统计</li>
+        <li lay-id="222" > 财务统计</li>
+    </ul>
+    <div class="layui-tab-content" style="padding:0;">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space8 row-margen">
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">房源出收</div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="test"></table>
+                            </div>
+                            <div class="layui-card-header">库存</div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="test1"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">拿房删房</div>
+                            <div class="layui-card-body">
+                                <div id="szchart" style="height:320px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">入住率</div>
+                            <div class="layui-card-body">
+                                <div id="ruzhulv" style="height:320px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space8">
+                    <div class="layui-card">
+                            <div class="layui-form-item" >
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="font-size:larger;font-weight:600;">月度统计</label>
+                                    <label class="layui-form-label">月份</label>
+                                    <div class="layui-input-inline" style="width: 100px;">
+                                        <input type="text" name="monthstatic" id="monthstatic" placeholder="" autocomplete="off" class="layui-input">
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        <div style="clear:both;">
+
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="layui-row row-margen">
+                    <div class="layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">空置率</div>
+                            <div class="layui-card-body">
+                                    <canvas id="canvas" width="200" height="200">
+                                            <p>抱歉，您的浏览器不支持canvas</p>
+                                     </canvas>
+                                     <div class="text first">已空置天数：207</div>
+                                     <div class="text">可出租天数：243</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">续租率</div>
+                            <div class="layui-card-body">
+                                    <canvas id="canvas1" width="200" height="200">
+                                            <p>抱歉，您的浏览器不支持canvas</p>
+                                     </canvas>
+                                     <div class="text first">续租合同数：0</div>
+                                     <div class="text">到期合同数：0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                            <div class="layui-card">
+                                <div class="layui-card-header">结余(含预期)</div>
+                                <div class="layui-card-body">
+                                        <canvas id="canvas2" width="200" height="200">
+                                                <p>抱歉，您的浏览器不支持canvas</p>
+                                         </canvas>
+                                         <div class="text first">续租合同数：0</div>
+                                         <div class="text">到期合同数：0</div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="layui-col-md3">
+                                <div class="layui-card">
+                                    <div class="layui-card-header">结余(实际)</div>
+                                    <div class="layui-card-body">
+                                            <canvas id="canvas3" width="200" height="200">
+                                                    <p>抱歉，您的浏览器不支持canvas</p>
+                                             </canvas>
+                                             <div class="text first">收入(含预期)61,057元</div>
+                                             <div class="text">支出(含预期)25,507元</div>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space8">
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">未来7日现金应收/应付情况 (元)</div>
+                            <div class="layui-card-body">
+                                <div id="main5" style="height:320px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">昨日收款情况</div>
+                            <div class="layui-card-body">
+                                <div id="main6" style="height:320px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header"></div>
+                            <div class="layui-card-body">
+                                <div id="main7" style="height:320px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+
+
+            </div>
+       
+    </div>
+</div>
+<script src="../../../Scripts/canvas.js"></script>    
+
+

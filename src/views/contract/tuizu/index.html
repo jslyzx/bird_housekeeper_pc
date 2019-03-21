@@ -1,0 +1,70 @@
+<style>
+        .fywz {
+            position: absolute;
+        }
+       body{overflow-y: scroll;}
+    </style>
+    <title>租客合同</title>
+    <script src="../../../Scripts/tuizu_business.js"></script>
+    <script src="../../../../Scripts/Common/public-base.js"></script>
+    <link href="../../../Content/Home.css" rel="stylesheet" />
+    <body style="overflow-y: scroll;">
+        <!--结束-->
+        <div class="layui-fluid" style="background-color:#ffffff;">
+            <div class="m-search">
+                <form class="layui-form hcs-form" action="" lay-filter="search" id="zcontract-search-form">
+                    <div class="m-search-item">
+                        <input type="text" name="Name" autocomplete="off" class="layui-input" placeholder="租客姓名" style="width:auto;">
+                    </div>
+                    <div class="m-search-item">
+                            <input type="text" name="Phone" autocomplete="off" class="layui-input" placeholder="租客电话" style="width:auto;">
+                    </div>
+                    <div class="m-search-item">
+                            <input type="text" name="CellName1" autocomplete="off" class="layui-input" placeholder="小区" style="width:auto;">
+                    </div>
+                    <div class="m-search-item">
+                            <div class="layui-input-inline">
+                                <select name="CityName" id="CityName" lay-filter="CityName" >
+                                    <option value="">请选择市</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="AreaName" id="AreaName" lay-filter="AreaName">
+                                    <option value="">请选择区</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="CellName" id="CellName" lay-filter="CellName">
+                                    <option value="">请选择小区</option>
+                                </select>
+                            </div>
+                    </div>
+                    <div class="m-search-item">
+                        <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </form>
+            </div>
+            <script id="zcontractbtnscribt" type="text/html">
+                {{#  layui.each(d, function(index, item){}}
+                <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+                        <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+                    </button>
+                {{#   });   }}
+            </script>
+            <div id="toolbar">
+                <div class="layui-btn-group">
+                    <div id="zcontract-button-view" style="overflow:hidden;"></div>
+                </div>
+            </div>
+            <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+                <ul class="layui-tab-title" style="margin-bottom:0;">
+                    <li value="0" class="layui-this">所有</li>
+                   
+                </ul>
+                <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                    <table id="zcontract-index-table" lay-filter="demoEvent"></table>
+                </div>
+            </div>
+        </div>
+    </body>

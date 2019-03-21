@@ -1,0 +1,192 @@
+
+<script src="../../../Scripts/jquery-1.10.2.js"></script>
+<script src="../../../Scripts/Common/md5.js"></script>
+
+<style>
+  #LAY_app{background: url(../../Images/bj.png) repeat left top;}
+  .index-filed-body {
+    background: url(../../Images/index-filed-newImg.png) repeat left top;
+    background-size: 100% 100%;
+    position: fixed;
+    bottom: 2rem;
+    right: 1.9rem;
+    width: 9.35rem;
+    height: 16.6rem;
+    text-align: center;
+    z-index: 10000;
+    display: none;
+}
+#telephone-body {
+    /* position: absolute; */
+    margin-top: 7.8rem;
+    /* margin-left: 2.5rem; */
+}
+.index-filed-body > div:nth-of-type(1) {
+    font-size: 0.9rem;
+    color: #ffffff;
+    /* margin-top: 6.3rem; */
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+#wechat-body {
+    /* position: absolute; */
+    margin-top: 2rem;
+    /* margin-left: 2.5rem; */
+}
+.index-filed-body > div:nth-of-type(2) {
+    font-size: 0.9rem;
+    color: #FFF000;
+    font-weight: 600;
+    margin-top: 1.5rem;
+}
+.index-filed-body span {
+    position: relative;
+    cursor: pointer;
+}
+.telephone-consultation {
+    color: #FFFFFF;
+}
+.index-filed-body div:nth-of-type(1) img {
+    position: absolute;
+    margin-top: -2.7rem;
+    margin-left: -10rem;
+}
+.telephone-consultation img {
+    display: none;
+}.index-filed-body span {
+    position: relative;
+    cursor: pointer;
+}
+.wechat-service {
+    color: #FFFFFF;
+}
+img {
+    border: none;
+}
+.index-filed-body div:nth-of-type(2) img {
+    position: absolute;
+    margin-top: -4rem;
+    margin-left: -8rem;
+}
+.wechat-service img {
+    display: none;
+}
+.telephone-consultation:hover img {
+    display: block;
+}
+
+.telephone-consultation img {
+    display: none;
+}
+.wechat-service img {
+    display: none;
+}
+.wechat-service:hover img {
+    display: block;
+}
+</style>
+<script type="text/html" template>
+  <link rel="stylesheet" href="{{ layui.setter.base }}style/login.css?v={{ layui.admin.v }}-1" media="all">
+</script>
+<div class="reg-body">
+    <div class="index-filed-body" style="display: block;">
+        <div id="telephone-body">
+            <span class="telephone-consultation">电话咨询
+                    <img src="../../Images/telephone.png">
+            </span>
+        </div>
+        <div id="wechat-body">
+            <span class="wechat-service">客服微信
+                <img src="../../Images/9105803a8767d46f2b4b5d0514bd224.jpg">
+            </span>
+        </div>
+      </div>
+      <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+        <div class="layadmin-user-login-main">
+          <div class="layadmin-user-login-box layadmin-user-login-header">
+            <h2>飞鸟管家</h2>
+            <p>此为体验版如需正式开通或者体验APP请联系客服</p>
+          </div>
+          <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+            <div class="layui-form-item">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
+              <input type="text" name="cellphone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="手机" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-row">
+                <div class="layui-col-xs7">
+                  <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                  <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input">
+                </div>
+                <div class="layui-col-xs5">
+                  <div style="margin-left: 10px;">
+                    <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode">获取验证码</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+              <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-repass"></label>
+              <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
+            </div>
+          
+            
+            <div class="layui-form-item">
+              <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注 册</button>
+            </div>
+            <div class="layui-trans layui-form-item layadmin-user-login-other">
+              <a lay-href="/user/login" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+        
+              <a lay-href="/user/login" class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
+            </div>
+          </div>
+        </div>
+        
+        
+      
+      </div>
+</div>
+
+
+<script>
+layui.use(['admin', 'form', 'user'], function(){
+  var $ = layui.$
+  ,setter = layui.setter
+  ,admin = layui.admin
+  ,form = layui.form
+  ,router = layui.router();
+  form.render();
+ 
+  
+
+  //提交
+  form.on('submit(LAY-user-reg-submit)', function(obj){
+    var field = obj.field;
+    field.yzm=field.vercode;
+    field.Mobile=field.cellphone;
+    //确认密码
+    if(field.password !== field.repass){
+      return layer.msg('两次密码输入不一致');
+    }
+    debugger;
+    field.password=hex_md5(field.password).toUpperCase();
+    var baseurl = setter.baseurl;
+    
+    //请求接口
+    admin.req({
+      url: baseurl+'api/Sysuser/register' //实际使用请改成服务端真实接口
+      ,data: field
+      ,type: "POST"
+      ,done: function(res){        
+        location.hash = '/user/login'; //跳转到登入页
+      }
+    });
+    
+    return false;
+  });
+});
+</script>
