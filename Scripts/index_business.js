@@ -450,9 +450,9 @@
             return '<span>' + "未知" + '</span>';
         }
         if (value.PayStatus == 1) {
-            return '<span>' + util.toDateString(value.ShouldReceive.getnowdate("yyyy/MM/dd"), 'yyyy/MM/dd') + '</span>'
+            return '<span>' + util.toDateString(value.ShouldReceive.replace(/-/g, '/'), 'yyyy/MM/dd') + '</span>'
         } 
-        var d1 = new Date(util.toDateString(value.ShouldReceive.getnowdate("yyyy/MM/dd"), 'yyyy/MM/dd'));
+        var d1 = new Date(util.toDateString(value.ShouldReceive.replace(/-/g, '/'), 'yyyy/MM/dd'));
         var d2 = new Date(nowDate);
         var days = d1 - d2;
         day = parseInt(days / (1000 * 60 * 60 * 24));
@@ -480,6 +480,6 @@
         if(value.ShouldReceive==null){
             return "";
         }
-       return  util.toDateString(value.ShouldReceive, 'yyyy-MM-dd')
+       return  util.toDateString(value.ShouldReceive.replace(/-/g, '/'), 'yyyy/MM/dd')
     }
 });

@@ -139,9 +139,9 @@ tablebtnid: '#btnintable',
         if(obj.elem.checked){
             isactive=1;
         }
-        var tjdata={"Id":Id,"IsActive":isactive,"NotUpdatefield":["Name","Code","Type","IsYajin","TuiType"]};
+        var tjdata={"Id":Id,"isdefault":isactive};
         var saveoption={
-            url:'api/Zafei/Savezafei',
+            url:'api/template/changemoren',
             data:tjdata,
             tableid:config.table,
             callBack:function(resultData){
