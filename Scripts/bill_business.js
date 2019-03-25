@@ -25,7 +25,6 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
                 { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应收时间', templet: formadaoqi, width: 150 }, { title: '账单周期', width: 200, templet: formatterzhouqi }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, {  templet: formasign, width:120, title: '标记' }
             ]
         ],
-        height: 620,
         url: 'api/Bill/Querylist',
         ismuilti: true,
         "tabfield": "PayStatus",

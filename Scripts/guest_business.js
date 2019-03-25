@@ -36,7 +36,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { width: 100, title: '紧急程度',templet: Ugenttemp  },
   { width: 100, title: '价格区间',templet: pricetemp  },
   { field: 'RectDate', width: 100, title: '租期',templet: zuqi  }
-]], height: 620, url: config.url,ismuilti: true
+]], url: config.url,ismuilti: true
     };
         var BtnOption = {
         area: ['1100px', '90%'],

@@ -25,7 +25,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function 
   , { field: 'lastdushu', width: 180, title: '读数' }
   , { field: 'HouseType', width: 180, title: '抄表类型',templet:chaobiao }
   , { field: 'HouseType', width: 180, title: '频率',templet:pinlv }
-        ]], height: 620, url: 'api/chaobiao/Query',
+        ]], height: 'full-230', url: 'api/chaobiao/Query',
         ismuilti: true,"tabfield":"PayStatus"
     };
    

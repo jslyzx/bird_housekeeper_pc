@@ -30,7 +30,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'cellname', width: 240, title: '小区名称' },
   { width: 100, title: '房源类型',templet: Ugenttemp  },
 
-]], height: 620, url: config.url,ismuilti: true
+]], height: 'full-230', url: config.url,ismuilti: true
     };
         var BtnOption = {
         area: ['1100px', '90%'],

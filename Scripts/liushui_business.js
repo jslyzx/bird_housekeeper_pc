@@ -30,7 +30,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'Transaoctor', width: 200, title: '办理人' },
   { field: 'Remark', width: 300, title: '备注' }
  
-]], height: 620, url: config.url,ismuilti: true
+]], url: config.url,ismuilti: true
     };
    
     var BtnOption = {

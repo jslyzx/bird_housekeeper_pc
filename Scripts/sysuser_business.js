@@ -15,7 +15,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
      
 ]];
         var tableoption = {
-            domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, height: 650, url: 'api/Sysuser/Querylist',
+            domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, url: 'api/Sysuser/Querylist',
             ismuilti: true
           
         };

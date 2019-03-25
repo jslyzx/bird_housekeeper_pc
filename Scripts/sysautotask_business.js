@@ -30,7 +30,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
  
 
   
-]], height: 620, url: config.url,ismuilti: true
+]], url: config.url,ismuilti: true
     };
     var BtnOption = {
         area: ['1100px', '900px'],

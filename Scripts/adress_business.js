@@ -13,7 +13,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
       , { width: 180, title:'类别',templet: formastatus}
       ]];
         var tableoption = {
-            domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, height: 650, url: 'api/cellname/Querylist',
+            domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, url: 'api/cellname/Querylist',
             ismuilti: true
           
         };

@@ -28,7 +28,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'IsYajin', width: 200, title: '是否押金' ,templet: yajintemp},
   { field: 'TuiType', width: 100, title: '是否退款' ,templet: tuitemp}
   ,{field:'IsActive', title:'是否激活', width:105, templet: '#switchTpl', unresize: true}
-]], height: 620, url: config.url,ismuilti: true,
+]], url: config.url,ismuilti: true,
 tablebtnid: '#btnintable',
 "tabfield": "IsYajin",
     };

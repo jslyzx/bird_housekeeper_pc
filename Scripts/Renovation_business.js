@@ -29,7 +29,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
 
  
  
-]], height: 620, url: config.url,ismuilti: true  ,"search":{"Status":999}
+]], height: 'full-230', url: config.url,ismuilti: true  ,"search":{"Status":999}
     };
     var BtnOption = {
         realtable:'T_REPAIRLIST',

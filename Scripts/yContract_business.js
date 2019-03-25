@@ -51,7 +51,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
           , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
           , { field: 'Phone', width: 180, title: '电话' }
           , { field: 'CreatePerson', width: 100, title: '创建人' }
-    ]], height: 650, url: 'api/OwerContract/Query',
+    ]], url: 'api/OwerContract/Query',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable'
     };
     var BtnOption = {

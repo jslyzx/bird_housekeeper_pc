@@ -59,7 +59,7 @@
                 ispaing: true,
                 isadd:true,
                 url: null,
-                height: 480,
+                height: 'full-260',
                 ismuilti: true,
                 arr: [
                     []

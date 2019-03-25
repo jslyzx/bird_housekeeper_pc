@@ -29,7 +29,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'create', width: 100, title: '创建人' },
   
  
-]], height: 620, url: config.url,ismuilti: true,
+]], url: config.url,ismuilti: true,
 search:{"houseid":houseid}
     };
    

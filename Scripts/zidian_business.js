@@ -25,7 +25,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'Name', width: 200, title: '名称' },
   { field: 'typename', width: 200, title: '字典类型'}
   ,{field:'IsActive', title:'是否激活', width:100, templet: '#switchTpl', unresize: true}
-]], height: 620, url: config.url,ismuilti: true,
+]], url: config.url,ismuilti: true,
 tablebtnid: '#btnintable',
 "tabfield": "IsYajin",
     };

@@ -32,7 +32,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   , { field: 'IsActive', width: 200, title: '是否激活' }
 
   
-]], height: 620, url: config.url,ismuilti: true
+]], height: 'full-230', url: config.url,ismuilti: true
     };
     var BtnOption = {
         area: ['1100px', '900px'],

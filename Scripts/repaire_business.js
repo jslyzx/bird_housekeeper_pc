@@ -36,7 +36,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   , { field: 'RepairId', width: 100, title: '接单人编号' }
  
  
-]], height: 620, url: config.url,ismuilti: true  ,"search":{"Status":999}
+]], url: config.url,ismuilti: true  ,"search":{"Status":999}
     };
     var BtnOption = {
         realtable:'T_REPAIRLIST',

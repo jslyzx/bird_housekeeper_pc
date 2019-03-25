@@ -15,7 +15,7 @@
      , { field: 'IsActive', width: 200, title: '是否激活' }
     ]];
     var tableoption = {
-        domid: "#sysrole-index-table", formid: "#zsysrole-search-form", arr: namearr, height: 650, url: 'api/Sysrole/Querylistrole',
+        domid: "#sysrole-index-table", formid: "#zsysrole-search-form", arr: namearr, url: 'api/Sysrole/Querylistrole',
         ismuilti: true
     };
     
