@@ -30,7 +30,6 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
     };
     //查询条件
     form.on('select(Type)', function(data){
-        debugger;
         var tableid = tableoption.domid.replace("#", "");
         doc.queryPara({"BillType":data.value},tableid);
     });  
@@ -54,7 +53,6 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         var data = obj.data,
             layEvent = obj.event,
             url = $(this).data('url');
-            debugger;
         if (layEvent === 'bill-receivebtn') { //收款
             if(data.BillType!=0){
                 layer.msg("不是收款单，无法进行收款操作");
@@ -79,7 +77,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
                 }
             });
         }
-        if (layEvent=== 'fukuanbtn') { //退款
+        if (layEvent=== 'fukuan') { //退款
             if(data.BillType!=1){
                 layer.msg("不是收款单，无法进行退款操作");
                 return;
@@ -107,7 +105,6 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         doc.bindCommonEvents(BtnOption, data, layEvent, url);
     });
      $("#bill-sendmessage-btn").click(function(){
-        debugger;
             var checkStatus = table.checkStatus('bill-main-table')
                     , getselect = checkStatus.data;
             if (getselect.length == 0) {
@@ -123,7 +120,6 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
             //调用发送短信接口
             var duanxinurl="api/Bill/pcuizu";
             doc.objectQuery(duanxinurl, arrphone, function (data) {
-                debugger;
                 if(data.Code==0){
                 
                     layer.msg(data.Message, {
@@ -139,7 +135,6 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
             });
     })
     $("#isnotactive").click(function() {
-        // debugger;
         var url = "/api/Procedure/CmdProce";
         doc.cmdpure(url, "sp_peibei_trante0");
     });
@@ -153,21 +148,18 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
     }
 
     function formatterzhouqi(value) {
-        // debugger;
         if (value.BeginTime == null || value.EndTime == null) {
             return '<div>' + '</div>'
         }
         if (value.BeginTime == "0001-01-01 00:00:00" || value.EndTime == "0001-01-01 00:00:00") {
             return '<div>' + '</div>'
         }
-        // debugger;
         var begintime = util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd');
         var endtime = util.toDateString(value.EndTime.replace(/-/g, '/'), 'yyyy/MM/dd');
         return '<div>' + begintime + " - " + endtime + '</div>';
     }
 
     function formadaoqi(value) {
-        // debugger;
         var day = 0;
         
         if (value.ShouldReceive == null) {

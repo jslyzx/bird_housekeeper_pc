@@ -55,7 +55,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable'
     };
     var BtnOption = {
-        area: ['1400px', '90%'],
+        area: ['98%', '90%'],
         editarea: ['1200px', '90%'],
         tableid: "zcontract-index-table",
         ismuilti:true,
@@ -73,7 +73,6 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
         var data = obj.data,
             layEvent = obj.event,
             url = $(this).data('url');
-            debugger;
             if (layEvent === 'ycontract-tuizu-btn') { //退租
                 if(data.Status!=1&&data.Status!=5){
                     layer.msg("合同状态不为待签约和在租中不能进行退租操作");
@@ -174,7 +173,6 @@ function treeSelect(config)
     config.v2 =config.v2?config.v2:"北京";
     config.v3 =config.v3?config.v3:"东城区";
     $.each(threeSelectData,function(k,v){
-        debugger;
         appendOptionTo($form.find('select[name='+config.s1+']'),v.provinceName,v.provinceName,config.v1);
     });
     form.render();
@@ -187,12 +185,10 @@ function treeSelect(config)
         });
     });
     function cityEvent(data){
-        debugger;
         $form.find('select[name='+config.s2+']').html("");
         config.v1 = data.value?data.value:config.v1;
         if(config.v1=="全部")
         {
-         debugger;
          appendOptionTo($form.find('select[name='+config.s2+']'),"全部","全部",config.v2);    
          $.each(threeSelectData,function(k,v){
               if(v.mallCityList){
@@ -222,12 +218,10 @@ function treeSelect(config)
         areaEvent(config);
     }
     function areaEvent(data){
-        debugger
         $form.find('select[name='+config.s3+']').html("");
         config.v2 = data.value?data.value:config.v2;
         if(config.v2=="全部")
         {
-         debugger;
          appendOptionTo($form.find('select[name='+config.s3+']'),"全部","全部",config.v3);
          $.each(threeSelectData,function(k,v){
          if(v.mallCityList){
@@ -242,7 +236,6 @@ function treeSelect(config)
         });
         }else{
             $.each(threeSelectData,function(k,v){
-                debugger
                 if(v.provinceName==config.v1||config.v1=="全部")
                 {
                   if(v.mallCityList){
@@ -270,7 +263,6 @@ function treeSelect(config)
 });
 
 function reflash() {
-    debugger;
     layui.use(['table'], function () {
         var table = layui.table;
         table.reload("zcontract-index-table");   

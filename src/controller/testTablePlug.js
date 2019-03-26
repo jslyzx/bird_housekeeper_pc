@@ -8,8 +8,6 @@
 layui.config({base: 'layui/lay/plug/'}).define(['tablePlug'], function (exports) {
   "use strict";
 
-  layui.link('layui/css/plug/tablePlug.css', 'tablePlug');
-
   var $ = layui.$,
     form = layui.form,
     layer = layui.layer,
