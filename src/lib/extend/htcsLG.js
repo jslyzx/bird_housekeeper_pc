@@ -74,7 +74,7 @@
                     type: 'toolbar',
                     field: 'toolbar_common',
                     title: '操作',
-                    width: 120,
+                    width: 158,
                     align: 'center'
                     ,fixed:"right"
                 })
