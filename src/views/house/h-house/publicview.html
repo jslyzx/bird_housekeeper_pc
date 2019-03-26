@@ -152,6 +152,7 @@ img {
             data.field.Id=id;
             var arr=doc.getcheckbox("#peibei");
             data.field.PublicPeibei=arr;
+            data.field.PublicImg=imageurl;
             var saveoption={
             url:'api/House/SaveHouse',
             data:data.field,

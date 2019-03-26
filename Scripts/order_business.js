@@ -10,6 +10,37 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     laydate.render({
         elem: '#CreateTime'
     });
+    //加载详情
+    doc.objectQuery(url, {}, function (data) {
+        debugger;
+        var getTpl = sysuereditscript.innerHTML
+      , view = document.getElementById('viewmoney');
+        laytpl(getTpl).render(data.numberData, function (html) {
+            view.innerHTML = html;
+        }); 
+        $("#zbank").click(function(){
+            debugger;
+            var url="set/base/zbank";
+            var view = layui.view;
+            var editid = "layuizcbtn";
+            layer.open({
+                id: editid,
+                type: 1,
+                title: '转出',
+                skin: 'two-layer',
+                shadeClose: true, //开启遮罩关闭
+                maxmin: true, //开启最大化最小化按钮
+                area: ['40%', '60%'],
+                success: function(layero, index) {
+                    view(this.id).render(url, {
+                       
+                        tableid: "guest-main-table",
+                        layerindex: index
+                    });
+                }
+            });
+        })
+    });
     var option1 = { data: [{ "value": 0, "text": "全部" }, { "value": 2, "text": "逾期" }, { "value": 3, "text": "今天" }, { "value": 4, "text": "1-7天" }], rdefault: 0 };
     mymod.CreateInput($("#yuqitype"), option1, function (result) {
         
@@ -72,26 +103,5 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
        }
        return value.Trader; 
     }
-    $("#zbank").click(function(){
-        debugger;
-        var url="set/base/zbank";
-        var view = layui.view;
-        var editid = "layuizcbtn";
-        layer.open({
-            id: editid,
-            type: 1,
-            title: '转出',
-            skin: 'two-layer',
-            shadeClose: true, //开启遮罩关闭
-            maxmin: true, //开启最大化最小化按钮
-            area: ['40%', '60%'],
-            success: function(layero, index) {
-                view(this.id).render(url, {
-                   
-                    tableid: "guest-main-table",
-                    layerindex: index
-                });
-            }
-        });
-    })
+   
 });

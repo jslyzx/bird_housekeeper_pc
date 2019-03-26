@@ -288,6 +288,31 @@ function ViewEvent() {
             }
         });
     });
+    //租客登记
+    $(".addcontract").click(function (index,value) {
+        var id = $(this).attr("id").replace("addcontract-", "");
+    
+        var view = layui.view;
+        layer.open({
+            type: 1,
+            id:"domedit",
+            title: '租客登记',
+            skin: 'two-layer',
+            anim: -1,
+            shade: .1,
+            shadeClose: false,
+            maxmin: true,
+            area: ['1120px', '90%'],
+            
+            success: function (layero, index) {
+                view("domedit").render('contract/z-contract/add', {
+                    id: id,
+                   
+                    layerindex:index
+                });
+            }
+        });
+     });
     //修改
     $(".editdepent").click(function (index,value) {
        var id = $(this).attr("id").replace("editdepent-", "");
@@ -300,7 +325,7 @@ function ViewEvent() {
            skin: 'two-layer',
            anim: -1,
            shade: .1,
-           shadeClose: true,
+           shadeClose: false,
            maxmin: true,
            area: ['1120px', '90%'],
            

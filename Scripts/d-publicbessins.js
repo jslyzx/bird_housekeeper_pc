@@ -357,6 +357,33 @@ function ViewEvent(pId) {
             }
         });
     });
+    //登记租客
+    $(".addcontract").click(function (index,value) {
+        debugger;
+        var id = $(this).attr("id").replace("addcontract-", "");
+        var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+        var view = layui.view;
+        layer.open({
+            type: 1,
+            id:"domedit",
+            title: '租客登记',
+            skin: 'two-layer',
+            anim: -1,
+            shade: .1,
+            shadeClose: false,
+            maxmin: true,
+            area: ['1120px', '90%'],
+            
+            success: function (layero, index) {
+                //debugger;
+                view("domedit").render('house/h-house/edit', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+     });
     //修改
     $(".editdepent").click(function (index,value) {
        debugger;
@@ -370,7 +397,7 @@ function ViewEvent(pId) {
            skin: 'two-layer',
            anim: -1,
            shade: .1,
-           shadeClose: true,
+           shadeClose: false,
            maxmin: true,
            area: ['1120px', '90%'],
            

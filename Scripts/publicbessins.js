@@ -336,6 +336,30 @@ function ViewEvent() {
         }
     });
    });
+   //录入合同
+   
+   $(".addcontract").click(function(){
+    var id = $(this).attr("id");
+    id=id.replace("addcontract-", "");
+    layer.open({
+        type: 1,
+        id:"domedit",
+        title: '租客登记',
+        skin: 'two-layer',
+        anim: -1,
+        shade: .1,
+        shadeClose: true,
+        maxmin: true,
+        area: ['1120px', '90%'],
+        success: function (layero, index) {
+            view("domedit").render('contract/z-contract/add', {
+                id: id,
+                ParentRoomid:parentid,
+                layerindex:index
+            });
+        }
+    });
+   });
    //删除整个房源
    $(".closehouse").click(function(){
     var id = $(this).attr("id");

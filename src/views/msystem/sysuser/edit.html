@@ -96,6 +96,11 @@
                 //重载更新后数据
                 doc.updateobj(oldData, _obj, ["rolename","SysRoleId"]);
             })
+            $("#cancelbtn").click(function(){
+                    debugger;
+                layer.close(layerindex);
+                return false;
+            });
          //监听提交
           form.on('submit(save)', function (data) {
         debugger;
@@ -225,7 +230,7 @@ $("#sysuser-childedit-edit").click(function(){
         </div>
             <div class="form-bottom">
                     <div class="form-wrap">
-                        <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-submit="">取消</button>
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-submit="">取消</button>
                         <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
                     </div>
           </div>

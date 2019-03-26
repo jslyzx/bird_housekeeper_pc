@@ -12,44 +12,37 @@
        {{#  LoadData(d.params.tableid,d.params.layerindex)}}
    </script>
    <script id="sysuereditscript" type="text/html">
-    <div class="layui-tab" lay-filter="demo">
-            <ul class="layui-tab-title">
-              <li class="layui-this" lay-id="1">转到支付宝</li>
-              <li lay-id="2">转到微信</li>
-              <li lay-id="3">转到银行卡</li>
-            </ul>
-            <div class="layui-tab-content">
-              <div class="layui-tab-item layui-show">
-                  <span style="font-weight:bold;padding:5px;"> 账户名:{{d.zfbname}} </span>
-                  <span style="font-weight:bold;padding:5px;"> 账号: {{d.zfb}}</span>
-              </div>
-              <div class="layui-tab-item">
-                    <span style="font-weight:bold;padding:5px;"> 账户名:{{d.wxname}} </span>
-                    <span style="font-weight:bold;padding:5px;"> 账号: {{d.wx}}</span>
-              </div>
-              <div class="layui-tab-item">  
-                <span style="font-weight:bold;padding:5px;"> 银行:{{d.name}} </span>
-                <span style="font-weight:bold;padding:5px;"> 账户名: {{d.bank}}</span>
-                <span style="font-weight:bold;padding:5px;"> 账号: {{d.account}}</span>
-              </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label " style="width:120px;">选择收款账号</label>
+            <div class="layui-input-inline">
+                <select name="bank" id="bank" lay-search style="width:120px;">
+                    <option value="">请选择</option>
+                    {{#  layui.each(d, function(index, item1){ }}
+                    {{#  if(item1.type==1){ }}
+                    <option value="{{item1.Id}}">支付宝:{{item1.account}}</option>
+                    {{# }else{ }}
+                    <option value="{{item1.Id}}">银行卡：{{item1.account}}</option>
+                    {{# }; });   }}
+                  
+                 </select>
             </div>
-    </div>
+        </div>
    </script> 
    <div id="sysuer-edit-view" >
     </div>
    <div  class="child-view form-wrapper">
         <form class="layui-form  layui-form-pane hcs-form form-panel" action="">            
            <div class="form-content">
-               
+            <div id="addzfb-view" ></div>  
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width:auto;">转出金额
                         </label>
                     <div class="layui-input-inline">
-                        <input type="text" name="amount" lay-verify="required" autocomplete="off" class="layui-input" placeholder="转出金额" id="Name">
+                        <input type="text" name="amount" id="amount" lay-verify="required" autocomplete="off" class="layui-input" placeholder="转出金额" id="Name">
                     </div>
                     <div class="layui-input-inline">
-                            <a class="hand yxr-red"><span>全部提现</span></a>
+                            <a class="hand yxr-red" id="allamount"><span>全部提现</span></a>
                     </div>
                    
                 </div>
@@ -87,25 +80,26 @@ function LoadData(tableid,layerindex){
            layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form','element'], function () {
            var laytpl = layui.laytpl;
            var doc = layui.htcsLG;
-           var url = "api/Menu/Querymenu";
            var $ = layui.jquery;
            var form = layui.form;
            var element = layui.element;
            var type=1;
-           var url = "api/Enterprise/querycompany";
+           var url = "api/Account/list";
            doc.objectQuery(url, {}, function (data) {
              debugger;
              var realdata=data.numberData;
              var getTpl = sysuereditscript.innerHTML
-             ,view = document.getElementById('sysuer-edit-view');
+             ,view = document.getElementById('addzfb-view');
              laytpl(getTpl).render(data.numberData, function (html) {
                  view.innerHTML = html;
              }); 
              form.render('');
-              //一些事件监听
-             element.on('tab(demo)', function(data){
-                type=this.getAttribute('lay-id');
-             });
+             $("#allamount").click(function(){
+                 debugger;
+                doc.objectQuery("api/Enterprise/querycompany", {}, function (data) {
+                       $("#amount").val(data.numberData.Amount);
+                })
+             })
              $("#cancelbtn").click(function(){
              layer.close(layerindex);
              })

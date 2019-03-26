@@ -38,13 +38,22 @@
              var bill=0;
              var nowDate = mymod.getnowdate("yyyy-MM-dd");
              var alldata=[];
+             var imageurl="";
              //查询特色信息
              doc.objectQuery(tsurl, para, function (data) {
                 alldata.push(data.numberData);
                 doc.objectQuery(url, { "Id": id }, function (data) {
                 alldata.push(data.numberData);
+                imageurl=alldata[1].PrivateImage;
                 doc.objectQuery(gqurl, { "Id": ParentRoomid }, function (data) {
                 alldata.push(data.numberData);
+                imageurl+=alldata[2].PublicImg;
+                var arr=new Array();
+                if(imageurl!=null){
+                imageurl=imageurl.substring(0,imageurl.length-1);
+                arr=imageurl.split(';');
+                }
+                alldata.push(arr);
                 laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
                 form.render('');
@@ -348,7 +357,7 @@ function formatterzhouqi(value) {
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" style="padding: 10px;overflow: hidden;">
                 <script id="housescript" type="text/html">
-                    {{# var doc= layui.htcsLG; }}
+                    {{# var setter = layui.setter; var doc= layui.htcsLG, imgurl1 = setter.imgurl;}}
                          <form class="layui-form layui-form-pane hcs-form" action=""> 
                           <input type="text" name="Id" id="Id" autocomplete="off" class="layui-input" value="{{d[1].Id}}" style="display:none" /> 
                           <div class="wrap"> 
@@ -456,9 +465,7 @@ function formatterzhouqi(value) {
                                              <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].Measure}}" disabled="" /> 
                                         </div>
                              </div>
-                             <div class="layui-form-item"> 
-                                
-                            </div>
+                            
                             <div class="layui-form-item"> 
                                 <div class="layui-inline"> 
                                  <label class="layui-form-label">地址</label> 
@@ -469,6 +476,19 @@ function formatterzhouqi(value) {
                                
                               
                                </div>   
+                               <div class="title"> 
+                                    <h3 class="red"> 图片信息</h3> 
+                                   </div> 
+                                   
+                                   <div class="layui-row" id="himage">
+                                         {{#  layui.each(d[3], function(index, item1){ }}
+                                         <div class="layui-col-xs2">
+                                                 <div>
+                                                  <img class="house-img-all house-img hand" src="{{imgurl1}}{{item1}}">
+                                                 </div>
+                                         </div>
+                                         {{# });   }}                          
+                                    </div>
                          </form> 
                     </script>
                     <div id="house-edit-view">

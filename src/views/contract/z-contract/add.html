@@ -45,6 +45,11 @@
                     form.render('');
                 });
                 function Create() {
+                    if(id!=undefined){
+                        debugger;
+                        $("#chosehouse").hide();
+                        $("#HouseId").val(id);
+                    }
                     form.on('checkbox(zafei)', function (data) {
                         debugger;
                         var dom = data.elem;
@@ -333,13 +338,16 @@
         },
         HouseName: function(value, item){
             debugger
-                    if($("#HouseId").val()==""||$("#HouseType").val()==""){
+                    if($("#HouseId").val()==""){
                 return "房源不存在";
             }}
     })
          //监听提交
         form.on('submit(save)', function (data) {
         debugger;
+        if(id!=undefined){
+           data.field.HouseId=id;
+        }
         var zafeilist = [];
         var yajin=[];
         //杂费
@@ -373,6 +381,7 @@
         var datafield=data.field;
         debugger;
         var tjdata = {
+            "Recent":datafield.Recent,
             "Recent":datafield.Recent, "Deposit":datafield.Deposit,
         "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
         "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,
@@ -414,7 +423,7 @@
      
         
 </script>
-  <script id="zcontractaddscript" type="text/html">
+ <script id="zcontractaddscript" type="text/html">
 
         <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
             <div class="form-content">
@@ -499,10 +508,9 @@
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>合同信息</legend>
                 </fieldset>
-                <div class="layui-form-item">
+                <div class="layui-form-item" id="chosehouse">
                     <div class="layui-inline">
                         <label class="layui-form-label">选择房源</label>
-                        
                         <div class="layui-input-inline" style="width:350px;">
                             <input type="tel" name="HouseId"  autocomplete="off" class="layui-input" id="HouseId" style="display:none">
                             <input type="tel" name="HouseName" lay-verify="HouseName" autocomplete="off" class="layui-input" id="HouseName">
@@ -650,17 +658,13 @@
                             </div>
                         </div>
                     </div>
-        
-              
-        
-            
-            <div class="form-bottom">
+        </div>
+        <div class="form-bottom">
                 <div class="form-wrap">
                     <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancelbtn">取消</button>
                     <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
                 </div>
             </div>
-        </div>
         </form>
     </script>
     <div id="zcontract-add-view" class="form-wrapper">
