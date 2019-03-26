@@ -264,7 +264,6 @@ function InitEvent() {
 function ViewEvent() {
    
     $(".m-panel-body").not(".layui-icon").dblclick(function () {
-        debugger;
         var id = $(this).attr("id").replace("panel-body-", "");
         var parentid = $(this).parent(".m-wrap-body").attr("parentid");
         var view = layui.view;

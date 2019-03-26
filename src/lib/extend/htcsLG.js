@@ -189,7 +189,6 @@
             })
         },
         reflash: function(tableid,options) {
-            debugger;
             searchpara.access_token = layui.data('layuiAdmin').access_token;
             table.reload(tableid, { where: searchpara });
             // 单击行变色并选中
@@ -201,7 +200,6 @@
             if(options!=undefined){
                 var dom='[lay-id='+tableid+']';
                 $(dom).on('dblclick', ".layui-table-body td:not([data-field='0']):not(:last-child)", function(event) {
-                    debugger;
                     var tobj=$(this).parent().find("td[data-field='Id']")[0].innerText;
                     var url=""
                         var editid = "layui" + options.toolview;
@@ -251,7 +249,6 @@
                 isloadmenu:true,
             }, options);
             
-            debugger;
             $('#zcontract-index-table .layui-table-view').on('dblclick', ".layui-table-body td:not([data-field='0']):not(:last-child)", function(event) {
                 //选中新行
                 var checkbox = $(this).parent().find(".laytable-cell-checkbox .layui-form-checkbox");
@@ -263,7 +260,6 @@
             var buttondata = { SysUserId: layui.data('layuiAdmin').userid, Id: options.menuid,"btnjishu":options.btnjishu };
             obj.objectQuery(buttonurl, buttondata, function(result) {
                 $.each(result.numberData,function(index,item){
-                    debugger;
                     if(item.BtnNo==options.toolview){
                         options.url=item.ButtonUrl;
                     }
@@ -297,10 +293,8 @@
             var that = obj;
             var $ = layui.$;
             var view = layui.view;
-            debugger;
             var dom='[lay-id='+options.tableid+']';
             $(dom).on('dblclick', ".layui-table-body td:not([data-field='0']):not(:last-child)", function(event) {
-                debugger;
                 var tobj=$(this).parent().find("td[data-field='Id']")[0].innerText;
                     var editid = "layui" + options.toolview;
                     var view = layui.view;
@@ -350,7 +344,6 @@
             });
         },
         bindCommonEvents: function(options, data, layEvent, url){
-            debugger;
             var view = layui.view;
 
             options = jQuery.extend({
@@ -391,7 +384,6 @@
                         }
                     });
                 } else if (options.tooldelete === layEvent) { //删除
-                    debugger;
                     layer.open({
                         skin: 'demo-class',
                         title: '删除提示',
@@ -747,7 +739,6 @@
             }
         },
         viewbutton:function(btnoptions,btnscript){
-            debugger;
             btnoptions = jQuery.extend({
                 menuid: 0,
                 area: ['893px', '600px'],
@@ -808,7 +799,6 @@
             var buttondata = { SysUserId: layui.data('layuiAdmin').userid, Id: options.menuid,"jishu":2 };
             obj.objectQuery(buttonurl, buttondata, function(result) {
                 $.each(result.numberData,function(index,item){
-                    debugger;
                     if(item.BtnNo==options.toolview){
                         options.url=item.ButtonUrl;
                     }
@@ -986,7 +976,6 @@
             }
         },
         SearchData1: function(data, fieldname, value) {
-            debugger;
             for (var i = 0; i < data.length; i++) {
                 if (data[i][fieldname] == value) {
                     return data[i];
