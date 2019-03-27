@@ -1,21 +1,6 @@
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
-<style>
-    .hand {
-    cursor: pointer;
-}
-img {
-    vertical-align: middle; border: 0;
-}.house-img {
-    height: 140px;
-    width: 140px;
-}
-.edit-house-info-dialog .house-img-all {
-    width: 100%;
-    height: 100%;
-}
 
-</style>
 <script>
      var imageurl="";
      function LoadData(id,tableid,layerindex){
@@ -44,12 +29,12 @@ img {
                     doc.objectQuery(url1, {  }, function (data) {
                         debugger;
                         alldata.push(data.numberData);
-                        var arr=new Array();
-                        if(alldata[1].PublicImg!=null){
+                    var arr=new Array();
+                    if(alldata[1].PublicImg!=null){
                         alldata[1].PublicImg=alldata[1].PublicImg.substring(0,alldata[1].PublicImg.length-1);
                         arr=alldata[1].PublicImg.split(';');
                     }
-                alldata.push(arr);
+                    alldata.push(arr);
                 laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
                 doc.tjgd();
