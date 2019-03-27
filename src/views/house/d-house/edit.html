@@ -1,3 +1,4 @@
+
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
 <style>
@@ -8,65 +9,17 @@ img {
     vertical-align: middle; border: 0;
 }.house-img {
     height: 140px;
+    height: 140px;
 }
 .edit-house-info-dialog .house-img-all {
     width: 100%;
     height: 100%;
 }
 
-.layui-table-cell {
-    overflow: visible;
-}
-
-.layui-layer-page .layui-layer-content {
-    overflow: hidden;
-}
-
-.layui-form-pane {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 61px;
-}
-
-.layui-form-pane .form-content {
-    flex: 1;
-    overflow: auto;
-}
-
-.layui-form-pane .form-content  .layui-form-item{
-    display: flex;
-    /* flex-flow: row wrap; */
-    align-items: center;
-    justify-content: space-between;
-}
-
-
-.address-form .layui-inline {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-}
-
-.address-form .layui-inline:not(:first-child) {
-    margin-left: 10px;
-}
-
-.address-form .layui-form-label {
-    width: 80px;
-}
-.address-form .layui-input-inline {
-    width: 150px;
-}
-.layui-form-select ul{
-	z-index:999999
-}
 </style>
 <script>
-     var imageurl="";
-     function LoadData(id,tableid,layerindex){
+       var imageurl="";
+      function LoadData(id,tableid,layerindex){
         layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
@@ -74,230 +27,240 @@ img {
             var form = layui.form;
             var deletebilllist=[];
             var table=layui.table;
-            var doc = layui.htcsLG;
-            var cityListUrl = 'api/BaseData/QueryCity1';
-            var areaListUrl = 'api/Map/PCQueryArea';
-            var filter = {
-                currentCity:'',
-                cityList: [],
-                cityOptions: [],
-                currentArea: '',
-                areaList: [],
-                areaOptions: [],
-                currentCircle: '',
-                circleList: [],
-                circleOptions: []
-            }
-            //加载数据
-            doc.objectQuery("api/IndependHouse/Queryhousebyid", { "Id": id }, function (data) {
-                debugger;
-            console.log(data);
-            filter.currentCity= data.numberData.CityName;
-            filter.currentArea= data.numberData.AreamName;
-            filter.currentCircle= data.numberData.BusinessArea;
-            var getTpl = billeditscript.innerHTML
-            , view = document.getElementById('bill-edit-view');
-            laytpl(getTpl).render(data.numberData, function (html) {
-            view.innerHTML = html;
-            });
-            form.render('');
-           
-            getCityList();
-            form.on('select(CityName)', function (data) {
-                console.log(data);
-                filter.currentCity = data.value;
-                getAreaList();
-            })
+            var url = "api/House/Querydepent";
+            var tsurl='api/BaseData/Query';
+            var doc = layui.htcsLG;   
+            var allresult = [];
+            var para={"teseorpeibei":0,"type":2};
+            var getTpl = billeditscript1.innerHTML
+             , view = document.getElementById('bill-edit-view1');
+             var alldata=[];
 
-            form.on('select(AreaName)', function (data) {
-                filter.currentArea = data.value;
-                getCircleList();
-            })
-            
-            form.on('select(CircleName)', function (data) {
-                filter.currentCircle = data.value;
-            })
-          
-            $("#cancelbtn").click(function(){
-            layer.close(layerindex);
-            return false;
-            });
-            doc.tjgd();   
+            //加载编辑数据和门店数据
+            doc.objectQuery(tsurl, para, function (result) {
+                alldata.push(result.numberData);
+                doc.objectQuery(url, { "Id": id }, function (data) {
+                alldata.push(data.numberData);
+                var image=alldata[1].PrivateImage;
+                var arr=new Array();
+                    if(image!=null){
+                    image=image.substring(0,image.length-1);
+                    arr=image.split(';');
+                }
+                alldata.push(arr);
+                imageurl=alldata[1].PrivateImage;
+                laytpl(getTpl).render(alldata, function (html) {
+                view.innerHTML = html;
+                doc.tjgd();
+                $("#Status").val(data.numberData.Status);
+                $("#Orientation").val(alldata[1].Orientation);
+                $("#Huxing").val(data.numberData.Huxing);
+                form.render('');
+               
+                $("#addimage").click(function () {
+                  debugger
+                 var addid="layui-contract-addimage";
+                 var view = layui.view;
+                 layer.open({
+                    id:addid,
+                    type: 1,
+                    title: '上传文件',
+                    skin: 'two-layer',
+                    //anim: 4,
+                    shadeClose: true,//开启遮罩关闭
+                    //shade: ['0.5'],
+                    maxmin: true, //开启最大化最小化按钮
+                    area:['800px', '500px'],
+                    success: function(layero,index){
+                        view(this.id).render('upload/index', {
+                            img:imageurl,
+                            type:1,
+                            layerindex:index
+                           
+                        });
+                        
+                      }
+                });  
+               
+               }); 
+             });
+             });   
             });
             //监听提交
             form.on('submit(save)', function (data) {
-                data.field.CityName=filter.currentCity;
-                data.field.AreamName=filter.currentArea;
-                data.field.BusinessArea=filter.currentCircle;
-                data.field.Id=id;
-                var saveoption={
-                    url:'api/IndependHouse/Update',
-                    data:data.field,
-                    tableid:tableid,
-                    callBack:function(resultData){
-                        if (resultData.Code == 0) {
-                            layer.close(layerindex);
-                            layui.index.render();
-                        }
-                    }
-                }
-                doc.Submit(saveoption);
-                return false;
-            }); 
-
+            data.field.Id=id;
+            var arr=doc.getcheckbox("#peibei");
+            data.field.PrivatePeibei=arr;
+            var arr1=doc.getcheckbox("#tese");
+            data.field.PrivateTeshe=arr1;
+            data.field.PrivateImage=imageurl;
+            var saveoption={
+            url:'api/House/editsavepentHouse',
+            data:data.field,
+            tableid:tableid,
+            callBack:function(resultData){
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+            }
+           }
+           doc.Submit(saveoption);
+           return false;
+         });
+         $("#cancelbtn1").click(function(){
+            layer.close(layerindex);
+            return false;
+         });
         
-            
-
-            function getCityList () {
-                doc.objectQuery(cityListUrl, {}, function(result) {
-                    console.log(result);
-                    if (result.Code === 0) {
-                        for (let i in result.numberData) {
-                            if(filter.currentCity === '') {
-                                filter.currentCity = result.numberData[i].RegionName;
-                            }
-                            filter.cityList.push({
-                                name: result.numberData[i].RegionName,
-                                id: result.numberData[i].Id
-                            })
-                            filter.cityOptions.push('<option value="'+ result.numberData[i].RegionName +'">'+ result.numberData[i].RegionName +'</option>')
-                        }
-                        $('select[name="CityName"]').html(filter.cityOptions.join('')).val(filter.currentCity);
-                        getAreaList();
-                        form.render('select');
-                    }
-                })
-            }
-            
-          
-
-
-            function getAreaList () {
-                doc.objectQuery(areaListUrl, {
-                    name: filter.currentCity
-                }, function (result) {
-                    console.log(result);
-                    filter.areaList = result.numberData[0].districts;
-                    let cityOptions = [];
-                    for (let i in filter.areaList) {
-                        cityOptions.push('<option value="'+ filter.areaList[i].name +'">'+ filter.areaList[i].name +'</option>')
-                    }
-                    $('select[name="AreaName"]').html(cityOptions.join('')).val(filter.currentArea);
-                    getCircleList();
-                    form.render('select');
-                })
-            }
-
-            function getCircleList () {
-                let circleOptions = [];
-                for (let i in filter.areaList) {
-                    if (filter.currentArea === filter.areaList[i].name) {
-                        filter.circleList = filter.areaList[i].districts;
-                    }
-                }
-                for (let i in filter.circleList) {
-                    circleOptions.push('<option value="'+ filter.circleList[i].name +'">'+ filter.circleList[i].name +'</option>')
-                }
-                console.log(filter);
-                $('select[name="CircleName"]').html(circleOptions.join('')).val(filter.currentCircle);
-                form.render('select');
-            }
         });
-    }
-  
+      
+      }
+      function complteimg(name,type, number){
+            layui.use(['jquery'], function () {
+            var $ = layui.jquery;
+            imageurl=name;
+            var arr=parsearry(name);
+            var dom="";
+            var setter = layui.setter;
+            var imgurl = setter.imgurl;
+            $.each(arr,function(index,value){
+                 dom+='<div class="layui-col-xs2"><div><img class="house-img-all house-img hand" src="'+imgurl+value+'"></div></div>';
+            });
+           $("#himage").html(dom);
+        });
+       }
+       function  parsearry(img){
+        var arr=new Array();
+        if(img!=null){
+            img=img.substring(0,img.length-1);
+            arr=img.split(';');
+        }
+        return arr;
+       }  
 </script>
-        <script type="text/html" template >
-            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
-        </script>
-        <script id="billeditscript" type="text/html">
-            <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
-                    <div class="form-content"> 
-                     <div class="layui-form-item address-form"> 
-                        <div class="layui-inline"> 
-                        <label class="layui-form-label">城市</label> 
-                        <!-- <div class="layui-input-inline">  -->
-                            <!-- <input type="tel" name="CityName" autocomplete="off" id="CityName" class="layui-input"   />                       </div>  -->
-                            <select name="CityName" id="CityName" lay-filter="CityName"  lay-verify="required" lay-search></select>
-                        <!-- </div> -->
-                        </div>
-                        <div class="layui-inline"> 
-                            <label class="layui-form-label">区域</label> 
-                            <!-- <div class="layui-input-inline">  -->
-                            <!-- <input type="text" name="AreamName" id="AreamName" autocomplete="off" class="layui-input"  /> -->
-                            <select name="AreaName" id="AreaName" lay-filter="AreaName"   lay-verify="required"></select>
-                            <!-- </div> -->
-                        </div> 
-                        
-                        <div class="layui-inline"> 
-                            <label class="layui-form-label">商圈</label> 
-                            <!-- <div class="layui-input-inline">  -->
-                            <!-- <input type="text" name="CircleName" id="CircleName" lay-filter="CircleName" autocomplete="off" class="layui-input"  /> -->
-                            <select name="CircleName" id="CircleName"  lay-filter="CircleName" ></select>
-                            <!-- </div>  -->
-                        </div> 
-                    </div> 
-                     <div class="layui-form-item"> 
-                        <div class="layui-inline"> 
-                        <label class="layui-form-label">公寓名称</label> 
-                        <div class="layui-input-inline"> 
-                        <input type="text" name="CellName" id="CellName" value="{{d.CellName}}"  autocomplete="off" class="layui-input" lay-verify="required"  /> 
-                        </div> 
-                        </div> 
-                      <div class="layui-inline"> 
-                          <label class="layui-form-label">地址</label> 
-                          <div class="layui-input-inline"> 
-                           <input type="text" name="Adress" id="Adress" value="{{d.Adress}}" autocomplete="off" class="layui-input" lay-verify="required"  /> 
-                          </div> 
-                      </div> 
-                     </div> 
-                     <div class="layui-form-item"> 
-                      <div class="layui-inline"> 
-                       <label class="layui-form-label">座/栋/号</label> 
-                       <div class="layui-input-inline"> 
-                        <input type="text" name="BuildingNumber" autocomplete="off" value="{{d.BuildingNumber}}"  class="layui-input" lay-verify="required|number"   /> 
-                       </div> 
-                    </div> 
-                       <div class="layui-inline"> 
-                        <label class="layui-form-label">单元</label> 
-                        <div class="layui-input-inline"> 
-                         <input type="text" name="Unit" autocomplete="off" value="{{d.Unit}}" class="layui-input" lay-verify="number"  /> 
-                        </div> 
-                       </div> 
-                      
-                     
-                     </div> 
-                     
-                     <div class="layui-form-item"> 
-                      
-                       <div class="layui-inline"> 
-                            <label class="layui-form-label">楼层总数</label> 
-                            <div class="layui-input-inline"> 
-                             <input type="text" name="AllFloor" value="{{d.AllFloor}}" autocomplete="off" class="layui-input gray"  lay-verify="required|number" disabled /> 
-                            </div> 
-                           </div> 
-
-                           <div class="layui-inline"> 
-                                <label class="layui-form-label">每层房间数</label> 
-                                <div class="layui-input-inline"> 
-                                 <input type="text" name="ShiNumber" value="{{d.ShiNumber}}" autocomplete="off" class="layui-input gray" lay-verify="required|number" disabled /> 
-                                </div> 
-                               </div> 
-                     
-                     </div> 
-                    
-                         
-                        </div>
-                    
-                        <div class="form-bottom">
-                                <div class="form-wrap">
-                                    <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancel" lay-submit="">取消</button>
-                                    <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
-                                </div>
+<script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+<script id="billeditscript1" type="text/html">
+    {{#  var setter = layui.setter;var imgurl = setter.imgurl;var doc = layui.htcsLG; }}
+    <div class="form-content">
+            <input type="text" name="Id" id="Id" autocomplete="off" class="layui-input" value="{{d[1].Id}}" style="display:none" /> 
+             <div class="layui-form-item"> 
+              <div class="layui-inline"> 
+               <label class="layui-form-label" style="text-align:left;width:auto;">房间名称</label> 
+               <div class="layui-input-inline" style="width:270px;"> 
+                <input type="tel" name="Name" autocomplete="off" class="layui-input" value="{{d[1].Name}}"  /> 
+               </div> 
+              </div> 
+              <div class="layui-inline"> 
+               <label class="layui-form-label">价格</label> 
+               <div class="layui-input-inline"> 
+                <input type="text" name="Price" autocomplete="off" class="layui-input" value="{{d[1].Price}}"  /> 
+               </div> 
+              </div> 
+             </div> 
+             <div class="layui-form-item"> 
+              <div class="layui-inline"> 
+               <label class="layui-form-label" style="text-align:left;width:auto;">出租状态</label> 
+               <div class="layui-input-inline" style="width: 122px;"> 
+                <select name="Status" lay-verify="" id="Status" disabled>
+                    <option value="">请选择</option>
+                    <option value="1">未租</option>
+                    <option value="2">已租</option>
+                    <option value="3" >装修中</option>
+                </select>  
+               </div> 
+              </div> 
+              <div class="layui-inline"> 
+               <label class="layui-form-label">户型</label> 
+               <div class="layui-input-inline"> 
+                    <select name="Huxing" lay-verify="" id="Huxing">
+                            <option value="">请选择</option>
+                            <option value="客卧">客卧</option>
+                            <option value="主卧">主卧</option>
+                            <option value="次卧" >次卧</option>
+                            <option value="一室一厅" >一室一厅</option>
+                            <option value="三室一厅" >三室一厅</option>
+                    </select>  
+               </div> 
+              </div> 
+             </div> 
+             <div class="layui-form-item"> 
+              <div class="layui-inline"> 
+               <label class="layui-form-label" style="text-align:left;width:auto;">朝向</label> 
+               <div class="layui-input-inline"> 
+                    <select name="Orientation" lay-verify="" id="Orientation">
+                            <option value="">请选择</option>
+                            <option value="东">东</option>
+                            <option value="西">西</option>
+                            <option value="南">南</option>
+                            <option value="北">北</option>
+                    </select>  
+               </div> 
+               <label class="layui-form-label" style="text-class="layui-form-label" style="text-align:left;width:auto;">面积</label> 
+               <div class="layui-input-inline"> 
+                <input type="text" name="Measure" autocomplete="off" class="layui-input" value="{{d[1].Measure}}"  /> 
+               </div> 
+              </div> 
+             </div> 
+             <div class="layui-form-item"> 
+              <div class="layui-inline"> 
+               <label class="layui-form-label" style="text-align:left;width:auto;">特色</label> 
+               <div class="layui-input-inline" style="width:auto;" id="tese">
+                {{#  layui.each(d[1].listtese, function(index, item1){ }}
+                {{#  if(item1.IsCheck==1){ }}
+                <input type="checkbox" name="PublicPeibei" value="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei"  checked >
+                {{# }else{ }}
+                    <input type="checkbox" name="PublicPeibei" value="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei">
+                {{# }; });   }}
+              </div>
+              </div> 
+              <div class="layui-form-item"> 
+                  <div class="layui-inline"> 
+                   <label class="layui-form-label" style="text-align:left;width:auto;">配备</label> 
+                   <div class="layui-input-inline" style="width:auto;" id="peibei">
+                    {{#  layui.each(d[1].listpeibei, function(index, item1){ }}
+                    {{#  if(item1.isCheck==1){ }}
+                    <input type="checkbox" name="PublicPeibei" value="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" checked >
+                    {{# }else{ }}
+                        <input type="checkbox" name="PublicPeibei" value="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" >
+                    {{# }; });   }}
                   </div>
-                   </form>
-                </script>
-           
-   
-                <div id="bill-edit-view">
+                  </div>
+             </div> 
+             <div class="title"> 
+                <h3 class="red"> 图片信息</h3> 
+               </div> 
+               <div class="layui-form-item"> 
+                <div class="layui-inline"> 
+                   <a class="layui-btn layui-btn-warm" id="addimage">添加/修改/删除 照片</a>
+                </div> 
+               </div>  
+               <div class="layui-row" id="himage">
+                     {{#  layui.each(d[2], function(index, item1){ }}
+                     <div class="layui-col-xs2">
+                             <div>
+                              <img class="house-img-all house-img hand" src="{{imgurl}}{{item1}}">
+                             </div>
+                     </div>
+                     {{# });   }}                          
                 </div>
-              
+
+            </div> 
+          </div>
+</script>
+        
+       
+            
+            <form class="layui-form layui-form-pane hcs-form" action=""> 
+                    <div id="bill-edit-view1" class="child-view">
+                        </div>
+                  <div class="form-bottom">
+                    <div class="form-wrap">
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn1" >取消</button>
+                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                    </div>
+                   </div>  
+           </form> 
+               
+    

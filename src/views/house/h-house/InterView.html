@@ -12,17 +12,45 @@ Layout = null;
     <style>
         .buttonleft{margin-left: 30px;}
         .house-img{width: 140px;height: 140px;cursor: pointer;}
+        .img-wrap{
+          position: relative;
+          width: 140px;
+          height: 140px;
+        }
+        .img-wrap .view,
+        .img-wrap .download{
+          position: absolute;
+          left: 5px;
+          font-size: 30px;
+          cursor: pointer;
+          color: #5FB878;
+          top: 4px;
+        }
+        .img-wrap .download{
+          right: 5px;
+          left: initial;
+        }
+        .opes{
+          position: absolute;
+          height: 40px;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: rgba(0,0,0,.5);
+        }
     </style>
     <script>
         var houseid=0;
          function LoadData(id,ParentRoomid,layerindex){
             houseid=id;
-            layui.use(['laypage','htcsradio', 'layer', 'laytpl', 'jquery', 'form','element'], function(){
+            layui.use(['laypage','htcsradio', 'layer', 'laytpl', 'jquery', 'form','element','setter'], function(){
             var url = "api/House/Querydepent";
             var para={"teseorpeibei":0,"type":2};
             var tsurl='api/BaseData/Query';
             var gqurl="api/House/publicHousexq";
             var laytpl = layui.laytpl;
+            var setter = layui.setter;
+            var baseurl = setter.baseurl;
             var doc = layui.htcsLG;
             var util = layui.util;
             var paradata = { "Id": id, "ParentRoomid": ParentRoomid };
@@ -60,6 +88,15 @@ Layout = null;
                       layer.photos({
                         photos: '#himage'
                         ,anim: 5
+                      });
+                      //预览
+                      $('#himage').on('click', '.view', function(){
+                        $(this).parents('.img-wrap').find('img').click();
+                      });
+                      //下载
+                      $('#himage').on('click', '.download', function(){
+                        var file = $(this).parents('.img-wrap').find('img').attr('alt');
+                        location.href = baseurl + 'HtcsExcel/DownloadFile?filename=' + file;
                       });
                    });
                    $(".buttonleft").click(function (index,value) {
@@ -478,8 +515,12 @@ function formatterzhouqi(value) {
                                    <div class="layui-row" id="himage">
                                          {{#  layui.each(d[3], function(index, item1){ }}
                                          <div class="layui-col-xs3">
-                                                 <div>
-                                                  <img class="house-img-all house-img hand" src="{{imgurl1}}{{item1}}">
+                                                 <div class="img-wrap">
+                                                  <img class="house-img-all house-img hand" src="{{imgurl1}}{{item1}}" alt="{{item1}}">
+                                                  <div class="opes">
+                                                    <i class="layui-icon view">&#xe615;</i>
+                                                    <i class="layui-icon download">&#xe601;</i>
+                                                  </div>
                                                  </div>
                                          </div>
                                          {{# });   }}                          

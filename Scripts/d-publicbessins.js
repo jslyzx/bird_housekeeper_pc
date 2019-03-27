@@ -17,7 +17,6 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         var paradata = { "PageSize": 10, "PageIndex": 1,"RecrntType":3 };
         var option = { data: [{ "value": 0, "text": "全部" }, { "value": 1, "text": "未租" },  { "value": 2, "text": "已租" },{ "value": 3, "text": "装修中" }], rdefault: 0 };
         mymod.CreateInput($("#house-othersrarch"), option, function (result) {
-            debugger;
             search.Status=result;
             loaddata(search);
         });
@@ -108,12 +107,10 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
                 ,isAuto:true
                 ,end:"没有房源了"
                 ,done: function(page, next){ //执行下一页的回调
-                    debugger;
                     paradata.PageIndex=page;
                     doc.objectQuery(url, paradata, function (data) {
                         var floors=[];
                         if(data.Code==0){
-                            debugger;
                             nowid=data.numberData.Id;
                             Eventhouse();
                             if(data.numberData!=null){
@@ -349,7 +346,7 @@ function ViewEvent(pId) {
             skin: "layui-anim layui-anim-rl layui-layer-adminRight",
             success: function (layero, index) {
                 //debugger;
-                view("domInterView").render('house/h-house/InterView', {
+                view("domInterView").render('house/d-house/InterView', {
                     id: id,
                     ParentRoomid:pId,
                     layerindex:index
@@ -376,7 +373,7 @@ function ViewEvent(pId) {
             
             success: function (layero, index) {
                 //debugger;
-                view("domedit").render('house/h-house/edit', {
+                view("domedit").render('house/d-house/edit', {
                     id: id,
                     ParentRoomid:parentid,
                     layerindex:index

@@ -13,16 +13,48 @@
     <link href="../../../../Content/hsc-form.css" rel="stylesheet" />  
     <style>
         .buttonleft{margin-left: 30px;}
+        .house-img{width: 140px;height: 140px;cursor: pointer;}
+        .img-wrap{
+          position: relative;
+          width: 140px;
+          height: 140px;
+          margin-right: 20px;
+          float: left;
+        }
+        .img-wrap .view,
+        .img-wrap .download{
+          position: absolute;
+          left: 5px;
+          font-size: 30px;
+          cursor: pointer;
+          color: #5FB878;
+          top: 4px;
+        }
+        .img-wrap .download{
+          right: 5px;
+          left: initial;
+        }
+        .opes{
+          position: absolute;
+          height: 40px;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: rgba(0,0,0,.5);
+        }
     </style> 
     <script>
          function LoadData(id,ParentRoomid,layerindex){
-            layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','element'], function(){
+            layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','element','setter'], function(){
             var url = "api/House/Querydepent";
             var para={"teseorpeibei":0,"type":2};
             var tsurl='api/BaseData/Query';
             var gqurl="api/House/publicHousexq";
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
+            var setter = layui.setter;
+            var baseurl = setter.baseurl;
+            var imgurl1 = setter.imgurl;
             var util = layui.util;
             var paradata = { "Id": id, "ParentRoomid": ParentRoomid };
             var getTpl = billeditscript.innerHTML
@@ -32,6 +64,7 @@
              var table = layui.table;
              var view1 = layui.view;
              var alldata=[];
+             var imageurl="";
              //查询特色信息
              doc.objectQuery(tsurl, para, function (data) {
                 alldata.push(data.numberData);
@@ -39,9 +72,31 @@
                 alldata.push(data.numberData);
                 doc.objectQuery(gqurl, { "Id": ParentRoomid }, function (data) {
                 alldata.push(data.numberData);
+                debugger
+                 imageurl += alldata[1].PrivateImage;
+                  var arr=new Array();
+                  if(imageurl!=null){
+                    imageurl=imageurl.substring(0,imageurl.length-1);
+                    arr=imageurl.split(';');
+                  }
+                  alldata.push(arr);
+                  alldata.imgurl1 = imgurl1;
                 laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
                 form.render('');
+                layer.photos({
+                        photos: '#himage'
+                        ,anim: 5
+                      });
+                      //预览
+                      $('#himage').on('click', '.view', function(){
+                        $(this).parents('.img-wrap').find('img').click();
+                      });
+                      //下载
+                      $('#himage').on('click', '.download', function(){
+                        var file = $(this).parents('.img-wrap').find('img').attr('alt');
+                        location.href = baseurl + 'HtcsExcel/DownloadFile?filename=' + file;
+                      });
              });
              $(".buttonleft").click(function (index,value) {
            debugger;
@@ -357,6 +412,20 @@ function formatterzhouqi(value) {
                                
                               
                                </div>   
+                               <div class="title"> 
+                                <h3 class="red"> 图片信息</h3> 
+                               </div>
+                               <div class="layui-row" id="himage">
+                                   {{#  layui.each(d[3], function(index, item1){ }}
+                                     <div class="img-wrap">
+                                      <img class="house-img-all house-img hand" src="{{d.imgurl1}}{{item1}}" alt="{{item1}}">
+                                      <div class="opes">
+                                        <i class="layui-icon view">&#xe615;</i>
+                                        <i class="layui-icon download">&#xe601;</i>
+                                      </div>
+                                     </div>
+                                   {{# });   }}                          
+                              </div>
                          </form> 
                     </script>
                     <div id="bill-edit-view">

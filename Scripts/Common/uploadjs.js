@@ -1,6 +1,6 @@
 ﻿
 function LoadData(img,type,layerindex){
-    layui.use(['upload',"setter"], function () {
+    layui.use(['upload',"setter",'layer'], function () {
         var imagearr = [];
         var index;
        
@@ -24,7 +24,6 @@ function LoadData(img,type,layerindex){
               //预读本地文件示例，不支持ie8
               index = layer.load(1);
               obj.preview(function (index, file, result) {
-                  debugger;
                   if (currindex == index) {
                       return;
                   }
@@ -36,14 +35,12 @@ function LoadData(img,type,layerindex){
                   $('#demo2').append(html);
                   removeEvent();
                   $("#cc-" + index).click(function (event) {
-                      debugger;
                       obj.upload(index, file);         
                       //event.stopPropagation();
                   });
               });
           }
           ,done: function (res){
-              debugger;
               if (res.Code == 0) {
                   imagearr.push(res.numberData);
                   $("#item-" + currindex).append('<i class="layui-icon success" style="font-size: 30px;color:#5FB878;">&#x1005;</i>');
@@ -65,7 +62,6 @@ function LoadData(img,type,layerindex){
        
         function removeEvent() {
             $(".remove").click(function () {
-                debugger;
                 var removeItem = "";
                 removeItem = $(this).prev("img").attr("alt");
                 $(this).parent().remove();
@@ -75,13 +71,16 @@ function LoadData(img,type,layerindex){
             });
         }
         function Initimg() {
-            debugger;
             var name = img;
             if (name != null && name != "undefined" && name != "") {
                 imagearr = getarr(name);
                 $.each(imagearr, function (index, value) {
-                    var html = '<div class="col-6-24 item"><img src="' + imgurl+value + '" alt="' + value + '"  class="layui-upload-img"><i class="layui-icon remove" style="font-size: 30px;color:#FF5722;">&#x1007;</i><i class="layui-icon success" style="font-size: 30px;color:#5FB878;">&#x1005;</i></div>';
+                    var html = '<div class="col-6-24 item"><img src="' + imgurl+value + '" alt="' + value + '"  class="layui-upload-img"><i class="layui-icon remove" style="font-size: 30px;color:#FF5722;">&#x1007;</i><i class="layui-icon success" style="font-size: 30px;color:#5FB878;">&#x1005;</i><i class="layui-icon view">&#xe615;</i><i class="layui-icon download">&#xe601;</i></div>';
                     $('#demo2').append(html);
+                });
+                layer.photos({
+                  photos: '#demo2'
+                  ,anim: 5
                 });
             }
         };
@@ -97,16 +96,23 @@ function LoadData(img,type,layerindex){
             return revalue;
         }
         $("#cancel1").click(function () {
-            debugger;
             layer.close(layerindex); 
         });
         $("#imgsave").click(function () {
-            debugger;
             var revalue = getstr(imagearr);
             layer.close(layerindex); 
            
             complteimg(revalue,type, imagearr.length);
             
+        });
+        //下载
+        $('.layui-upload-list').on('click', '.download', function(){
+          var file = $(this).siblings('img').attr('alt');
+          location.href = baseurl + 'HtcsExcel/DownloadFile?filename=' + file;
+        });
+        //预览
+        $('.layui-upload-list').on('click', '.view', function(){
+          $(this).siblings('img').click();
         });
         return false;
 });

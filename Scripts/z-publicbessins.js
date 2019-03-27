@@ -101,7 +101,6 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
 
         //加载数据
         function loaddata(othersearch){
-            debugger;
             //合并筛选条件
             $('#view').remove();
             $('.right-content').append('<div id="view"></div>')
@@ -112,7 +111,6 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
                 ,isAuto:true
                 ,end:"没有房源了"
                 ,done: function(page, next){ //执行下一页的回调
-                    debugger;
                     paradata.PageIndex=page;
                     doc.objectQuery(url, paradata, function (data) {
                         laytpl(getTpl).render(data.numberData, function (html) {

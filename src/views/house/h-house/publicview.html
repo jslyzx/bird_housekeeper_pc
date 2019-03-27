@@ -1,6 +1,16 @@
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
-
+<style>
+    .hand {
+    cursor: pointer;
+}
+img {
+    vertical-align: middle; border: 0;
+}.house-img {
+    height: 140px;
+    width: 140px;
+}
+</style>
 <script>
      var imageurl="";
      function LoadData(id,tableid,layerindex){
@@ -27,7 +37,6 @@
                     alldata.push(data.numberData);
                     imageurl=alldata[1].PublicImg;
                     doc.objectQuery(url1, {  }, function (data) {
-                        debugger;
                         alldata.push(data.numberData);
                     var arr=new Array();
                     if(alldata[1].PublicImg!=null){
@@ -103,7 +112,6 @@
                 return false;
                 });
                 $("#addimage").click(function () {
-                    debugger;
                  var addid="layui-contract-addimage";
                  var view = layui.view;
                  layer.open({

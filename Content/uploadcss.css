@@ -39,6 +39,22 @@
     top: 8px;
     cursor: pointer;
 }
+.view{
+    position: absolute;
+    left: 5px;
+    bottom: 8px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #5FB878;
+}
+.download{
+    position: absolute;
+    right: 5px;
+    bottom: 8px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #5FB878;
+}
 img {
     vertical-align: middle;
 }

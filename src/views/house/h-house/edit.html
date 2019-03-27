@@ -1,7 +1,22 @@
 
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .hand {
+    cursor: pointer;
+}
+img {
+    vertical-align: middle; border: 0;
+}.house-img {
+    height: 140px;
+    height: 140px;
+}
+.edit-house-info-dialog .house-img-all {
+    width: 100%;
+    height: 100%;
+}
 
+</style>
 <script>
        var imageurl="";
       function LoadData(id,tableid,layerindex){
@@ -20,13 +35,13 @@
             var getTpl = billeditscript1.innerHTML
              , view = document.getElementById('bill-edit-view1');
              var alldata=[];
-            debugger;
+
             //加载编辑数据和门店数据
             doc.objectQuery(tsurl, para, function (result) {
                 alldata.push(result.numberData);
                 doc.objectQuery(url, { "Id": id }, function (data) {
                 alldata.push(data.numberData);
-                var image=alldata[1].PublicImg;
+                var image=alldata[1].PrivateImage;
                 var arr=new Array();
                     if(image!=null){
                     image=image.substring(0,image.length-1);
@@ -42,9 +57,8 @@
                 $("#Huxing").val(data.numberData.Huxing);
                 form.render('');
                
-                debugger;
                 $("#addimage").click(function () {
-                    debugger;
+                  debugger
                  var addid="layui-contract-addimage";
                  var view = layui.view;
                  layer.open({
@@ -94,7 +108,6 @@
            return false;
          });
          $("#cancelbtn1").click(function(){
-             debugger;
             layer.close(layerindex);
             return false;
          });
@@ -103,7 +116,6 @@
       
       }
       function complteimg(name,type, number){
-            debugger;
             layui.use(['jquery'], function () {
             var $ = layui.jquery;
             imageurl=name;
