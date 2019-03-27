@@ -54,7 +54,140 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
         var url=apiurl+'HtcsExcel/contractexcel?search='+JSON.stringify(search); 
         $(this).attr("href",url);
        
+    });
+
+    // 三级联动数据
+    var leftFilter = {
+        currentProvince: '',
+        currentCity: '',
+        currentArea: '',
+        provinceOptions: [],
+        cityOptions: [],
+        areaOptions: [],
+        provinceList: [],
+        cityList: [],
+        areaList: []
+    }
+    var filterUrl = 'api/Formatter/QueryPCCell1';
+    initFilter();
+
+    function initFilter(){
+      doc.objectQuery(filterUrl, {"Type": '1'}, function (data) {
+          var provinceList = data.numberData;
+          var cityList = [];
+          var provinceOptions = [];
+          var currentProvince = leftFilter.currentProvince;
+          for (var i in provinceList) {
+              if (currentProvince === '' || currentProvince === provinceList[i].provinceName) {
+              currentProvince = provinceList[i].provinceName;
+              cityList = provinceList[i].mallCityList; 
+              }
+              provinceOptions.push('<option value="'+ provinceList[i].provinceName +'">'+ provinceList[i].provinceName +'</option>');
+          }
+          leftFilter.provinceOptions  = provinceOptions;
+          leftFilter.cityList = cityList;
+          leftFilter.currentProvince = currentProvince;
+          leftFilter.provinceList = provinceList;
+          selectProvince();
+          $('select[name="CityName"]').append(leftFilter.provinceOptions.join('')).val(leftFilter.currentProvince);
+          $('select[name="AreaName"]').append(leftFilter.cityOptions.join('')).val(leftFilter.currentCity);
+          // $('.area-list').append(leftFilter.areaOptions.join(''))
+          form.render();
+      })
+    }
+
+    form.on('select(CityName)', function (data) {
+        leftFilter.currentProvince = data.value;
+        for (let i in leftFilter.provinceList) {
+            if (leftFilter.currentProvince === leftFilter.provinceList[i].provinceName) {
+                leftFilter.cityList = leftFilter.provinceList[i].mallCityList;
+            }
+        }
+        selectProvince();
+        $('select[name="AreaName"]').html(leftFilter.cityOptions.join('')).val(leftFilter.currentCity);
+        form.render();
     })
+
+    form.on('select(AreaName)', function (data) {
+        leftFilter.currentCity = data.value;
+        for (let i in leftFilter.cityList) {
+            if (leftFilter.currentCity === leftFilter.cityList[i].cityName) {
+                leftFilter.areaList = leftFilter.cityList[i].mallAreaList;
+            }
+        }
+        selectCity();
+        $('select[name="CellName"]').html(leftFilter.areaOptions.join(''));
+        form.render();
+    })
+
+    function selectProvince () {
+            var provinceList = leftFilter.provinceList;
+            var currentProvince =  leftFilter.currentProvince;
+            var cityList = leftFilter.cityList;
+            var cityOptions = [];
+            var currentCity = '';
+            var areaList = [];
+            if (currentCity === '' && cityList.length > 1) {
+                cityOptions.push('<option value="">全部</option>')
+                areaList = getAreaList();
+                for (var i in cityList) {
+                    cityOptions.push('<option value="'+ cityList[i].cityName +'">'+ cityList[i].cityName +'</option>')
+                }
+            } else {
+                for (var i in cityList) {
+                    if (currentCity === '' || currentCity === cityList[i].cityName) {
+                    currentCity = cityList[i].cityName;
+                    areaList = cityList[i].mallAreaList;
+                    cityOptions.push('<option value="'+ cityList[i].cityName +'" selected>'+ cityList[i].cityName +'</option>');
+                    } else {
+                    cityOptions.push('<option value="'+ cityList[i].cityName +'">'+ cityList[i].cityName +'</option>')
+                    }
+                }
+            }
+
+            leftFilter.areaList = areaList;
+            leftFilter.cityOptions = cityOptions;
+            leftFilter.currentCity = currentCity;
+
+            selectCity();
+        }
+
+        function getAreaList () {
+            var cityList = leftFilter.cityList;
+            var areaList = [];
+            for (var i in cityList) {
+                areaList = [].concat(areaList, cityList[i].mallAreaList || []);
+            }
+            return areaList;
+        }
+
+        function selectCity () {
+            var areaList = leftFilter.areaList;
+            var cityList = leftFilter.cityList;
+            var areaOptions = [];
+            var currentArea = '';
+            if (currentArea === '' && areaList.length >= 1) {
+                areaOptions.push('<label class="area-item area-item-active" lay-value="">全部小区</label>')
+                for (var i in areaList) {
+                    areaOptions.push('<option value="'+ areaList[i].areaName +'">'+ areaList[i].areaName +'</option>')
+                }
+            } else {
+                if (currentArea === '') {
+                    areaOptions.push('<option lay-value="">全部小区</option>');
+                }
+                for (var i in areaList) {
+                    if (currentArea === areaList[i].areaName) {
+                        currentArea = areaList[i].areaName;
+                        areaOptions.push('<label class="area-item area-item-active" lay-value="'+ areaList[i].areaName +'">'+ areaList[i].areaName +'</label>')
+                    } else {
+                        areaOptions.push('<label class="area-item"  lay-value="'+ areaList[i].areaName +'">'+ areaList[i].areaName +'</label>')
+                    }
+                }
+            }
+            leftFilter.areaOptions = areaOptions;
+            leftFilter.currentArea = currentArea;
+        }
+
     var tableoption = {
         domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
             { type: 'checkbox' }

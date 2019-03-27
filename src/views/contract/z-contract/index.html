@@ -42,7 +42,24 @@
                                             <input type="text" name="tEndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="tEndTime">
                                         </div>
                             </div>
-                     
+                     <div class="m-search-item">
+                             <label class="layui-form-label" style="width: 40px;">市</label>
+                             <div class="layui-input-inline" style="width: 90px;">
+                                 <select lay-filter="CityName" name="CityName"></select>
+                             </div>
+                         </div>
+                         <div class="m-search-item">
+                             <label class="layui-form-label" style="width: 40px;">区</label>
+                             <div class="layui-input-inline" style="width: 90px;">
+                                 <select lay-filter="AreaName" name="AreaName"></select>
+                             </div>
+                         </div>
+                         <div class="m-search-item">
+                             <label class="layui-form-label" style="width: 40px;">小区</label>
+                             <div class="layui-input-inline" style="width: 120px;">
+                                 <select lay-filter="CellName" name="CellName"></select>
+                             </div>
+                         </div>
                     <div class="m-search-item">
                         <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
                     </div>
