@@ -130,7 +130,7 @@
                     if($("#BeginTime").val()!=""){
                         debugger;
                         var dt = getDate($("#BeginTime").val());
-                        var newDate = doc.DateAdd("m",Number(idvalue),dt,);
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt);
                       
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
                     }

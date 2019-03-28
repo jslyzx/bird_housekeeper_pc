@@ -1,177 +1,150 @@
-
-    <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
-    <script src="../../../../Scripts/jquery-1.10.2.js"></script>    
-     <style>
-         .wrapguding{display:none;}
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script src="../../../../Scripts/jquery-1.10.2.js"></script>
+<style>
+    .wrapguding{display:none;}
          .zafeitit{color:#FFB800;font-weight:500;}
          .zisyajin{display: none;}
          .rizu{display: none;}
      </style>
-  <script type="text/html" template >
+<script type="text/html" template>
     {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
   </script>
-  <script>
-      var indexclose;
-      function LoadData(id,tableid,layerindex,btnOption){
+<script>
+    var indexclose;
+    function LoadData(id,tableid,layerindex,btnOption){
         layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form','util'], function () {
-                var laytpl = layui.laytpl;
-                var util = layui.util;
-                var doc = layui.htcsLG;
-                var url = "api/Contract/GetEnum";
-                var $ = layui.jquery;
-                var jQuery=layui.jquery;
-                var form = layui.form;
-                debugger;
-                doc.objectQuery(url, { }, function (data) {
-                    var getTpl = zcontractaddscript.innerHTML
-               , view = document.getElementById('zcontract-add-view');
-                    laytpl(getTpl).render(data.numberData, function (html) {
-                        view.innerHTML = html;
-                    });
-                    var laydate = layui.laydate;
-                    //执行一个laydate实例
-                    laydate.render({
-                        elem: '#BatethDay' //指定元素
-                    });
-                    laydate.render({
-                        elem: '#BeginTime' //指定元素
-                    });
-                    laydate.render({
-                        elem: '#EndTime' //指定元素
-                    });       
-                    //验证规则
-                    Create();
-                    EventOther();
-                    form.render('');
+            var laytpl = layui.laytpl;
+            var util = layui.util;
+            var doc = layui.htcsLG;
+            var url = "api/Contract/GetEnum";
+            var $ = layui.jquery;
+            var jQuery=layui.jquery;
+            var form = layui.form;
+            doc.objectQuery(url, {}, function (data) {
+                var getTpl = zcontractaddscript.innerHTML,view = document.getElementById('zcontract-add-view');
+                laytpl(getTpl).render(data.numberData, function (html) {
+                    view.innerHTML = html;
                 });
-                function Create() {
-                    if(id!=undefined){
-                        debugger;
-                        $("#chosehouse").hide();
-                        $("#HouseId").val(id);
-                    }
-                    form.on('checkbox(zafei)', function (data) {
-                        debugger;
-                        var dom = data.elem;
-                        var name = dom.title;
-                        var type = dom.attributes.ztype.nodeValue;
-                        var yajin=dom.attributes.zyajin.nodeValue;
-                        var id = "zafei-" + name;
-                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + dom.title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" id="' + id + 'zafeiPinlv" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input" class="zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
-                      
-                        if (dom.checked == true)
-                        {
-                            $(".zafeicontent").append(content);
-                        } else {
-                            $("#"+id).remove();
-                        }
-                        form.render('');
-                        $(id+" .zafeiType").val(type);
-                        Eventzafei(type,id,yajin);
-                    });
-                    //计算押金
-                    $(document).on('change','.Recent',function(){
-                        var zujin=$(".Recent").val();
-                        var yaji=$("#DepositType").val();
-                        $("#cyajin").val(zujin*yaji);
-                    });
-                    form.on('select(DepositType)', function(data){
-                        var zujin=$(".Recent").val();
-                        var yaji=$("#DepositType").val();
-                        $("#cyajin").val(zujin*yaji);
-                    });
-                    form.on('checkbox(yajin)', function (data) {
-                        debugger;
-                        var dom = data.elem;
-                        var name = dom.name;
-                        var type = dom.attributes.ztype.nodeValue;
-                        var yajin=dom.attributes.zyajin.nodeValue;
-                        var id = "yajin-" + name;
-                        var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + dom.title + '</label><div class="layui-input-inline zafeiType" style="width: 140px;"><input type="tel" name="yajinJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div>';
-                      
-                        if (dom.checked == true)
-                        {
-                            $(".yajincontent").append(content);
-                        } else {
-                            $("#"+id).remove();
-                        }
-                        form.render('');
-                        $(id+" .zafeiType").val(type);
-                        Eventzafei(type,id,yajin);
-                    });
-                    
+                var laydate = layui.laydate;
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#BatethDay' //指定元素
+                });
+                laydate.render({
+                    elem: '#BeginTime' //指定元素
+                });
+                laydate.render({
+                    elem: '#EndTime' //指定元素
+                });       
+                //验证规则
+                Create();
+                EventOther();
+                form.render('');
+            });
+            function Create() {
+                if(id!=undefined){
+                    $("#chosehouse").hide();
+                    $("#HouseId").val(id);
                 }
-                
-               form.on('select(Recivetype)', function(data){
-                   debugger;
-                   var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option>';
-                   var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5号</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option>';
-                   if(data.value==2){
-                          $("#BeforeDay").empty();
-                          $("#BeforeDay").append(hao);
-                   }
-                   if(data.value==1){
-                    $("#BeforeDay").empty();
-                     $("#BeforeDay").append(tian);
+                form.on('checkbox(zafei)', function (data) {
+                    var dom = data.elem;
+                    var name = dom.title;
+                    var type = dom.attributes.ztype.nodeValue;
+                    var yajin=dom.attributes.zyajin.nodeValue;
+                    var id = "zafei-" + name;
+                    var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + dom.title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" id="' + id + 'zafeiPinlv" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input" class="zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                  
+                    if (dom.checked == true)
+                    {
+                        $(".zafeicontent").append(content);
+                    } else {
+                        $("#"+id).remove();
                     }
-                    form.render('select');
-               });
-              
-        
-               function EventOther(){
+                    form.render('');
+                    $(id+" .zafeiType").val(type);
+                    Eventzafei(type,id,yajin);
+                });
+                //计算押金
+                $(document).on('change','.Recent',function(){
+                    var zujin=$(".Recent").val();
+                    var yaji=$("#DepositType").val();
+                    $("#cyajin").val(zujin*yaji);
+                });
+                form.on('select(DepositType)', function(data){
+                    var zujin=$(".Recent").val();
+                    var yaji=$("#DepositType").val();
+                    $("#cyajin").val(zujin*yaji);
+                });
+                form.on('checkbox(yajin)', function (data) {
+                    var dom = data.elem;
+                    var name = dom.name;
+                    var type = dom.attributes.ztype.nodeValue;
+                    var yajin=dom.attributes.zyajin.nodeValue;
+                    var id = "yajin-" + name;
+                    var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + dom.title + '</label><div class="layui-input-inline zafeiType" style="width: 140px;"><input type="tel" name="yajinJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div>';
+                  
+                    if (dom.checked == true)
+                    {
+                        $(".yajincontent").append(content);
+                    } else {
+                        $("#"+id).remove();
+                    }
+                    form.render('');
+                    $(id+" .zafeiType").val(type);
+                    Eventzafei(type,id,yajin);
+                });
+            }
+
+            function EventOther(){
                 $("#cancelbtn").click(function(){
-                    debugger;
-                layer.close(layerindex);
-                return false;
+                    layer.close(layerindex);
+                    return false;
                 });
                 form.on('select(timeType)', function(data){
-                debugger;
-                //日租
-                if(data.value==0){
-                    $(".yuezu").hide();
-                    $(".rizu").show();
-                    //不验证
-                    $("#Type").removeAttr("lay-verify");
-                    $("#PinLv").removeAttr("lay-verify");
-                    $("#DepositType").removeAttr("lay-verify");
-                    $("#Recent").removeAttr("lay-verify");
-                     //验证
-                    $("#Recent1").attr("lay-verify","required");
-                    $("#Type").val(0);
-                    //常规押金可编辑
-                    $("#cyajin").removeClass("gray");
-                    $("#cyajin").attr("disabled",false);
-                }
-                //月租
-                if(data.value==1){
-                    $(".yuezu").show();
-                    $(".rizu").hide();
-                      //不验证
-                    $("#Recent1").removeAttr("lay-verify"); 
-                    //验证
-                    $("#Recent").attr("lay-verify","required");
-                    $("#Type").attr("lay-verify","required");
-                    $("#DepositType").attr("lay-verify","required");
-                    $("#PinLv").attr("lay-verify","required");
-                    $("#yType").val(1);
-                    //常规押金不可编辑
-                    $("#cyajin").addClass("gray");
-                    $("#cyajin").attr("disabled",true);
-                }
-                 
-                 form.render('select');
+                    //日租
+                    if(data.value==0){
+                        $(".yuezu").hide();
+                        $(".rizu").show();
+                        //不验证
+                        $("#Type").removeAttr("lay-verify");
+                        $("#PinLv").removeAttr("lay-verify");
+                        $("#DepositType").removeAttr("lay-verify");
+                        $("#Recent").removeAttr("lay-verify");
+                         //验证
+                        $("#Recent1").attr("lay-verify","required");
+                        $("#Type").val(0);
+                        //常规押金可编辑
+                        $("#cyajin").removeClass("gray");
+                        $("#cyajin").attr("disabled",false);
+                    }
+                    //月租
+                    if(data.value==1){
+                        $(".yuezu").show();
+                        $(".rizu").hide();
+                          //不验证
+                        $("#Recent1").removeAttr("lay-verify"); 
+                        //验证
+                        $("#Recent").attr("lay-verify","required");
+                        $("#Type").attr("lay-verify","required");
+                        $("#DepositType").attr("lay-verify","required");
+                        $("#PinLv").attr("lay-verify","required");
+                        $("#yType").val(1);
+                        //常规押金不可编辑
+                        $("#cyajin").addClass("gray");
+                        $("#cyajin").attr("disabled",true);
+                    }
+                    form.render('select');
                 });
                 //快捷键
                 $(".btkj").click(function(){
                     var idvalue=$(this).attr("idvalue");
                     if($("#BeginTime").val()!=""){
-                        debugger;
                         var dt = getDate($("#BeginTime").val());
-                        var newDate = doc.DateAdd("m",Number(idvalue),dt,);
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt);
                       
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
                     }
-                })
+                });
                 function getDate(strDate){    
                     var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
                     function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
@@ -179,7 +152,6 @@
                 }
                 $('#HouseName').devbridgeAutocomplete({
                     lookup: function (query, done) {
-                        debugger;
                         var querydata = {};
                         
                         querydata.Name = query;
@@ -187,7 +159,6 @@
                         querydata.PageSize = 100;
                         querydata.PageIndex = 1;
                         doc.objectQuery("api/House/Querybyname", querydata, function (result) {
-                            debugger;
                             if (result.numberData != null) {
                                 var realresut = [];
                                 
@@ -209,14 +180,11 @@
                     minChars: 1,
                     onSelect: function (suggestion) {
                         isSearch = true;
-                        debugger;
                         $("#HouseId").val(suggestion.data);
                         $("#HouseType").val(suggestion.HouseType);
                     },
                     triggerSelectOnValidInput:false,
                     result: function (event, data, formatted) {
-                    
-                        debugger;
                         // 必须阻止事件的默认行为，否则autocomplete默认会把ui.item.value设为输入框的value值
                         event.preventDefault();     
                     },
@@ -229,7 +197,6 @@
                     groupBy: 'category'
                 });
                 $("#addimage").click(function () {
-                    debugger;
                  var addid="layui-contract-addimage";
                  var view = layui.view;
                  layer.open({
@@ -251,8 +218,7 @@
                       }
                 });  
                });
-               $("#addzjimage").click(function () {
-                    debugger;
+                $("#addzjimage").click(function () {
                  var addid="layui-contract-addzjimage";
                  var view = layui.view;
                  indexclose=layer.open({
@@ -274,140 +240,137 @@
                       }
                 });  
                });
-               }
-                function Eventzafei(type,id,isyajin) {
-                    debugger;
-                    var rid = "#" + id;
-                    if(isyajin==1){
-                        $(rid+" .wraprice").hide();
-                        $(rid+" .wrapbiao").hide();
-                        $(rid+" .wrap-jstype").hide();
-                        $(rid+" .wrapguding").show();
-                        $(rid+" .wrappinlv").hide();
-                        return;
-                    }
-                    if (type == 1) {
-                        $(rid+" .wraprice").hide();
-                        $(rid+" .wrapbiao").hide();
-                        $(rid+" .wrapguding").show();
-                        $(rid+" .wrappinlv").show();
-                    }
-                    if (type == 2) {
-                        $(rid+" .wrappinlv").hide();
-                        $(rid+" .wraprice").hide();
-                        $(rid+" .wrapbiao").hide();
-                        $(rid+" .wrapguding").hide();
-                    }
-                    if (type == 3) {
-                        $(rid+" .wrapguding").hide();
-                        $(rid+" .wrappinlv").hide();
-                        $(rid+" .wraprice").show();
-                        $(rid+" .wrapbiao").show();
-                        
-                    }
-                    form.on('select('+id+'zafeiType)', function (data) {
-                        debugger;
-                        if ($(rid + "zafeiType").val() == 1) {
-                            $(rid + " .wraprice").hide();
-                            $(rid + " .wrapbiao").hide();
-                            $(rid + " .wrapguding").show();
-                        }
-                        if ($(rid + "zafeiType").val() == 2) {
-                            $(rid + " .wrappinlv").hide();
-                            $(rid + " .wraprice").hide();
-                            $(rid + " .wrapbiao").hide();
-                            $(rid + " .wrapguding").hide();
-                        }
-                        if ($(rid + "zafeiType").val() == 3) {
-                            $(rid + " .wrapguding").hide();
-                            $(rid + " .wrappinlv").show();
-                            $(rid + " .wraprice").show();
-                            $(rid + " .wrapbiao").show();
-                        }
-                    });
-                    var laydate = layui.laydate;
-                    laydate.render({
-                        elem: rid+' .Chaobiao' //指定元素
-                    });
+            }
+
+            function Eventzafei(type,id,isyajin) {
+                var rid = "#" + id;
+                if(isyajin==1){
+                    $(rid+" .wraprice").hide();
+                    $(rid+" .wrapbiao").hide();
+                    $(rid+" .wrap-jstype").hide();
+                    $(rid+" .wrapguding").show();
+                    $(rid+" .wrappinlv").hide();
+                    return;
                 }
-                form.verify({
-                    EndTime : function(value, item){
+                if (type == 1) {
+                    $(rid+" .wraprice").hide();
+                    $(rid+" .wrapbiao").hide();
+                    $(rid+" .wrapguding").show();
+                    $(rid+" .wrappinlv").show();
+                }
+                if (type == 2) {
+                    $(rid+" .wrappinlv").hide();
+                    $(rid+" .wraprice").hide();
+                    $(rid+" .wrapbiao").hide();
+                    $(rid+" .wrapguding").hide();
+                }
+                if (type == 3) {
+                    $(rid+" .wrapguding").hide();
+                    $(rid+" .wrappinlv").hide();
+                    $(rid+" .wraprice").show();
+                    $(rid+" .wrapbiao").show();
+                    
+                }
+                form.on('select('+id+'zafeiType)', function (data) {
+                    if ($(rid + "zafeiType").val() == 1) {
+                        $(rid + " .wraprice").hide();
+                        $(rid + " .wrapbiao").hide();
+                        $(rid + " .wrapguding").show();
+                    }
+                    if ($(rid + "zafeiType").val() == 2) {
+                        $(rid + " .wrappinlv").hide();
+                        $(rid + " .wraprice").hide();
+                        $(rid + " .wrapbiao").hide();
+                        $(rid + " .wrapguding").hide();
+                    }
+                    if ($(rid + "zafeiType").val() == 3) {
+                        $(rid + " .wrapguding").hide();
+                        $(rid + " .wrappinlv").show();
+                        $(rid + " .wraprice").show();
+                        $(rid + " .wrapbiao").show();
+                    }
+                });
+                var laydate = layui.laydate;
+                laydate.render({
+                    elem: rid+' .Chaobiao' //指定元素
+                });
+            }
+
+            form.verify({
+                EndTime: function(value, item){
                     if(value <= $("#BeginTime").val()){
-                return "开始时间必须大于结束时间";
-            }
-        },
-        HouseName: function(value, item){
-            debugger
+                        return "开始时间必须大于结束时间";
+                    }
+                },
+                HouseName: function(value, item){
                     if($("#HouseId").val()==""){
-                return "房源不存在";
-            }}
-    })
-         //监听提交
+                        return "房源不存在";
+                    }
+                }
+            });
+
+            //监听提交
         form.on('submit(save)', function (data) {
-        debugger;
-        if(id!=undefined){
-           data.field.HouseId=id;
-        }
-        var zafeilist = [];
-        var yajin=[];
-        //杂费
-        $.each($(".zafeicontent .zafeilist"), function (index, item) {
-        debugger;
-        var id = "#" + item.id;
-        var zafei = {};
-        zafei.Name = $(id + " .zafeitit").html();
-        zafei.Amount = $(id + " .zafeiJine").val();
-        zafei.Type = $(id + "zafeiType").val();
-        zafei.Price = $(id + " .zafeiPrice").val();
-        zafei.Reading = $(id + " .zafeidushu").val();
-        zafei.ChaobiaoTime = $(id + " .Chaobiao").val();
-        zafei.IsYajin= $(id + " .zisyajin").html();
-        if(zafei.IsYajin==1){
-            yajin.push(zafei);
-        }else{
-            zafeilist.push(zafei);
-        }
-        });
-        //押金
-        $.each($(".yajincontent .yajinlist"), function (index, item) {
-        debugger;
-        var id = "#" + item.id;
-        var zafei = {};
-        zafei.Name = $(id + " .yajintit").html();
-        zafei.Amount = $(id + " .yajinJine").val();
-        zafei.IsYajin= 1;
-        yajin.push(zafei);
-        });
-        var datafield=data.field;
-        debugger;
-        var tjdata = {
-            "Recent":datafield.Recent,
-            "Recent":datafield.Recent, "Deposit":datafield.Deposit,
-        "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
-        "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,
-        "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Weinxin": datafield.Weinxin, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType, "Document": datafield.Document,"Zidcard":datafield.zjImage },
-        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"Recent":datafield.Recent,"DepositType":datafield.DepositType,
-        "Enclosure":datafield.Image
-         };
-         var url = doc.baseurl + "/api/Contract/SaveData";
-         var saveoption={
-          url:'api/Contract/SaveData',
-          data:tjdata,
-          tableid:tableid,
-          btnOption:btnOption,
-          callBack:function(resultData){
-            if (resultData.Code == 0) {
-                layer.close(layerindex);
+            if(id!=undefined){
+               data.field.HouseId=id;
             }
-        }
-       }
-      doc.Submit(saveoption);
-      return false;
+            var zafeilist = [];
+            var yajin=[];
+            //杂费
+            $.each($(".zafeicontent .zafeilist"), function (index, item) {
+                var id = "#" + item.id;
+                var zafei = {};
+                zafei.Name = $(id + " .zafeitit").html();
+                zafei.Amount = $(id + " .zafeiJine").val();
+                zafei.Type = $(id + "zafeiType").val();
+                zafei.Price = $(id + " .zafeiPrice").val();
+                zafei.Reading = $(id + " .zafeidushu").val();
+                zafei.ChaobiaoTime = $(id + " .Chaobiao").val();
+                zafei.IsYajin= $(id + " .zisyajin").html();
+                if(zafei.IsYajin==1){
+                    yajin.push(zafei);
+                }else{
+                    zafeilist.push(zafei);
+                }
+            });
+            //押金
+            $.each($(".yajincontent .yajinlist"), function (index, item) {
+                var id = "#" + item.id;
+                var zafei = {};
+                zafei.Name = $(id + " .yajintit").html();
+                zafei.Amount = $(id + " .yajinJine").val();
+                zafei.IsYajin= 1;
+                yajin.push(zafei);
+            });
+            var datafield=data.field;
+            var tjdata = {
+                "Recent":datafield.Recent,
+                "Recent":datafield.Recent, "Deposit":datafield.Deposit,
+            "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
+            "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,
+            "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Weinxin": datafield.Weinxin, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType, "Document": datafield.Document,"Zidcard":datafield.zjImage },
+            "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"Recent":datafield.Recent,"DepositType":datafield.DepositType,
+            "Enclosure":datafield.Image
+             };
+            var url = doc.baseurl + "/api/Contract/SaveData";
+            var saveoption={
+                url:'api/Contract/SaveData',
+                data:tjdata,
+                tableid:tableid,
+                btnOption:btnOption,
+                callBack:function(resultData){
+                    if (resultData.Code == 0) {
+                        layer.close(layerindex);
+                    }
+                }
+            }
+            doc.Submit(saveoption);
+            return false;
          });
-               
         });
-      }
-      function complteimg(name,type, number){
+    }
+
+    function complteimg(name,type, number){
         layui.use(['jquery'], function () {
             var $ = layui.jquery;
             if(type==1){
@@ -419,13 +382,10 @@
              $("#imgzjnumber").html(number);
             }
         })
-      }
-     
-        
+    }
 </script>
- <script id="zcontractaddscript" type="text/html">
-
-        <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+<script id="zcontractaddscript" type="text/html">
+    <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
             <div class="form-content">
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>租客信息</legend>
@@ -667,12 +627,7 @@
             </div>
         </form>
     </script>
-    <div id="zcontract-add-view" class="form-wrapper">
-    </div>
-   
-
-
+<div id="zcontract-add-view" class="form-wrapper">
+</div>
 <script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
-<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  
-
-
+<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />
