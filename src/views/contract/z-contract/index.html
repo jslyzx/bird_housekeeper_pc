@@ -8,6 +8,7 @@
             margin-top: 20px;
         }
        }
+       .multi dl dd.layui-this{background-color:#fff}
     </style>
     <title>租客合同</title>
     <script src="../../../Scripts/Contract_business.js"></script>
@@ -66,9 +67,10 @@
                          <div class="m-search-item">
                              <label class="layui-form-label" style="width: 40px;">小区</label>
                              <div class="layui-input-inline" style="width: 120px;">
-                                 <select lay-filter="CellName" name="CellName">
+                                 <select lay-filter="CellName" name="CellName2" multiple="multiple">
                                      <option value="">请选择</option>
                                  </select>
+                                 <input type="hidden" name="CellName" id="CellName">
                              </div>
                          </div>
                     <div class="m-search-item">

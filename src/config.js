@@ -63,7 +63,8 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       'testTablePlug',
       'codemirror',
       'markdown',
-      'marked'
+      'marked',
+      'multiSelect'
     ]
     
     //主题配置

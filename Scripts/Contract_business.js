@@ -9,7 +9,7 @@
 var $form;
 var form;
 var $;
-layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form', 'htcsLG'], function () {
+layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form', 'htcsLG', 'multiSelect'], function () {
     var laypage = layui.laypage
     , layer = layui.layer;
     var laytpl = layui.laytpl;
@@ -22,6 +22,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
     var   apiurl =layui.setter.baseurl;
     $form = $('form');
     var laydate = layui.laydate;
+    var multiSelect = layui.multiSelect;
     laydate.render({
         elem: '#BeginTime1'
     });
@@ -113,13 +114,19 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
             }
         }
         selectCity();
-        $('select[name="CellName"]').html(leftFilter.areaOptions.join(''));
+        $('select[name="CellName2"]').html(leftFilter.areaOptions.join(''));
         form.render();
+        multiSelect.init();
         $('#zcontract-search-form button[lay-filter="search"]').click();
     })
 
     form.on('select(CellName)', function (data) {
-        $('#zcontract-search-form button[lay-filter="search"]').click();
+      var vals = []
+      $('.layui-form-checked span').each(function() {
+        vals.push($(this).text());
+      })
+      $('#CellName').val(vals.join(','));
+      $('#zcontract-search-form button[lay-filter="search"]').click();
     })
 
     function selectProvince () {
