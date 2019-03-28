@@ -29,7 +29,6 @@
         laytpl(getTpl).render(data.numberData, function (html) {
             view.innerHTML = html;
         });
-        debugger;
         $(".alerd").hide();
         if(data.numberData!=null){
             if(data.numberData.Status==4)
@@ -46,7 +45,6 @@
                         $("#imgnumber").html(arr.length);
         }
                      $("#viewcontract").click(function(){
-                         debugger;
                          var url="contract/z-contract/view"
                          var editid = "layuibillreceivebtn";
                          var view = layui.view;
@@ -68,7 +66,6 @@
             });
                      })
                     $("#addimage").click(function () {
-                    debugger;
                  var addid="layui-contract-addimage";
                  var view = layui.view;
                  layer.open({
@@ -107,7 +104,6 @@
         });
         form.render('');
          //加载子表数据
-    debugger;
     var url="api/Bill/billlist";
     var clos=[[ //表头
                { type: 'numbers' , width: 80, title: '编号', }
@@ -119,7 +115,6 @@
     doc.childtable(options);
     });
     doc.objectQuery("api/Zafei/Zafeilist",{},function(data1){ 
-        debugger;
         selectdata=data1.numberData;
     }); 
     EventBtn();

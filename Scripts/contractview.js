@@ -61,7 +61,6 @@ table.on('tool(demoEvent3)', function(obj) {
   var data = obj.data,
       layEvent = obj.event,
       url = $(this).data('url');
-      debugger;
       if (layEvent=== 'fukuan') { //退款
         if(data.BillType!=1&&data.BillType!=0){
             layer.msg("未知账单无法操作");
@@ -150,9 +149,7 @@ table.on('tool(demoEvent3)', function(obj) {
          }
 
          })
-          debugger;
           doc.objectQuery(url, { }, function (data) {
-              debugger;
                alldata.push(data.numberData);
                doc.objectQuery(xqurl, {"Id":id }, function (data) {
                   alldata.push(data.numberData);
@@ -179,7 +176,6 @@ table.on('tool(demoEvent3)', function(obj) {
                   elem: '#EndTime' //指定元素
               }); 
               });
-              debugger;
               form.render('');
               $("#DocumentType").val(alldata[1].Teant.DocumentType);
               $("#Work").val(alldata[2].Work);
@@ -214,7 +210,6 @@ table.on('tool(demoEvent3)', function(obj) {
           });
           });
           function initzafei(){
-            debugger;
             var name ="";
             var type = 0;
             var yajin=0;
@@ -237,7 +232,6 @@ table.on('tool(demoEvent3)', function(obj) {
         });
     }
     function inityajin(){
-            debugger;
             var name ="";
             var type = 0;
             var yajin=0;
@@ -290,7 +284,6 @@ table.on('tool(demoEvent3)', function(obj) {
             };
             doc.viewbutton(BtnviewOption, zcontractbtnscribt);
             $("#btnintableview a").click(function(){
-                debugger;
                 var data=$(this).attr("lay-event");
                 var url =$(this).attr("data-url");
                 if (data === 'zcontract-tuizu-btn') { //退租
@@ -351,7 +344,6 @@ table.on('tool(demoEvent3)', function(obj) {
           }
           function Create() {
             form.on('checkbox(zafei)', function (data) {
-                debugger;
                 var dom = data.elem;
                 var name = dom.name;
                 var type = dom.attributes.ztype.nodeValue;
@@ -370,7 +362,6 @@ table.on('tool(demoEvent3)', function(obj) {
                 Eventzafei(type,id,yajin);
             });
             form.on('checkbox(yajin)', function (data) {
-                debugger;
                 var dom = data.elem;
                 var name = dom.name;
                 var type = dom.attributes.ztype.nodeValue;
@@ -391,7 +382,6 @@ table.on('tool(demoEvent3)', function(obj) {
         }
           
          form.on('select(Recivetype)', function(data){
-             debugger;
              var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option>';
              var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5号</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option>';
              if(data.value==1){
@@ -407,7 +397,6 @@ table.on('tool(demoEvent3)', function(obj) {
          function EventOther(){
              //监听提交
    $("#viewcontract").click(function(){
-       debugger;
       var editid = "layuibillreceivebtn";
       var view = layui.view;
       layer.open({
@@ -429,7 +418,6 @@ table.on('tool(demoEvent3)', function(obj) {
    })
           $('#HouseName').devbridgeAutocomplete({
               lookup: function (query, done) {
-                  debugger;
                   var querydata = {};
                   
                   querydata.Name = query;
@@ -459,14 +447,11 @@ table.on('tool(demoEvent3)', function(obj) {
               minChars: 1,
               onSelect: function (suggestion) {
                   isSearch = true;
-                  debugger;
                   $("#HouseId").val(suggestion.data);
                   $("#HouseType").val(suggestion.HouseType);
               },
               triggerSelectOnValidInput:false,
               result: function (event, data, formatted) {
-              
-                  debugger;
                   // 必须阻止事件的默认行为，否则autocomplete默认会把ui.item.value设为输入框的value值
                   event.preventDefault();     
               },
@@ -479,7 +464,6 @@ table.on('tool(demoEvent3)', function(obj) {
               groupBy: 'category'
           });
           $("#addimage").click(function () {
-              debugger;
            var addid="layui-contract-addimage";
            var view = layui.view;
            layer.open({
@@ -502,7 +486,6 @@ table.on('tool(demoEvent3)', function(obj) {
           });  
          });
          $("#addzjimage").click(function () {
-              debugger;
            var addid="layui-contract-addzjimage";
            var view = layui.view;
            indexclose=layer.open({
@@ -526,7 +509,6 @@ table.on('tool(demoEvent3)', function(obj) {
          });
          }
           function Eventzafei(type,id,isyajin) {
-              debugger;
               var rid = "#" + id;
               if(isyajin==1){
                   $(rid+" .wraprice").hide();
@@ -556,7 +538,6 @@ table.on('tool(demoEvent3)', function(obj) {
                   
               }
               form.on('select('+id+'zafeiType)', function (data) {
-                  debugger;
                   if ($(rid + "zafeiType").val() == 1) {
                       $(rid + " .wraprice").hide();
                       $(rid + " .wrapbiao").hide();
@@ -587,7 +568,6 @@ table.on('tool(demoEvent3)', function(obj) {
       }
   },
   HouseName: function(value, item){
-      debugger
               if($("#HouseId").val()==""||$("#HouseType").val()==""){
           return "房源不存在";
       }}
@@ -595,7 +575,6 @@ table.on('tool(demoEvent3)', function(obj) {
    
 
    function formadaoqi(value) {
-      debugger;
       var day = 0;
   
   if (value.ShouldReceive == null) {
@@ -650,14 +629,12 @@ function formasign(value) {
   return '<span>' + value.sign + '</span>'
 }
   function formatterzhouqi(value) {
-      debugger;
       if(value.BeginTime==null||value.EndTime==null){
           return '<div>'+'</div>'
       }
       if(value.BeginTime=="0001/01/01 00:00:00"||value.EndTime=="0001/01/01 00:00:00"){
           return '<div>'+'</div>'
       }
-      debugger;
       var begintime=util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd');
       var endtime=util.toDateString(value.EndTime.replace(/-/g, '/'), 'yyyy/MM/dd');
       return '<div>' + begintime+" - "+endtime + '</div>';

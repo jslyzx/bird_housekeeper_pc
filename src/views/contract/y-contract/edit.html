@@ -28,7 +28,6 @@
                 var getTpl = zcontractaddscript.innerHTML
                , view = document.getElementById('zcontract-add-view');
                var laydate = layui.laydate;
-               debugger;
                 doc.objectQuery(url, { }, function (data) {
                      alldata.push(data.numberData);
                      doc.objectQuery(xqurl, {"Id":id }, function (data) {
@@ -62,7 +61,6 @@
                         elem: '#EndTime' //指定元素
                     }); 
                     });
-                    debugger;
                     form.render('');
                     $("#DocumentType").val(alldata[1].Teant.DocumentType);
                     $("#Work").val(alldata[2].Work);
@@ -129,7 +127,6 @@
                     });
                 }
                 function inityajin(){
-                        debugger;
                         var name ="";
                         var type = 0;
                         var yajin=0;
@@ -184,7 +181,6 @@
                         Eventzafei(type,id,yajin);
                     });
                     form.on('checkbox(yajin)', function (data) {
-                        debugger;
                         var dom = data.elem;
                         var name = dom.name;
                         var type = dom.attributes.ztype.nodeValue;
@@ -205,7 +201,6 @@
                 }
              
                form.on('select(Recivetype)', function(data){
-                   debugger;
                    var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option>';
                    var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5号</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option>';
                    if(data.value==2){
@@ -236,7 +231,6 @@
                     return date;    
                 }
                 $("#addimage").click(function () {
-                    debugger;
                  var addid="layui-contract-addimage";
                  var view = layui.view;
                  layer.open({
@@ -259,7 +253,6 @@
                 });  
                });
                $("#addzjimage").click(function () {
-                    debugger;
                  var addid="layui-contract-addzjimage";
                  var view = layui.view;
                  indexclose=layer.open({
@@ -283,7 +276,6 @@
                });
                }
                 function Eventzafei(type,id,isyajin) {
-                    debugger;
                     var rid = "#" + id;
                     if(isyajin==1){
                         $(rid+" .wraprice").hide();
@@ -313,7 +305,6 @@
                         
                     }
                     form.on('select('+id+'zafeiType)', function (data) {
-                        debugger;
                         if ($(rid + "zafeiType").val() == 1) {
                             $(rid + " .wraprice").hide();
                             $(rid + " .wrapbiao").hide();
@@ -344,18 +335,15 @@
             }
         },
         HouseName: function(value, item){
-            debugger
                     if($("#HouseId").val()==""||$("#HouseType").val()==""){
                 return "房源不存在";
             }}
     })
          //监听提交
         form.on('submit(save)', function (data) {
-        debugger;
         var zafeilist = [];
         var yajin=[];
         $.each($(".zafeicontent .zafeilist"), function (index, item) {
-        debugger;
         var id = "#" + item.id;
         var zafei = {};
         zafei.Name = $(id + " .zafeitit").html();
@@ -376,7 +364,6 @@
         
           //押金
         $.each($(".yajincontent .yajinlist"), function (index, item) {
-        debugger;
         var id = "#" + item.id;
         var zafei = {};
         zafei.Name = $(id + " .yajintit").html();
