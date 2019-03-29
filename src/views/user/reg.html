@@ -84,6 +84,14 @@ img {
 .wechat-service:hover img {
     display: block;
 }
+.time{
+  line-height: 38px;
+  margin-left: 10px;
+  display: none;
+}
+.time i{
+  margin-right: 5px;
+}
 </style>
 <script type="text/html" template>
   <link rel="stylesheet" href="{{ layui.setter.base }}style/login.css?v={{ layui.admin.v }}-1" media="all">
@@ -121,6 +129,7 @@ img {
                 <div class="layui-col-xs5">
                   <div style="margin-left: 10px;">
                     <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode">获取验证码</button>
+                    <span class="time" id="timeout"><i>60</i>秒重新获取</span>
                   </div>
                 </div>
               </div>
@@ -160,8 +169,6 @@ layui.use(['admin', 'form', 'user'], function(){
   ,form = layui.form
   ,router = layui.router();
   form.render();
- 
-  
 
   //提交
   form.on('submit(LAY-user-reg-submit)', function(obj){
@@ -172,7 +179,7 @@ layui.use(['admin', 'form', 'user'], function(){
     if(field.password !== field.repass){
       return layer.msg('两次密码输入不一致');
     }
-    debugger;
+    $('button[lay-submit]').prop('disabled', true);
     field.password=hex_md5(field.password).toUpperCase();
     var baseurl = setter.baseurl;
     
