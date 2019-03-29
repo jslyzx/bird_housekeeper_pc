@@ -64,7 +64,8 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       'codemirror',
       'markdown',
       'marked',
-      'multiSelect'
+      'multiSelect',
+      'formSelects'
     ]
     
     //主题配置

@@ -182,14 +182,16 @@ layui.use(['admin', 'form', 'user'], function() {
             done: function(res) {
                 if (res.code === 0) {
                     location.hash = '/user/login'; //跳转到登入页
-                } else {
+                }
+            },
+            success: function(res) {
+                if (res.code !== 0) {
                     layer.msg(res.Message);
                     $('button[lay-submit]').prop('disabled', false);
                 }
             },
-            error: function(){
-              layer.msg('注册失败');
-              $('button[lay-submit]').prop('disabled', false);
+            error: function() {
+                $('button[lay-submit]').prop('disabled', false);
             }
         });
 
