@@ -1,4 +1,17 @@
-﻿.house_iframe {
+﻿.hand {
+    cursor: pointer;
+}
+img {
+    vertical-align: middle; border: 0;
+}.house-img {
+    height: 140px;
+    width: 140px;
+}
+.edit-house-info-dialog .house-img-all {
+    width: 100%;
+    height: 100%;
+}
+.house_iframe {
     height: 100%;
     width: 100%;
     border: none;
