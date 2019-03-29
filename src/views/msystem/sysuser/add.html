@@ -1,6 +1,8 @@
-
+<!DOCTYPE html>
+<html>
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
 <script src="../../../Scripts/Common/md5.js"></script>
+<link href="../../../Content/formSelects-v4.css" rel="stylesheet" />
 <style>
        .child-view  .layui-table-cell{
     overflow:visible !important;
@@ -12,130 +14,13 @@
  }
 
     </style>
-<script>
-     var tuizulist = [];
-      function LoadData(id,tableid,layerindex){
-        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
-            var laytpl = layui.laytpl;
-            var doc = layui.htcsLG;
-            var $ = layui.jquery;
-            var form = layui.form;
-            var deletebilllist=[];
-            var table=layui.table;
-            var url =  "api/Sysuser/QueryUser";
-            var doc = layui.htcsLG;
-            var data = { "Id": id };
-            var allresult = [];
-          
-            var clos=[[ //表头
-               { type: 'numbers' , width: 80, title: '编号', }
-               , {
-               field: 'SysRoleId',
-               width: 380,
-               title: '角色名称'
-               ,templet: '#checkboxTplxx',unresize:true} 
-            ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } ]];
-               doc.objectQuery("api/Sysrole/Querylistrolenopage", {}, function (data) {
-               debugger;
-               tuizulist = data.numberData;
-               var options={"type":"add","tableid":"#sysuserchildedittable","clos":clos,"height":500};
-               doc.childtable(options);   
-               EventBtn();
-            }); 
-            doc.objectQuery("api/cellname/Querylist", {"PageSize":100000,"PageIndex":1}, function (result) {  
-                debugger; 
-                var realdata = result.numberData;
-                var getTpl = storescript.innerHTML,
-                view = document.getElementById('viewstoreid');
-                laytpl(getTpl).render(realdata, function (html) {
-                    view.innerHTML = html;
-                });  
-                form.render('select');
-            });
-           
-            function getarr(){
-                var list=[];
-                var tkTable = $('[lay-id="sysuserchildedittable"] .layui-table-body .layui-table tr');
-                $.each(tkTable,function(index, item){
-                  list.push({
-                    type: 0,
-                    SysRoleId: $(item).find('[data-field="SysRoleId"] select option:selected').val()
-                  })
-                });
-                return list;
-            }
-            function EventBtn()
-            {
-            var tabbleid="sysuserchildedittable";
-             //类别
-             form.on('select(billlay)', function (obj) {
-                debugger;
-                var oldData = table.cache["sysuserchildedittable"];
-                var id = $(obj.elem).attr("Idvalue") - 1;
-                var _obj = {
-                    "numbers": id,
-                    "rolename": $(obj.elem).find("option:selected").text(),
-                    "SysRoleId":$(obj.elem).find("option:selected").val()
-                };
-                //重载更新后数据
-                doc.updateobj(oldData, _obj, ["rolename","SysRoleId"]);
-            })
-         //监听提交
-          form.on('submit(save)', function (data) {
-        debugger;
-        var datafield=data.field;
-        datafield.Password=hex_md5(datafield.Password).toUpperCase();
-        datafield.listrole=getarr(); ; 
-        datafield.deletebilllist=deletebilllist;
-        var tjdata =datafield;
-        var saveoption={
-          url:'api/Sysuser/addUser',
-          data:tjdata,
-          tableid:tableid,
-          callBack:function(resultData){
-            debugger;
-            if (resultData.Code == 0) {
-                layer.close(layerindex);
-            }
-        }
-       }
-      doc.Submit(saveoption);
-      return false;
-});
-  //监听删除按钮
-  table.on('tool(demoEvent1)', function(obj){ 
-  debugger;
-  var data = obj.data; //获得当前行数据
-  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-  var tr = obj.tr; //获得当前行 tr 的DOM对象
-  if(layEvent === 'del'){ //删除
-     obj.del();
-    if(data.Id!=0){
-        deletebilllist.push(data);
-    }
-  }
-});
-//添加新行事件
-$("#sysuser-childedit-edit").click(function(){
-         debugger;
-         var oldData =table.cache[tabbleid];  
-         var data1={"Id":0,"SysUserId":12,"SysRoleId":0,"edtype":1,"rolename":""};
-          oldData.push(data1);  
-          table.reload(tabbleid,{  
-              data : oldData  ,
-              limit: oldData.length
-         });
-});
-}
-        });
-      }
-</script>
+	<body>
  <script id="storescript" type="text/html">
     <div class="layui-inline"> 
             <label class="layui-form-label">门店选择</label> 
             <div class="layui-input-inline"> 
                 
-                   <select name="storeid" id="storeid" lay-search>
+                   <select name="storeid" id="storeid" xm-select-search="" xm-select="id" >
                            <option value="">请选择</option>
                            {{#  layui.each(d, function(index, item1){ }}
                            <option value="{{item1.Id}}">{{item1.Name}}</option>
@@ -188,6 +73,17 @@ $("#sysuser-childedit-edit").click(function(){
                         </div>
                         <div class="layui-form-item">
                                 <div id="viewstoreid"></div>
+						</div>
+						<div class="layui-form-item">
+								<label class="layui-form-label">查看权限</label>
+								<div class="layui-input-inline" style="width: 400px;">
+								  <input type="radio" name="range" lay-verify="required" value="1" title="本人">
+								  <input type="radio" name="range"  lay-verify="required" value="2" title="本店" >
+								  <input type="radio" name="range" lay-verify="required" value="3" title="本区" >
+								  <input type="radio" name="range" lay-verify="required" value="4" title="本市" >
+								  <input type="radio" name="range"lay-verify="required"  value="5" title="所有" >
+								</div>
+								<label style="color:red;">本人只可查看本人管理已租房源,本店可查看所属门店所有已租房源，依次类推</label>
                         </div>
                         <div class="layui-tab layui-tab-card" style="margin-top:0;">
                             <ul class="layui-tab-title">
@@ -211,9 +107,137 @@ $("#sysuser-childedit-edit").click(function(){
                 
                     <div class="form-bottom">
                             <div class="form-wrap">
-                                <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-submit="">取消</button>
+                                <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-submit="">取消</button>
                                 <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
                             </div>
                   </div>
                 </form>   
     </div>
+	<script>
+		var tuizulist = [];
+		 function LoadData(id,tableid,layerindex){
+		   layui.use(['formSelects','laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+			   debugger;
+			   var laytpl = layui.laytpl;
+			   var doc = layui.htcsLG;
+			   var formSelects = layui.formSelects;
+			   var deletebilllist=[];
+			   var table=layui.table;
+			   var url =  "api/Sysuser/QueryUser";
+			
+			   var data = { "Id": id };
+			   var allresult = [];
+			   var $ = layui.jquery,form = layui.form;
+			   $("#cancelbtn").click(function(){
+                    debugger;
+                layer.close(layerindex);
+                return false;
+            });
+			   var clos=[[ //表头
+				  { type: 'numbers' , width: 80, title: '编号', }
+				  , {
+				  field: 'SysRoleId',
+				  width: 380,
+				  title: '角色名称'
+				  ,templet: '#checkboxTplxx',unresize:true} 
+			   ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } ]];
+				  doc.objectQuery("api/Sysrole/Querylistrolenopage", {}, function (data) {
+				  debugger;
+				  tuizulist = data.numberData;
+				  var options={"type":"add","tableid":"#sysuserchildedittable","clos":clos,"height":500};
+				  doc.childtable(options);   
+				  EventBtn();
+			   }); 
+			   doc.objectQuery("api/cellname/Querylist", {"PageSize":100000,"PageIndex":1}, function (result) {  
+				   debugger; 
+				   var realdata = result.numberData;
+				   var getTpl = storescript.innerHTML,
+				   view = document.getElementById('viewstoreid');
+				   laytpl(getTpl).render(realdata, function (html) {
+					   view.innerHTML = html;
+				   });  
+				   
+				   form.render('');
+				   formSelects.render();
+			   });
+			  
+			   function getarr(){
+				   var list=[];
+				   var tkTable = $('[lay-id="sysuserchildedittable"] .layui-table-body .layui-table tr');
+				   $.each(tkTable,function(index, item){
+					 list.push({
+					   type: 0,
+					   SysRoleId: $(item).find('[data-field="SysRoleId"] select option:selected').val()
+					 })
+				   });
+				   return list;
+			   }
+			   function EventBtn()
+			   {
+			   var tabbleid="sysuserchildedittable";
+				//类别
+				form.on('select(billlay)', function (obj) {
+				   debugger;
+				   var oldData = table.cache["sysuserchildedittable"];
+				   var id = $(obj.elem).attr("Idvalue") - 1;
+				   var _obj = {
+					   "numbers": id,
+					   "rolename": $(obj.elem).find("option:selected").text(),
+					   "SysRoleId":$(obj.elem).find("option:selected").val()
+				   };
+				   //重载更新后数据
+				   doc.updateobj(oldData, _obj, ["rolename","SysRoleId"]);
+			   })
+			//监听提交
+			 form.on('submit(save)', function (data) {
+		   debugger;
+		   var datafield=data.field;
+		   datafield.Password=hex_md5(datafield.Password).toUpperCase();
+		   datafield.listrole=getarr(); ; 
+		   datafield.deletebilllist=deletebilllist;
+		   var tjdata =datafield;
+		   var saveoption={
+			 url:'api/Sysuser/addUser',
+			 data:tjdata,
+			 tableid:tableid,
+			 callBack:function(resultData){
+			   debugger;
+			   if (resultData.Code == 0) {
+				   layer.close(layerindex);
+			   }
+		   }
+		  }
+		 doc.Submit(saveoption);
+		 return false;
+   });
+	 //监听删除按钮
+	 table.on('tool(demoEvent1)', function(obj){ 
+	 debugger;
+	 var data = obj.data; //获得当前行数据
+	 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+	 var tr = obj.tr; //获得当前行 tr 的DOM对象
+	 if(layEvent === 'del'){ //删除
+		obj.del();
+	   if(data.Id!=0){
+		   deletebilllist.push(data);
+	   }
+	 }
+   });
+   //添加新行事件
+   $("#sysuser-childedit-edit").click(function(){
+			debugger;
+			var oldData =table.cache[tabbleid];  
+			var data1={"Id":0,"SysUserId":12,"SysRoleId":0,"edtype":1,"rolename":""};
+			 oldData.push(data1);  
+			 table.reload(tabbleid,{  
+				 data : oldData  ,
+				 limit: oldData.length
+			});
+   });
+   }
+		   });
+		 }
+   </script>
+   	</body>
+	   </html>
+	   

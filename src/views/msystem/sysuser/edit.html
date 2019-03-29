@@ -1,5 +1,6 @@
 
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<link href="../../../Content/formSelects-v4.css" rel="stylesheet" />
 <style>
        .child-view  .layui-table-cell{
     overflow:visible !important;
@@ -14,7 +15,7 @@
 <script>
      var tuizulist = [];
       function LoadData(id,tableid,layerindex){
-        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+        layui.use(['formSelects','laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
             var $ = layui.jquery;
@@ -22,7 +23,7 @@
             var deletebilllist=[];
             var table=layui.table;
             var url =  "api/Sysuser/QueryUser";
-          
+            var formSelects = layui.formSelects;
             var data = { "Id": id };
             var allresult = [];
             var Password="";
@@ -44,6 +45,12 @@
                 laytpl(getTpl).render(realdata, function (html) {
                     view.innerHTML = html;
                 });  
+                //初始化赋值
+                form.val("formuser", {
+                "range": realdata.range 
+               })
+                form.render('');
+                
                  //角色列表
                doc.objectQuery("api/Sysrole/Querylistrolenopage", {}, function (data) {
                debugger;
@@ -53,8 +60,14 @@
                   roledata=realdata.listrole1
                }
                var options={"data":roledata,"tableid":"#sysuserchildedittable","clos":clos,"height":500};
-               doc.childtable(options);   
-               EventBtn(realdata.storeid);
+               doc.childtable(options);  
+               
+               //转换成数组
+               var stroarr=[];
+               if(realdata.storeid!=null&&realdata.storeid!=undefined){
+                stroarr=realdata.storeid.split(',')
+               }
+               EventBtn(stroarr);
             }); 
             });
            
@@ -79,8 +92,9 @@
                 laytpl(getTpl).render(realdata, function (html) {
                     view.innerHTML = html;
                 });  
-                $("#storeid").val(storeid);
-                form.render('select');
+                formSelects.render();
+                
+                formSelects.value('id', storeid);
             });
             var tabbleid="sysuserchildedittable";
              //类别
@@ -104,6 +118,10 @@
          //监听提交
           form.on('submit(save)', function (data) {
         debugger;
+        if(data.field.range==null){
+            layer.msg('请选择查看权限');
+            return false;
+        }
         data.field.Id=id;
         var datafield=data.field;
         datafield.Password=Password;
@@ -157,7 +175,7 @@ $("#sysuser-childedit-edit").click(function(){
             <label class="layui-form-label">门店选择</label> 
             <div class="layui-input-inline"> 
                 
-                   <select name="storeid" id="storeid" lay-search>
+                   <select name="storeid" id="storeid" xm-select="id" lay-search>
                            <option value="">请选择</option>
                            {{#  layui.each(d, function(index, item1){ }}
                            <option value="{{item1.Id}}">{{item1.Name}}</option>
@@ -183,7 +201,7 @@ $("#sysuser-childedit-edit").click(function(){
         </script>
     <script id="sysuereditscript" type="text/html">
         {{# var doc = layui.htcsLG;}}
-        <form class="layui-form  layui-form-pane hcs-form form-panel" action="">                
+        <form class="layui-form  layui-form-pane hcs-form form-panel" lay-filter="formuser">                
             <div class="form-content">
                 <div class="layui-form-item">
                     <div class="layui-inline">
@@ -207,6 +225,17 @@ $("#sysuser-childedit-edit").click(function(){
                     </div>
                     <div class="layui-form-item">
                             <div id="viewstoreid"></div>
+                    </div>
+                    <div class="layui-form-item">
+                            <label class="layui-form-label">查看权限</label>
+                            <div class="layui-input-inline" style="width: 400px;">
+                              <input type="radio" name="range" lay-verify="required" value="1" title="本人">
+                              <input type="radio" name="range"  lay-verify="required" value="2" title="本店" >
+                              <input type="radio" name="range" lay-verify="required" value="3" title="本区" >
+                              <input type="radio" name="range" lay-verify="required" value="4" title="本市" >
+                              <input type="radio" name="range"lay-verify="required"  value="5" title="所有" >
+                            </div>
+                            <label style="color:red;">本人只可查看本人管理已租房源,本店可查看所属门店所有已租房源，依次类推</label>
                     </div>
                 <div class="layui-tab layui-tab-card" style="margin-top:0;">
                     <ul class="layui-tab-title">
