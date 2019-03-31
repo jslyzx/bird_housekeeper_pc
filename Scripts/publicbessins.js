@@ -13,8 +13,19 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         apiurl =layui.setter.baseurl;
         var search={"RecrntType":2};       
         var url ='api/House/Queryhouselist';
+        var storeurl ="api/cellname/Querylist";
         var paradata = { "PageSize": 10, "PageIndex": 1,"RecrntType": 2};
         var option = { data: [{ "value": 0, "text": "全部" }, { "value": 1, "text": "未租" },  { "value": 2, "text": "已租" },{ "value": 3, "text": "装修中" }], rdefault: 0 };
+        doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+            debugger;
+            var list=[];
+            var rdata=data.numberData;
+            for (var i in rdata) {
+                list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].Name +'</option>');
+            }
+            $('select[name="storeid"]').append(list.join(''));
+            form.render();
+        });
         mymod.CreateInput($("#house-othersrarch"), option, function (result) {
             debugger;
             search.Status=result;
@@ -29,6 +40,11 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         form.on('select(ShiNumber)', function(data){
             debugger;
             search.ShiNumber=data.value;
+            loaddata(search);
+        }); 
+        form.on('select(store)', function(data){
+            debugger;
+            search.storeid=data.value;
             loaddata(search);
         });  
         //监听提交
@@ -339,6 +355,7 @@ function ViewEvent() {
    
    $(".addcontract").click(function(){
     var id = $(this).attr("id");
+    var view = layui.view;
     id=id.replace("addcontract-", "");
     layer.open({
         type: 1,
@@ -353,7 +370,7 @@ function ViewEvent() {
         success: function (layero, index) {
             view("domedit").render('contract/z-contract/add', {
                 id: id,
-                ParentRoomid:parentid,
+                ParentRoomid:id,
                 layerindex:index
             });
         }
@@ -458,7 +475,25 @@ function formatter(value,cont){
   if(cont=="面积"){
     return value+"平";
   }
+ 
   return value;
 }
+function formatter1(value){
+        debugger;
+        if(value==1){
+           return "到期"
+        }
+        if(value==2){
+          return "违约"
+       }
+       if(value==3){
+          return "转租"
+       }
+       if(value==4){
+          return "新房"
+       }
+       return "房源类型";
+    
+  }
 
 

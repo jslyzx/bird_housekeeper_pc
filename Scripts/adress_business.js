@@ -25,6 +25,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
             tooladd: "addstore",
             tooledit: "editstore",
             tooldelete: "deletestore",
+            toolview: "editstore",
             menuid:232,
             "realtable": "T_CELLNAME"
         };

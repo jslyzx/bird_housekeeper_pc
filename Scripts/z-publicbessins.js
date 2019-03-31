@@ -11,6 +11,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         var doc = layui.htcsLG;
         var $ = layui.jquery;
         apiurl =layui.setter.baseurl;
+        var storeurl ="api/cellname/Querylist";
         var search={"RecrntType":1};       
         var url ='api/zHouse/Query';
         var paradata = { "PageSize": 50, "PageIndex": 1};
@@ -20,12 +21,27 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             search.Status=result;
             loaddata(search);
         });
+        doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+            debugger;
+            var list=[];
+            var rdata=data.numberData;
+            for (var i in rdata) {
+                list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].Name +'</option>');
+            }
+            $('select[name="storeid"]').append(list.join(''));
+            form.render();
+        });
         //监听几室
         form.on('select(Idletime)', function(data){
             debugger;
             search.Idletime=data.value;
             loaddata(search);
         });  
+        form.on('select(store)', function(data){
+            debugger;
+            search.storeid=data.value;
+            loaddata(search);
+        }); 
         form.on('select(ShiNumber)', function(data){
             debugger;
             search.ShiNumber=data.value;
@@ -455,6 +471,23 @@ function formatter(value,cont){
     return value+"平";
   }
   return value;
+}
+function formatter1(value){
+    debugger;
+    if(value==1){
+       return "到期"
+    }
+    if(value==2){
+      return "违约"
+   }
+   if(value==3){
+      return "转租"
+   }
+   if(value==4){
+      return "新房"
+   }
+   return "房源类型";
+
 }
 
 

@@ -33,11 +33,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
     laydate.render({
         elem: '#tEndTime'
     });
-    var threeSelectData={};
-    doc.objectQuery("api/Formatter/QueryCell",{},function(data1){ 
-        threeSelectData=data1.numberData;
-        treeSelect(defaults);
-    }); 
+    
     var tableoption = {
         domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
             { type: 'checkbox' }
@@ -55,7 +51,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable'
     };
     var BtnOption = {
-        area: ['98%', '90%'],
+        area: ['70%', '90%'],
         editarea: ['1200px', '90%'],
         tableid: "zcontract-index-table",
         ismuilti:true,

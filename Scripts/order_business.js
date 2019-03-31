@@ -2,14 +2,22 @@ debugger;
 layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     var util = layui.util;
     var $ = layui.$;
+    var laytpl = layui.laytpl;
     var mymod = layui.htcsradio;
     var nowDate = mymod.getnowdate("yyyy-MM-dd");
     var doc = layui.htcsLG;
     var laydate = layui.laydate;
     var table = layui.table;
+    var url="api/Enterprise/querycompany";
+    var form = layui.form;
     laydate.render({
-        elem: '#CreateTime'
+        elem: '#BeginTime'
     });
+    laydate.render({
+        elem: '#EndTime'
+    });
+    form.render('');
+    debugger;
     //加载详情
     doc.objectQuery(url, {}, function (data) {
         debugger;
@@ -28,7 +36,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
                 type: 1,
                 title: '转出',
                 skin: 'two-layer',
-                shadeClose: true, //开启遮罩关闭
+                shadeClose: false, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
                 area: ['40%', '60%'],
                 success: function(layero, index) {
@@ -53,14 +61,13 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     { type: 'checkbox' }
     , { field: 'Id', width: 100, title: '订单编号' },
   { field: 'CreateTime', width: 200, title: '创建时间' },
-  { field: 'CostName', width: 200, title: '地址	' },
-  { field: 'Amount', width: 100, title: '租客姓名' },
-  { field: 'TYPE', width: 100, title: '租客电话'},
-  { field: 'TradingDate', width: 100, title: '账务类型' },
-  { field: 'PayType', width: 100, title: '支付方式' },
-  { field: 'Transaoctor', width: 100, title: '订单金额(元)' },
-  { field: 'Transaoctor', width: 100, title: '手续费(元)' },
-  { field: 'Transaoctor', width: 100, title: '实收金额(元)' }
+  { field: 'House', width: 200, title: '地址' },
+  { field: 'zkName', width: 100, title: '租客姓名' },
+  { field: 'Pone', width: 140, title: '租客电话'},
+  { field: 'TradingDate', width: 100, title: '账务类型',templet: formasign },
+  { field: 'zftype', width: 100, title: '支付方式' },
+  { field: 'Amount', width: 100, title: '订单金额' },
+  { field: 'Amount', width: 100, title: '到账类型',templet: formatterTrader },
  
 ]], height: 620, url: config.url,ismuilti: true
     };
@@ -87,21 +94,24 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     });
     
     
-    function Ugenttemp(value) {
+    function formasign(value) {
+        if (value.type == 1) {
+            return '电费'
+        } 
         if (value.Type == 2) {
-            return '<div style="background-color:crimson;text-align:center;color: #f5f6f7;">' + "支出" + '</div>'
+            return '账单'
         } 
-        if (value.Type == 1) {
-            return '<div style="background-color: blue;text-align:center;color: #f5f6f7;">' + "收入" + '</div>'
-        } 
-     
+     return '未知';
     }
     function formatterTrader(value) {
         debugger;
-       if(value.Trader==undefined){
-           return "";
+       if(value.ispt==0){
+           return "到账商家";
        }
-       return value.Trader; 
+       if(value.ispt==0){
+        return "到账平台";
+       }
+     
     }
    
 });

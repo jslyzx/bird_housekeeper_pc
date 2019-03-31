@@ -7,9 +7,14 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     var doc = layui.htcsLG;
     var laydate = layui.laydate;
     var table = layui.table;
+    var form = layui.form;
     laydate.render({
-        elem: '#CreateTime'
+        elem: '#BeginTime'
     });
+    laydate.render({
+        elem: '#EndTime'
+    });
+    form.render('');
     var option1 = { data: [{ "value": 0, "text": "全部" }, { "value": 2, "text": "逾期" }, { "value": 3, "text": "今天" }, { "value": 4, "text": "1-7天" }], rdefault: 0 };
     mymod.CreateInput($("#yuqitype"), option1, function (result) {
         
@@ -24,7 +29,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     { field: 'createtime', width: 200, title: '申请时间' },
   { field: 'amount', width: 100, title: '金额	' },
   { field: '', width: 100, title: '账户类型	',templet: formatterctype   },
-  { field: 'Amount', width: 300, title: '收款账号',templet: formatterTrader  },
+  { field: 'Amount', width: 400, title: '收款账号',templet: formatterTrader  },
   { field: 'TradingDate', width: 100, title: '状态' ,templet: formattertype},
 ]], height: 620, url: config.url,ismuilti: true
     };
@@ -88,13 +93,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     }
     function formatterTrader(value) {
        
-        if(value.type==1||value.type==2){
-            return "账户名"+value.name+" "+"账户"+value.account;
-        }
-        
-        if(value.type==3){
-            return "银行"+value.bank+" "+"账户名"+value.name+" "+"账户"+value.account;
-        }
+        return "账户名:"+value.name+" "+"账户:"+value.account;
         
      }
     

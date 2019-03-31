@@ -40,7 +40,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     };
     var BtnOption = {
         realtable:'T_REPAIRLIST',
-        area: ['1100px', '900px'],
+        area: ['80%', '80%'],
         tableid: config.table,
         btnview: config.btnview,
         tooladd: config.tooladd,

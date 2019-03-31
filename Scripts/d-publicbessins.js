@@ -373,7 +373,7 @@ function ViewEvent(pId) {
             
             success: function (layero, index) {
                 //debugger;
-                view("domedit").render('house/d-house/edit', {
+                view("domedit").render('contract/z-contract/add', {
                     id: id,
                     ParentRoomid:parentid,
                     layerindex:index
@@ -540,4 +540,20 @@ function formatter(value,cont){
       return value+"平";
     }
     return value;
-  }
+  }function formatter1(value){
+    debugger;
+    if(value==1){
+       return "到期"
+    }
+    if(value==2){
+      return "违约"
+   }
+   if(value==3){
+      return "转租"
+   }
+   if(value==4){
+      return "新房"
+   }
+   return "房源类型";
+
+}

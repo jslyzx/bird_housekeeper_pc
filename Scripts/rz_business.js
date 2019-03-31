@@ -23,10 +23,10 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         tabfield:config.tabfield,
         domid: config.tableid, formid:config.formid, arr: [[ //表头
    
-  { field: 'createtime', width: 150, title: '创建时间' },
+  { field: 'createtime', width: 160, title: '创建时间' },
   { field: 'House', width: 200, title: '房源' },
   { field: 'type', width: 200, title: '类型' },
-  { field: 'content', width: 200, title: '内容' },
+  { field: 'content', width: 250, title: '内容' },
   { field: 'create', width: 100, title: '创建人' },
   
  
