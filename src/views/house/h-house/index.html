@@ -20,7 +20,6 @@
                         <span class="m-title" id="m-title-{{item.house.Id}}">{{item.house.CellName}}·{{item.house.BuildingNumber}}号{{item.house.RoomId}}室</span>
                         <span class="">系统编号:</span>
                         <span class="houseid" id="houseid-{{item.house.Id}}">{{item.house.Id}}</span>
-                      
                     </div>
                     <span class="m-row" id="m-row-{{item.house.Id}}">
                         <i class="layui-icon" style="font-size:27px;">&#xe61a;</i>
@@ -47,7 +46,7 @@
                         <div class="m-top m-zt-y" id="m-top">
                             <ul>
                                 <li>
-                                    <span>{{itemtop.ID}}</span>-<span style="">{{itemtop.Name}}</span>
+                                    <span style="">{{itemtop.Name}}</span>
                                     <span class="caidan-icon" id="caidan-icon-{{itemtop.ID}}" view="false">
                                         <i class="layui-icon" id="lay-ic-{{itemtop.ID}}" style="font-size:22px;" view="false">&#xe65f;</i>
                                     </span>
@@ -69,7 +68,7 @@
                         <div class="m-top m-zt-k" id="m-top">
                             <ul>
                                 <li>
-                                    <span>{{itemtop.ID}}</span>-<span style="">{{itemtop.Name}}</span>
+                                    <span class="fylx">{{formatter1(itemtop.sign)}}</span><span style="">{{itemtop.Name}}</span>
                                     <span class="caidan-icon" id="caidan-icon-{{itemtop.ID}}" view="false">
                                         <i class="layui-icon" id="lay-ic-{{itemtop.ID}}" style="font-size:22px;" view="false">&#xe65f;</i>
                                     </span>
@@ -78,6 +77,8 @@
                                     <ul class="project-span-box span-box" id="span-box-{{itemtop.ID}}">
                                         <li style="line-height: 30px;height: 30px;" class="deletedepent" id="deletedepent-{{itemtop.ID}}"><a data="18220" class="deleteApartment">删除房源</a></li>
                                         <li style="line-height: 30px;height: 30px;" class="editdepent" id="editdepent-{{itemtop.ID}}"><a class="view-del-project">编辑房源</a></li>
+                                        <li style="line-height: 30px;height: 30px;" class="addcontract" id="addcontract-{{itemtop.ID}}"><a class="view-del-project">登记租客</a></li>
+
                                     </ul>
                                 </li>
                                 <li><span>{{formatter(itemtop.Price,"暂未定价")}}</span></li>
@@ -118,6 +119,7 @@
                                 <div class="m-search-item">
                                 <select name="ShiNumber" lay-verify="" id="ShiNumber" lay-filter="ShiNumber">         
                                     <option value="">居室</option>
+                                    <option value="1">1居</option>
                                     <option value="2">2居</option>
                                     <option value="3">3居</option>
                                     <option value="4">4居</option>
@@ -125,6 +127,12 @@
                                 </select>
                             
                                  </div>  
+                                 <div class="m-search-item">
+                                        <select name="storeid"  id="storeid" lay-filter="store">         
+                                            <option value="">门店</option>
+                                        
+                                        </select>
+                                 </div> 
                                  <div class="m-search-item">
                                     <select name="Idletime" lay-verify="" lay-filter="Idletime">         
                                         <option value="">空置天数</option>

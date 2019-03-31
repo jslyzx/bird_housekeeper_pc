@@ -20,7 +20,7 @@
                 <div class="m-top m-zt-y" id="m-top">
                     <ul>
                         <li>
-                            <span>编号:{{itemtop.Id}}</span>-<span style="">{{itemtop.CellName}}-{{itemtop.BuildingNumber}}号-{{itemtop.BuildingNumber}}单元-{{itemtop.RoomId}}室</span>
+                           <span style="">{{itemtop.CellName}}-{{itemtop.BuildingNumber}}号-{{itemtop.BuildingNumber}}单元-{{itemtop.RoomId}}室</span>
 
                             <span class="caidan-icon" id="caidan-icon-{{itemtop.Id}}" view="false">
                                 <i class="layui-icon" id="lay-ic-{{itemtop.Id}}" style="font-size:22px;" view="false">&#xe65f;</i>
@@ -45,7 +45,7 @@
                 <div class="m-top m-zt-k" id="m-top">
                     <ul>
                         <li>
-                            <span> <span>编号:{{itemtop.Id}}</span>-<span style="">{{itemtop.CellName}}-{{itemtop.BuildingNumber}}号-{{itemtop.BuildingNumber}}单元-{{itemtop.RoomId}}室</span>
+                            <span class="fylx">{{formatter1(itemtop.sign)}}</span><span style="">{{itemtop.CellName}}-{{itemtop.BuildingNumber}}号-{{itemtop.BuildingNumber}}单元-{{itemtop.RoomId}}室</span>
                             <span class="caidan-icon" id="caidan-icon-{{itemtop.Id}}" view="false">
                                 <i class="layui-icon" id="lay-ic-{{itemtop.Id}}" style="font-size:22px;" view="false">&#xe65f;</i>
                             </span>
@@ -98,7 +98,11 @@
                                     <option value="4">4居</option>
                                     <option value="5">5居</option>
                                 </select>
-                            
+                                 </div> 
+                                 <div class="m-search-item">
+                                    <select name="storeid"  id="storeid" lay-filter="store">         
+                                        <option value="">门店</option>
+                                    </select>
                                  </div>  
                                  <div class="m-search-item">
                                     <select name="Idletime" lay-verify="" lay-filter="Idletime">         

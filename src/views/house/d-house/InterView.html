@@ -44,7 +44,9 @@
         }
     </style> 
     <script>
+         var houseid=0;
          function LoadData(id,ParentRoomid,layerindex){
+            houseid=id;
             layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','element','setter'], function(){
             var url = "api/House/Querydepent";
             var para={"teseorpeibei":0,"type":2};
@@ -65,6 +67,7 @@
              var view1 = layui.view;
              var alldata=[];
              var imageurl="";
+             var contract=0;
              //查询特色信息
              doc.objectQuery(tsurl, para, function (data) {
                 alldata.push(data.numberData);
@@ -126,48 +129,103 @@
             element.on('tab(test1)', function(){
                var layid=this.getAttribute('lay-id');
                if(layid==222){ 
+                if(contract==1){
+                return false;
+            };
+            contract=1;
                 var tableoption = {
-            domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
+        domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
             { type: 'checkbox' }
+            ,{ field: 'Id', width: 100, title: '编号' }
           , { field: 'Name', width: 100, title: '租客姓名' }
-          , { field: 'Phone', width: 150, title: '租客电话' }
-          , { field: 'Deposit', width: 180, title: '身份证号' }
           , { field: 'Status', width: 110, title: '状态', templet: formatterstatus }
+          , { field: 'Phone', width: 150, title: '租客电话' }
           , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
           , { field: 'Recent', width: 80, title: '租金' }
-          , { field: 'Pinlv', width: 120, title: '付款频率',templet: formatterpinlv }
-          
+          , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
+       
     ]], height: 650, url: 'api/Contract/Query',
-        ismuilti: true,"tabfield":"Status","search":{"HouseId":id}
+        ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable',
+        "search":{"HouseId":id}
     };
-    doc.InitTable(tableoption);
     var BtnOption = {
-        area: ['990px', '910px'],
+        area: ['1400px', '90%'],
+        editarea: ['1200px', '90%'],
         tableid: "zcontract-index-table",
         ismuilti:true,
         btnview:  "zcontract-button-view",
+        toolview: "zcontract-view-btn",
         tooladd:  "zcontract-add-btn",
         tooledit: "zcontract-edit-btn",
         tooldelete:"zcontract-delete-btn",
         deletespname:"sp_pldeletecontract",
-        menuid:164
+        menuid:165
     };
-    doc.InitButton(BtnOption, zcontractbtnscribt);
+    doc.InitButton(BtnOption, zcontractbtnscribt, tableoption);
+     //监听工具栏按钮
+     table.on('tool(demoEvent)', function(obj) {
+        var data = obj.data,
+            layEvent = obj.event,
+            url = $(this).data('url');
+            if (layEvent === 'zcontract-tuizu-btn') { //退租
+                if(data.Status!=1&&data.Status!=5){
+                    layer.msg("合同状态不为待签约和在租中不能进行退租操作");
+                    return;
+                }
+                var editid="layuizcontracttuizubtn";
+                var view = layui.view;
+                layer.open({
+                    id: editid,
+                    type: 1,
+                    title: '退租',
+                    skin: 'two-layer',
+    
+                    //anim: 4,
+                    shadeClose: true, //开启遮罩关闭
+    
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['1000px', '90%'],
+                    success: function(layero, index) {
+                        view(this.id).render(url, {
+                            id: data.Id,
+                            tableid: "bill-main-table",
+                            layerindex: index
+                        });
+                    }
+                });
+            }
+            if (layEvent === 'zcontract-xuzu-btn') { //续租
+                if(data.Status!=1&&data.Status!=5){
+                    layer.msg("合同状态不为待签约和在租中不能进行续租操作");
+                    return;
+                }
+                var editid="layuizcontracttuizubtn";
+                var view = layui.view;
+                layer.open({
+                    id: editid,
+                    type: 1,
+                    title: '续租',
+                    skin: 'two-layer',
+    
+                    //anim: 4,
+                    shadeClose: true, //开启遮罩关闭
+    
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['1000px', '90%'],
+                    success: function(layero, index) {
+                        view(this.id).render(url, {
+                            id: data.Id,
+                            tableid: "bill-main-table",
+                            layerindex: index
+                        });
+                    }
+                });
+            }
+            doc.bindCommonEvents(BtnOption, data, layEvent, url);
+     });  
                }
-               if(layid=="333"){
-                var tableoption = {
-        domid: "#bill-main-table", formid: "#bill-search-form", arr: [[ //表头
-    { type: 'checkbox' }
-    , { title: '账单周期',width: 200,templet:formatterzhouqi }
-    , { width: 80, title: '状态', templet: formastatus }
-    , { field: 'Amount', width: 80, title: '金额' }
-    , { title: '收租时间',width: 200,templet:formatterreveice }
-  , { field: 'TeantName', width: 100, title: '租客姓名' }
-  , { field: 'Phone', width: 120, title: '租客电话' }
-        ]], height: 620, url: 'api/Bill/Querylist',
-        ismuilti: true,"tabfield":"PayStatus","search":{"HouseId":id}
-    };
-    doc.InitTable(tableoption);
+               if(layid==333){
+                   $(".house_iframe").attr('src','/#/house/rz');
                }
             });
             function formatterstatus(value) {
@@ -278,14 +336,29 @@ function formatterzhouqi(value) {
 
 </head>
 <body>
+        <script id="zcontractbtnscribt" type="text/html">
+        </script>
+        <script type="text/html" id="btnintable">
+            <ul class="layui-nav toolbar-nav">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" class="show-more">操作</a>
+                        <dl class="layui-nav-child"></dl>
+                    </li>
+                </ul>
+            </script>
+        <div id="toolbar">
+            <div class="layui-btn-group">
+                <div id="zcontract-button-view" style="overflow:hidden;"></div>
+            </div>
+        </div>
   <script type="text/html" template >
     {{#  LoadData(d.params.id,d.params.ParentRoomid,d.params.layerindex)}}
   </script>
     <div class="layui-tab layui-tab-card" style="margin:0px;" lay-filter="test1">
         <ul class="layui-tab-title">
             <li class="layui-this" lay-id="111">房源信息</li>
-            <li lay-id="222">合同信息</li>
-            <li lay-id="333">在租账单</li>
+            <li lay-id="222">租客合同</li>
+            <li lay-id="333">房源日志</li>
            
         </ul>
         <div class="layui-tab-content">
@@ -445,18 +518,9 @@ function formatterzhouqi(value) {
                             </div>
                     </div>
             </div>
-            <div class="layui-tab-item">
-                    <div class="layui-tab layui-tab-brief" lay-filter="tabletab">
-                            <ul class="layui-tab-title" style="margin-bottom:0;">
-                                <li value="999" class="layui-this">待处理账单</li>
-                                <li value="222" class="">未处理账单</li>
-                                <li value="222" class="">已处理账单</li>
-                            </ul>
-                            <div class="layui-tab-content" style="padding:0px;margin:0px;">
-                                <table id="bill-main-table" lay-filter="demoEvent"></table>
-                            </div>
-                    </div>
-            </div>
+            <div class="layui-tab-item" style="height:700px;">
+                    <iframe src="" isloaded="true" frameborder="0" class="house_iframe"></iframe>
+                </div>
             <div class="layui-tab-item">
               
             </div>

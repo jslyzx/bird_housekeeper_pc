@@ -28,6 +28,7 @@ img {
             var deletebilllist=[];
             var table=layui.table;
             var url = "api/House/publicHousexq";
+            var storeurl="api/cellname/Querylist";
             var tsurl='api/BaseData/Queryfgy';
             var doc = layui.htcsLG;   
             var allresult = [];
@@ -40,6 +41,8 @@ img {
             doc.objectQuery(tsurl, para, function (result) {
                 alldata.push(result.numberData);
                 doc.objectQuery(url, { "Id": id }, function (data) {
+                alldata.push(data.numberData);
+                doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
                 alldata.push(data.numberData);
                 var image=alldata[1].PublicImg;
                 var arr=new Array();
@@ -55,6 +58,7 @@ img {
                 $("#Huxing").val(alldata[1].Huxing);
                 $("#Orientation").val(alldata[1].Orientation);
                 $("#HouseKeeper").val(alldata[1].HouseKeeper);
+                $("#storeidd").val(alldata[1].storeid);
                 form.render('');
                 doc.tjgd();
                 $("#addimage").click(function () {
@@ -141,7 +145,9 @@ img {
                     groupBy: 'category'
                 });
              });
-             });   
+             }); 
+            }); 
+             
             });
             
             //监听提交
@@ -385,6 +391,16 @@ img {
                                   <option value="">请选择</option>
                                   {{#  layui.each(d[0], function(index, item1){ }}
                                   <option value="{{item1.Id}}">{{item1.RealName}}</option>
+                                  {{# });   }}   
+                          </select>
+                   </div> 
+                   <label class="layui-form-label">门店</label> 
+                   <div class="layui-input-inline"> 
+                          <select name="storeid" id="storeidd" lay-search>
+                                  <option value="">请选择</option>
+                                  {{#  layui.each(d[2], function(index, item1){ }}
+    
+                                  <option value="{{item1.Id}}">{{item1.Name}}</option>
                                   {{# });   }}   
                           </select>
                    </div> 

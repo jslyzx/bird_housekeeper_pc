@@ -23,6 +23,7 @@ img {
             var table=layui.table;
             var url ="api/House/publicHousexq";
             var url1 ="api/BaseData/Queryfgy";
+            var storeurl="api/cellname/Querylist";
             var tsurl="api/BaseData/Query";
             var doc = layui.htcsLG;
             var allresult = [];
@@ -38,17 +39,22 @@ img {
                     imageurl=alldata[1].PublicImg;
                     doc.objectQuery(url1, {  }, function (data) {
                         alldata.push(data.numberData);
+                        doc.objectQuery(storeurl, {"PageSize":100000,"PageIndex":1}, function (data) {
+                     alldata.push(data.numberData);
                     var arr=new Array();
                     if(alldata[1].PublicImg!=null){
                         alldata[1].PublicImg=alldata[1].PublicImg.substring(0,alldata[1].PublicImg.length-1);
                         arr=alldata[1].PublicImg.split(';');
                     }
-                    alldata.push(arr);
+                alldata.push(arr);
                 laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
                 doc.tjgd();
-                form.render('');
+                debugger;
                 $("#HouseKeeper").val(alldata[1].HouseKeeper);
+                $("#storeidd").val(alldata[1].storeid);
+                form.render('');
+            
                 }); 
                 $('#CellName').devbridgeAutocomplete({
                     lookup: function (query, done) {
@@ -137,6 +143,7 @@ img {
                
                });  
              });
+            });
              });   
             });
             
@@ -268,7 +275,17 @@ img {
                                 <select name="HouseKeeper" id="HouseKeeper">
                                         <option value="">请选择</option>
                                         {{#  layui.each(d[2], function(index, item1){ }}
-                                        <option value="{{item1.RealName}}">{{item1.RealName}}</option>
+                                        <option value="{{item1.Id}}">{{item1.RealName}}</option>
+                                        {{# });   }}   
+                                </select>
+                         </div> 
+                         <label class="layui-form-label">门店</label> 
+                         <div class="layui-input-inline"> 
+                                <select name="storeid" id="storeidd" lay-search>
+                                        <option value="">请选择</option>
+                                        {{#  layui.each(d[3], function(index, item1){ }}
+          
+                                        <option value="{{item1.Id}}">{{item1.Name}}</option>
                                         {{# });   }}   
                                 </select>
                          </div> 
