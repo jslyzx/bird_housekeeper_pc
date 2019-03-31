@@ -9,6 +9,7 @@
 .layui-form-select ul{
 	z-index:999999
 }
+.alerd{display:none;}
 </style>
 <script>
     var selectdata=[];
@@ -28,8 +29,64 @@
         laytpl(getTpl).render(data.numberData, function (html) {
             view.innerHTML = html;
         });
-        var contenth=(900-100)+"px";
-        $(".form-content").css("height",contenth);
+        $(".alerd").hide();
+        if(data.numberData!=null){
+            if(data.numberData.Status==4)
+            {
+                $(".alerd").show();
+            }
+        }
+        if(data.numberData.Voucher!=null){
+            $("#Image").val(data.numberData.Voucher);
+            var arr=new Array();
+                        var str=data.numberData.Voucher; 
+                        str=str.substr(0, str.length - 1);  
+                        arr=str.split(';');
+                        $("#imgnumber").html(arr.length);
+        }
+                     $("#viewcontract").click(function(){
+                         var url="contract/z-contract/view"
+                         var editid = "layuibillreceivebtn";
+                         var view = layui.view;
+                         layer.open({
+                         id: editid,
+                         type: 1,
+                         title: '查看合同',
+                         skin: 'two-layer',
+                         shadeClose: true, //开启遮罩关闭
+                         maxmin: true, //开启最大化最小化按钮
+                         area: ['1000px', '90%'],
+                         success: function(layero, index) {
+                         view(this.id).render(url, {
+                         id: data.numberData.ContractId,
+                         tableid: "bill-main-table",
+                         layerindex: index
+                    });
+                }
+            });
+                     })
+                    $("#addimage").click(function () {
+                 var addid="layui-contract-addimage";
+                 var view = layui.view;
+                 layer.open({
+                    id:addid,
+                    type: 1,
+                    title: '上传文件',
+                    skin: 'two-layer',
+                    //anim: 4,
+                    shadeClose: true,//开启遮罩关闭
+                    //shade: ['0.5'],
+                    maxmin: true, //开启最大化最小化按钮
+                    area:['800px', '500px'],
+                    success: function(layero,index){
+                        view(this.id).render('upload/index', {
+                            img:$("#Image").val(),
+                            type:1,
+                            layerindex:index
+                        });
+                      }
+                });  
+});
         var laydate = layui.laydate;
         //执行一个laydate实例
         laydate.render({
@@ -47,7 +104,6 @@
         });
         form.render('');
          //加载子表数据
-    debugger;
     var url="api/Bill/billlist";
     var clos=[[ //表头
                { type: 'numbers' , width: 80, title: '编号', }
@@ -59,7 +115,6 @@
     doc.childtable(options);
     });
     doc.objectQuery("api/Zafei/Zafeilist",{},function(data1){ 
-        debugger;
         selectdata=data1.numberData;
     }); 
     EventBtn();
@@ -113,6 +168,7 @@ form.on('submit(save)', function (data) {
   }
   
 });
+
 }
 function formatterstatus(value) {
         if (value == 1) {
@@ -140,6 +196,19 @@ function ns(value){
       }
       return value;
   }
+  function complteimg(name,type, number){
+        layui.use(['jquery'], function () {
+            var $ = layui.jquery;
+            if(type==1){
+             $("#Image").val(name);
+             $("#imgnumber").html(number);
+            }
+            if(type==2){
+             $("#zjImage").val(name);
+             $("#imgzjnumber").html(number);
+            }
+        })
+      }
 </script>
 <!--结束-->
 <script type="text/html" template >
@@ -159,7 +228,7 @@ function ns(value){
   </script>
 <div>
 <script id="billeditscript" type="text/html">
-    {{#   var util = layui.util;}}
+    {{#   var util = layui.util;var doc = layui.htcsLG;}}
     <form class="layui-form layui-form-pane hcs-form" action=""> 
             <div class="form-content">
                             <input type="text" name="Id" id="Id"  autocomplete="off" class="layui-input" value="{{d.Id}}" style="display:none">
@@ -167,7 +236,11 @@ function ns(value){
                                 <div class="title">
                                     <h3 class="red">
                                         基本信息
+                                        <a id="viewcontract" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm">
+                                            查看合同
+                                        </a>
                                     </h3>
+                                   
                                 </div>
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
@@ -201,7 +274,43 @@ function ns(value){
                                             <input type="text" name="ShouldReceive"  autocomplete="off" class="layui-input gray" value="{{d.ShouldReceive}}" disabled>
                                         </div>
                                     </div>   
-                                </div>            
+                                </div> 
+                                <div class="layui-form-item">
+                                        <label class="layui-form-label">备注</label>
+                                        <div class="layui-input-inline">
+                                              <textarea name="Remark" id="Remark" placeholder="请输入内容" value="" disabled class="layui-textarea gray">{{doc.ns(d.Remark)}}</textarea>
+                                         </div> 
+                                      </div>  
+                                <div class="layui-form-item alerd">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="text-align:left;width:auto;">处理人</label>
+                                        <div class="layui-input-inline" >
+                                            <input type="text" name="TranSactor" id="TranSactor" autocomplete="off" class="layui-input gray" value="{{doc.ns(d.TranSactor) }}" disabled>
+                                        </div>
+                                        <label class="layui-form-label">支付时间</label>
+                                        <div class="layui-input-inline" style="width:122px;">
+                                            <input type="text" name="PayTime"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.PayTime)}}" disabled>
+                                        </div>
+                                        <label class="layui-form-label">支付方式</label>
+                                        <div class="layui-input-inline" style="width:122px;">
+                                            <input type="text" name="PayType"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.PayType)}}" disabled>
+                                        </div>
+                                    </div>
+                                    
+                                        <div class="layui-form-item alerd" >
+                                            <label class="layui-form-label" style="text-align:left;width:auto;">流水号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="Liushui"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Liushui)}}" disabled>
+                                            </div>
+                                            <label class="layui-form-label">附件</label>
+                                            <div class="layui-input-inline">
+                                            <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i>凭证<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                            <input type="tel" name="Voucher" autocomplete="off" class="layui-input gray" disabled id="Image">
+                                        </div>
+                                        </div>
+                                  
+                                    
+                                </div>             
                               </div>
                               <div class="layui-tab layui-tab-card" style="margin-top:0;">
                                     <ul class="layui-tab-title">

@@ -27,13 +27,11 @@
         laydate.render({
          elem: '#ShouldReceive1' //指定元素
         });
-       
-        var laydate = layui.laydate;
         laydate.render({
-         elem: '#BeginTime' //指定元素
-                    });
+         elem: '#BeginTime1' //指定元素
+         });
         laydate.render({
-         elem: '#EndTime' //指定元素
+         elem: '#EndTime1' //指定元素
         }); 
         
     doc.objectQuery("api/Zafei/Zafeilist",{},function(data1){ 
@@ -182,13 +180,13 @@ function formattertime(value) {
                                             <div class="layui-inline">
                                                 <label class="layui-form-label" style="text-align:left;width:auto;">合同编号</label>
                                                 <div class="layui-input-inline" style="width:270px;">
-                                                    <input type="tel" name="ContractId"  autocomplete="off" class="layui-input"  >
+                                                    <input type="tel" lay-verify="required" name="ContractId"  autocomplete="off" class="layui-input"  >
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">租客姓名</label>
                                                 <div class="layui-input-inline">
-                                                    <input type="text" name="TeantName"  autocomplete="off" class="layui-input">
+                                                    <input type="text"  name="TeantName"  autocomplete="off" class="layui-input">
                                                 </div>
                                             </div>
                                         </div>
@@ -196,20 +194,26 @@ function formattertime(value) {
                                             <div class="layui-inline">
                                                 <label class="layui-form-label" style="text-align:left;width:auto;">账单周期</label>
                                                 <div class="layui-input-inline" style="width: 122px;">
-                                                    <input type="text" name="BeginTime" id="BeginTime" autocomplete="off" class="layui-input" >
+                                                    <input type="text" lay-verify="required" name="BeginTime" id="BeginTime1" autocomplete="off" class="layui-input" >
                                                 </div>
                                                 <div class="layui-form-mid">到</div>
                                                 <div class="layui-input-inline" style="width:122px;">
-                                                    <input type="text" name="EndTime" id="EndTime" autocomplete="off" class="layui-input" >
+                                                    <input type="text" lay-verify="required" name="EndTime" id="EndTime1" autocomplete="off" class="layui-input" >
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">应付款时间</label>
                                                 <div class="layui-input-inline">
-                                                    <input type="text" name="ShouldReceive"  autocomplete="off" id="ShouldReceive1" class="layui-input" >
+                                                    <input type="text" lay-verify="required" name="ShouldReceive"  autocomplete="off" id="ShouldReceive1" class="layui-input" >
                                                 </div>
                                             </div>   
-                                        </div>             
+                                        </div> 
+                                        <div class="layui-form-item">
+                                                <label class="layui-form-label">备注</label>
+                                                <div class="layui-input-inline">
+                                                      <textarea name="Remark" id="Remark" placeholder="请输入内容" value="" class="layui-textarea"></textarea>
+                                                 </div> 
+                                              </div>            
                                       </div>
                                       <div class="layui-tab layui-tab-card" style="margin-top:0;">
                                             <ul class="layui-tab-title">
