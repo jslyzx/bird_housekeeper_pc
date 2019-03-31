@@ -50,27 +50,37 @@
             </div>
             <div class="m-search" style="background-color: #e0e7ec;padding-top: 20px;padding-bottom: 20px;">
                     <form class="layui-form hcs-form" action="" lay-filter="search" id="guest-search-form">
-                        <div class="m-search-item">
-                            <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="编号" id="Id" style="width:auto;">
+                        <div class="m-search-item" >
+                            <label class="layui-form-label">创建时间</label>
+                            <div class="layui-input-inline" style="width: 144px;">
+                                    <input type="text" name="BeginTime" autocomplete="off" class="layui-input" placeholder="开始时间" id="BeginTime">
+                                </div>
+                                <div class="layui-input-inline" style="width: 144px;">
+                                        <input type="text" name="EndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="EndTime">
+                                    </div>
                         </div>
                         <div class="m-search-item">
-                            <input type="text" name="Trader" autocomplete="off" placeholder="交易对象" class="layui-input" id="Name" style="width:auto;">
-                        </div>
-                        <div class="m-search-item">
-                            <input type="text" name="PayMentNumber" autocomplete="off" placeholder="支付流水号" class="layui-input" id="ddd" style="width:auto;">
-                        </div>
-                        <div class="m-search-item">
-                                <input type="text" name="CostName" autocomplete="off" placeholder="费用名称" class="layui-input" id="ddd" style="width:auto;">
-                        </div>
-                        <div class="m-search-item">
-                            <select name="Source" lay-verify="" id="Source">
-                               <option value="">收支类型</option>                           
-                               <option value="收入">收入</option>
-                               <option value="支出" >支出</option>
+                            <select name="Type" lay-verify="" id="Type">
+                               <option value="">财务类型</option>                           
+                               <option value="1">账单</option>
+                               <option value="2">电费</option>
                             </select>  
                         </div>
                         <div class="m-search-item">
-                            <input type="text" name="CreateTime" placeholder="创建时间" autocomplete="off" class="layui-input" id="CreateTime">
+                            <select name="Source" lay-verify="" id="Source">
+                               <option value="">支付方式</option>                           
+                               <option value="支付宝">支付宝</option>
+                               <option value="微信" >微信</option>
+                            </select>  
+                        </div>
+                        <div class="m-search-item" >
+                            <label class="layui-form-label">金额区间</label>
+                            <div class="layui-input-inline" style="width: 144px;">
+                                    <input type="text" name="minamount" autocomplete="off" class="layui-input" placeholder="最小金额" >
+                                </div>
+                                <div class="layui-input-inline" style="width: 144px;">
+                                        <input type="text" name="maxamount" autocomplete="off" class="layui-input" placeholder="最大金额">
+                                    </div>
                         </div>
                         <div class="m-search-item">
                             <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>

@@ -275,7 +275,12 @@ function ns(value){
                                         </div>
                                     </div>   
                                 </div> 
-
+                                <div class="layui-form-item">
+                                        <label class="layui-form-label">备注</label>
+                                        <div class="layui-input-inline">
+                                              <textarea name="Remark" id="Remark" placeholder="请输入内容" value="" disabled class="layui-textarea gray">{{doc.ns(d.Remark)}}</textarea>
+                                         </div> 
+                                      </div>  
                                 <div class="layui-form-item alerd">
                                     <div class="layui-inline">
                                         <label class="layui-form-label" style="text-align:left;width:auto;">处理人</label>

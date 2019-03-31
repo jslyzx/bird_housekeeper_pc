@@ -35,6 +35,10 @@
                 data: JSON.stringify(queryParam),
                 dataType: 'json',
                 success: function(result) {
+                   
+                    if(result.Code==1002){
+                        location.hash = '/user/login'; //跳转到登入页
+                    }
                     var resultData = result;
                     if (typeof callBack == 'function') {
                         callBack(resultData);
@@ -72,6 +76,9 @@
                     $('.layui-table-fixed .layui-table-body').css({
                         overflow: 'visible'
                     });
+                    if(res.Code==1002){
+                        location.hash = '/user/login'; //跳转到登入页
+                    }
                 },
                 search: {}
             }, options);

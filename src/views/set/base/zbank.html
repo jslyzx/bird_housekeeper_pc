@@ -11,11 +11,11 @@
    <script type="text/html" template >
        {{#  LoadData(d.params.tableid,d.params.layerindex)}}
    </script>
-   <script id="sysuereditscript" type="text/html">
+   <script id="zbankscript" type="text/html">
     <div class="layui-form-item">
             <label class="layui-form-label " style="width:120px;">选择收款账号</label>
             <div class="layui-input-inline">
-                <select name="bank" id="bank" lay-search style="width:120px;">
+                <select name="accountbankid" id="accountbankid" lay-verify="required" lay-search style="width:150px;">
                     <option value="">请选择</option>
                     {{#  layui.each(d, function(index, item1){ }}
                     {{#  if(item1.type==1){ }}
@@ -88,25 +88,27 @@ function LoadData(tableid,layerindex){
            doc.objectQuery(url, {}, function (data) {
              debugger;
              var realdata=data.numberData;
-             var getTpl = sysuereditscript.innerHTML
+             var getTpl = zbankscript.innerHTML
              ,view = document.getElementById('addzfb-view');
              laytpl(getTpl).render(data.numberData, function (html) {
                  view.innerHTML = html;
              }); 
              form.render('');
+             $("#cancelbtn").click(function(){
+             layer.close(layerindex);
+             })
              $("#allamount").click(function(){
                  debugger;
                 doc.objectQuery("api/Enterprise/querycompany", {}, function (data) {
                        $("#amount").val(data.numberData.Amount);
                 })
              })
-             $("#cancelbtn").click(function(){
-             layer.close(layerindex);
-             })
+            
              //监听提交
             form.on('submit(save)', function (data) {
             debugger;
             data.field.type=type;
+            
             var saveoption={
             url:'api/Account/withdrawal',
             data:data.field,

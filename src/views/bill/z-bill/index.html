@@ -15,7 +15,7 @@
                         <input type="text" name="ContractId" autocomplete="off" class="layui-input" placeholder="合同编号" id="ContractId">
                      </div>
             <div class="m-search-item" style="width:200px;">
-                <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区名,房间号，姓名，手机号" id="CellName">
+                <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区名,房间号，姓名，手机号" >
              </div>
              <div class="m-search-item" >
                     <label class="layui-form-label">收租时间</label>
@@ -34,6 +34,31 @@
                             <option value="1">付款账单</option> 
                     </select>               
             </div>
+            <div class="m-search-item">
+                    <label class="layui-form-label" style="width: auto;">市</label>
+                    <div class="layui-input-inline" style="width: 90px;">
+                        <select lay-filter="CityName" name="CityName">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="m-search-item">
+                    <label class="layui-form-label" style="width: auto;">区</label>
+                    <div class="layui-input-inline" style="width: 90px;">
+                        <select lay-filter="AreaName" name="AreaName">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="m-search-item">
+                    <label class="layui-form-label" style="width: auto;">小区</label>
+                    <div class="layui-input-inline" style="width: 90px;">
+                        <select lay-filter="CellName" name="CellName2" multiple="multiple">
+                            <option value="">请选择</option>
+                        </select>
+                        <input type="hidden" name="CellNames" id="CellName">
+                    </div>
+                </div>
             <div class="m-search-item">
                 <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
             </div>

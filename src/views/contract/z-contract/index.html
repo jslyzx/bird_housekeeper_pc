@@ -34,10 +34,10 @@
                             <label class="layui-form-label">起租时间</label>
                             <div class="layui-input-inline" style="width: 90px;">
                                     <input type="text" name="BeginTime" autocomplete="off" class="layui-input" placeholder="开始时间" id="BeginTime1">
-                                </div>
+                            </div>
                                 <div class="layui-input-inline" style="width: 90px;">
                                         <input type="text" name="EndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="EndTime1">
-                                    </div>
+                                </div>
                         </div>
                         <div class="m-search-item" >
                                 <label class="layui-form-label">退租日期</label>
@@ -49,7 +49,7 @@
                                         </div>
                             </div>
                      <div class="m-search-item">
-                             <label class="layui-form-label" style="width: 40px;">市</label>
+                             <label class="layui-form-label" style="width: auto;">市</label>
                              <div class="layui-input-inline" style="width: 90px;">
                                  <select lay-filter="CityName" name="CityName">
                                      <option value="">请选择</option>
@@ -57,7 +57,7 @@
                              </div>
                          </div>
                          <div class="m-search-item">
-                             <label class="layui-form-label" style="width: 40px;">区</label>
+                             <label class="layui-form-label" style="width: auto;">区</label>
                              <div class="layui-input-inline" style="width: 90px;">
                                  <select lay-filter="AreaName" name="AreaName">
                                      <option value="">请选择</option>
@@ -65,12 +65,12 @@
                              </div>
                          </div>
                          <div class="m-search-item">
-                             <label class="layui-form-label" style="width: 40px;">小区</label>
-                             <div class="layui-input-inline" style="width: 120px;">
+                             <label class="layui-form-label" style="width: auto;">小区</label>
+                             <div class="layui-input-inline" style="width: 90px;">
                                  <select lay-filter="CellName" name="CellName2" multiple="multiple">
                                      <option value="">请选择</option>
                                  </select>
-                                 <input type="hidden" name="CellName" id="CellName">
+                                 <input type="hidden" name="CellNames" id="CellName">
                              </div>
                          </div>
                     <div class="m-search-item">
@@ -109,7 +109,7 @@
                 <ul class="layui-tab-title" style="margin-bottom:0;">
                     <li value="0" class="layui-this">所有</li>
                     <li value="5">在租</li>
-                    <li value="6">待退租</li>
+                    <li value="6">即将到期</li>
                     <li value="4">待搬入</li>
                     <li value="9">退款中</li>
                     <li value="1">待签约</li>
