@@ -15,6 +15,7 @@ var header = require('gulp-header');
 var del = require('del');
 var gulpif = require('gulp-if');
 var minimist = require('minimist');
+var babel = require('gulp-babel');
 
 //获取参数
 var argv = require('minimist')(process.argv.slice(2), {
@@ -42,7 +43,8 @@ var argv = require('minimist')(process.argv.slice(2), {
       ,'!./src/lib/extend/echarts.js'
     ];
     
-    return gulp.src(src).pipe(uglify())
+    return gulp.src(src).pipe(babel())
+    .pipe(uglify())
      .pipe(header.apply(null, note))
     .pipe(gulp.dest(destDir));
   }
