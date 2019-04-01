@@ -86,7 +86,7 @@ layui.define('form', function(exports) {
     var timeOut = 60;
 
     function setTimeOut() {
-        let timer = setTimeout(function() {
+        var timer = setTimeout(function() {
             setTimeOut()
             if (timeOut > 0) {
                 timeOut--;
