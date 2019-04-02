@@ -1,4 +1,3 @@
-debugger;
 layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     var util = layui.util;
     var $ = layui.$;
@@ -45,7 +44,6 @@ search:{"houseid":houseid}
         menuid:237
         ,"realtable":"T_FINANCE"
     };
-    debugger;
     doc.InitButton(BtnOption, guestbtnscribt, tableoption);
     $("#addrz").click(function(){
         var editid = "layuibillreceivebtn";
@@ -85,7 +83,6 @@ search:{"houseid":houseid}
      
     }
     function formatterTrader(value) {
-        debugger;
        if(value.Trader==undefined){
            return "";
        }

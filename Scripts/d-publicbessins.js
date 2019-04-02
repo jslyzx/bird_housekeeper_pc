@@ -328,7 +328,6 @@ function ViewEvent(pId) {
     $(".m-row").unbind("click");
 
     $(".m-panel-body").not(".layui-icon").dblclick(function () {
-        debugger;
         var id = $(this).attr("id").replace("panel-body-", "");
         var parentid = $(this).parent(".m-wrap-body").attr("parentid");
         var view = layui.view;
@@ -342,7 +341,7 @@ function ViewEvent(pId) {
             shade: .1,
             shadeClose: true,
             maxmin: true,
-            area: ['60%', '1100px'],
+            area: ['70%', '1100px'],
             skin: "layui-anim layui-anim-rl layui-layer-adminRight",
             success: function (layero, index) {
                 //debugger;
@@ -541,7 +540,6 @@ function formatter(value,cont){
     }
     return value;
   }function formatter1(value){
-    debugger;
     if(value==1){
        return "到期"
     }
