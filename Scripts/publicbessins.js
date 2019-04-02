@@ -17,7 +17,6 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         var paradata = { "PageSize": 10, "PageIndex": 1,"RecrntType": 2};
         var option = { data: [{ "value": 0, "text": "全部" }, { "value": 1, "text": "未租" },  { "value": 2, "text": "已租" },{ "value": 3, "text": "装修中" }], rdefault: 0 };
         doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
-            debugger;
             var list=[];
             var rdata=data.numberData;
             for (var i in rdata) {
@@ -27,23 +26,19 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             form.render();
         });
         mymod.CreateInput($("#house-othersrarch"), option, function (result) {
-            debugger;
             search.Status=result;
             loaddata(search);
         });
         //监听几室
         form.on('select(Idletime)', function(data){
-            debugger;
             search.Idletime=data.value;
             loaddata(search);
         });  
         form.on('select(ShiNumber)', function(data){
-            debugger;
             search.ShiNumber=data.value;
             loaddata(search);
         }); 
         form.on('select(store)', function(data){
-            debugger;
             search.storeid=data.value;
             loaddata(search);
         });  
@@ -244,7 +239,6 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
 function InitEvent() {
     $(".m-row").unbind("click");
     $(".m-row").click(function (e) {
-        debugger;
         var idvalue = $(this).attr("id");
         if(idvalue=="all-row"){
             $(".m-wrap-body").slideToggle();
@@ -293,7 +287,7 @@ function ViewEvent() {
             shade: .1,
             shadeClose: true,
             maxmin: true,
-            area: ['60%', '100%'],
+            area: ['70%', '100%'],
             skin: "layui-anim layui-anim-rl layui-layer-adminRight",
             success: function (layero, index) {
                 view("domInterView").render('house/h-house/InterView', {
@@ -438,7 +432,6 @@ function ViewEvent() {
 }
 $(".addhouse").unbind("click");
 $(".addhouse").click(function () {
-    debugger;
     var url ="api/House/adddepentHouse";
     var parentid = $(this).attr("id").replace("addhouse-", "");
     var $id = $("#m-wrap-body-" + parentid).children(".m-panel-body:last");
@@ -479,7 +472,6 @@ function formatter(value,cont){
   return value;
 }
 function formatter1(value){
-        debugger;
         if(value==1){
            return "到期"
         }
