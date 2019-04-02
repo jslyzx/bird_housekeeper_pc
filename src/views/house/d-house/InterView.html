@@ -125,10 +125,7 @@ Layout = null;
             element.on('tab(test1)', function(){
                var layid=this.getAttribute('lay-id');
                if(layid==222){ 
-                if(contract==1){
-                return false;
-            };
-            contract=1;
+                element.tabChange('ztabletab', '0');
                 var tableoption = {
         domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
             { type: 'checkbox' }
@@ -142,7 +139,7 @@ Layout = null;
        
     ]], height: 650, url: 'api/Contract/Query',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#zbtnintable',
-        "search":{"HouseId":id}
+        "search":{"HouseId":id},tabletab:'ztabletab'
     };
     var BtnOption = {
         area: ['1400px', '90%'],
@@ -221,21 +218,21 @@ Layout = null;
      });  
                }
                if(layid==333){
+                element.tabChange('ytabletab', '0');
                    var tableoption = {
                       domid: "#ycontract-index-table", arr: [[ //表头
                           { type: 'checkbox' }
                         , { field: 'Id'  , width: 100, title: '合同编号' }
-                        , { field: 'Name', width: 100, title: '姓名' }
-                        , { field: 'Status', width: 110, title: '状态', templet: formatterstatus }
-                        , { width: 380, title: '所属房源', templet: formatterhouse }
-                        , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
+                        , { field: 'Name', width: 80, title: '姓名' }
+                        , { field: 'Status', width: 100, title: '状态', templet: formatterstatus }
+                        , { width: 180, title: '所属房源', templet: formatterhouse }
+                        , { field: 'ContractTime', width: 220, title: '合同周期', templet: formattertime }
                         , { field: 'Deposit', width: 80, title: '押金' }
                         , { field: 'Recent', width: 80, title: '租金' }
                         , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
-                        , { field: 'Phone', width: 180, title: '电话' }
-                        , { field: 'CreatePerson', width: 100, title: '创建人' }
+                        , { field: 'Phone', width: 120, title: '电话' }
                   ]], url: 'api/OwerContract/Query',
-                      ismuilti: true,"tabfield":"Status",tablebtnid: '#ybtnintable',"search":{"HouseId":id}
+                      ismuilti: true,"tabfield":"Status",tablebtnid: '#ybtnintable',"search":{"HouseId":id},tabletab:'ytabletab'
                   };
                   var BtnOption = {
                       area: ['70%', '90%'],
@@ -600,11 +597,11 @@ function formatterzhouqi(value) {
                 </div>
             </div>
             <div class="layui-tab-item">
-                <div class="layui-tab layui-tab-brief" lay-filter="tabletab">
+                <div class="layui-tab layui-tab-brief" lay-filter="ztabletab">
                     <ul class="layui-tab-title" style="margin-bottom:0;">
-                        <li value="0" class="layui-this">全部合同</li>
-                        <li value="5" class="">在租合同</li>
-                        <li value="7" class="">历史合同</li>
+                        <li value="0" class="layui-this" lay-id="0">全部合同</li>
+                        <li value="5" class="" lay-id="5">在租合同</li>
+                        <li value="7" class="" lay-id="7">历史合同</li>
                     </ul>
                     <div class="layui-tab-content" style="padding:0px;margin:0px;">
                         <table id="zcontract-index-table" lay-filter="zdemoEvent"></table>
@@ -612,11 +609,11 @@ function formatterzhouqi(value) {
                 </div>
             </div>
             <div class="layui-tab-item">
-                <div class="layui-tab layui-tab-brief" lay-filter="tabletab2">
+                <div class="layui-tab layui-tab-brief" lay-filter="ytabletab">
                     <ul class="layui-tab-title" style="margin-bottom:0;">
-                        <li value="0" class="layui-this">全部合同</li>
-                        <li value="5" class="">在租合同</li>
-                        <li value="7" class="">历史合同</li>
+                        <li value="0" class="layui-this" lay-id="0">全部合同</li>
+                        <li value="5" class="" lay-id="5">在租合同</li>
+                        <li value="7" class="" lay-id="7">历史合同</li>
                     </ul>
                     <div class="layui-tab-content" style="padding:0px;margin:0px;">
                         <table id="ycontract-index-table" lay-filter="ydemoEvent"></table>
