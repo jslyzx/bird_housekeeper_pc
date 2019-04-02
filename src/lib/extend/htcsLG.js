@@ -276,10 +276,10 @@
                 laytpl(getTpl).render(result.numberData, function(html) {
                     view.innerHTML = html;
                 });
-                
                 var seg = '';
                 var btnhtml = $(tableoption.tablebtnid).html();
-                
+                // 多次加载去掉原有的按钮
+                btnhtml = btnhtml.replace(/<dd>.*<\/dd>/,'');
                 if(options.isloadmenu==true){
                     var i = btnhtml.indexOf('</dl>');
                     layui.each(result.numberData, function(index, item) {
