@@ -51,8 +51,6 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       ,'/user/forget' //找回密码
       ,'/template/tips/test' //独立页的一个测试 demo
       ,'/house/rz' //登入页
-      ,'/house/zContract'
-      ,'/house/yContract'
     ]
     
     //扩展的第三方模块
