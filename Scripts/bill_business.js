@@ -142,7 +142,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         ismuilti: true,
         "tabfield": "PayStatus",
         tablebtnid: '#billbtnintable',
-        "search":{"BillType":0,"PayStatus":2,"Object":0}
+        "search":{"BillType":0,"PayStatus":2,"Object":2}
     };
     //查询条件
     form.on('select(Type)', function(data){
@@ -205,11 +205,11 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
             var lurl="";
             var ltitle="";
             if(data.BillType==1){
-                lurl="bill/z-bill/fukuan";
+                lurl="bill/y-bill/fukuan";
                 ltitle="付款";
             }
             if(data.BillType==0){
-                lurl="bill/y-bill/receive";
+                lurl="bill/z-bill/receive";
                 ltitle="收款";
             }
             layer.open({
@@ -345,13 +345,17 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         return '<span>' + "未知" + '</span>'
     }
     function formasign(value) {
+        var result="";
+        
         var retu=value.sign;
         if(value.stage!=0){
             retu+="-"+value.stage+"期"
         }
-        return '<span>' +retu+ '</span>'
+       
+        result='<span>' +retu+ '</span>';
+        return result;
     }
-
+    
     function formatterreveice(value) {
         if (value.ShouldReceive == null) {
             return "";

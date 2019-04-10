@@ -67,6 +67,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'TradingDate', width: 100, title: '账务类型',templet: formasign },
   { field: 'zftype', width: 100, title: '支付方式' },
   { field: 'Amount', width: 100, title: '订单金额' },
+  { field: 'Status', width: 100, title: '订单状态' ,templet: formatterstatus},
   { field: 'Amount', width: 100, title: '到账类型',templet: formatterTrader },
  
 ]], height: 620, url: config.url,ismuilti: true
@@ -103,12 +104,25 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         } 
      return '未知';
     }
+    function formatterstatus(value) {
+        if (value.Status == 0) {
+            return '未支付'
+        } 
+        if (value.Status == 1) {
+            return '已支付'
+        } 
+        if (value.Status == 2) {
+            return '支付失败'
+        } 
+     return '未知';
+    }
+    
     function formatterTrader(value) {
         debugger;
        if(value.ispt==0){
            return "到账商家";
        }
-       if(value.ispt==0){
+       if(value.ispt==1){
         return "到账平台";
        }
      

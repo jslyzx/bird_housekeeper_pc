@@ -57,78 +57,123 @@ function LoadData(id,tableid,layerindex){
         var url = "api/store/Queryid";
         var $ = layui.jquery;
         var form = layui.form;
-        var cityListUrl = 'api/BaseData/QueryCity1';
-        var areaListUrl = 'api/Map/PCQueryArea';
-      
-            var filter = {
-                currentCity: '',
-                cityList: [],
-                cityOptions: [],
-                currentArea: '',
-                areaList: [],
-                areaOptions: [],
-                currentCircle: '',
-                circleList: [],
-                circleOptions: []
+        var leftFilter = {
+        currentProvince: '',
+        currentCity: '',
+        currentArea: '',
+        provinceOptions: [],
+        cityOptions: [],
+        areaOptions: [],
+        provinceList: [],
+        cityList: [],
+        areaList: []
+        }
+           var filterUrl = 'api/Formatter/Querystore';
+         
+           function initFilter(){
+           doc.objectQuery(filterUrl, {"Type": '0'}, function (data) {
+           var provinceList = data.numberData;
+           var cityList = [];
+           var provinceOptions = [];
+           var currentProvince = leftFilter.currentProvince;
+           for (var i in provinceList) {
+              cityList = provinceList[i].mallCityList; 
+              provinceOptions.push('<option value="'+ provinceList[i].provinceName +'">'+ provinceList[i].provinceName +'</option>');
+           }
+           leftFilter.provinceOptions  = provinceOptions;
+           leftFilter.cityList = cityList;
+           leftFilter.provinceList = provinceList;
+           selectProvince();
+           $('select[name="CityName"]').append(leftFilter.provinceOptions.join(''));
+           $('select[name="AreaName"]').append(leftFilter.cityOptions.join(''));
+           debugger;
+           $('select[name="CityName"]').val(leftFilter.currentProvince);
+           $('select[name="AreaName"]').val(leftFilter.currentCity);
+           form.render();
+      })
+    }
+
+    function selectProvince () {
+            var provinceList = leftFilter.provinceList;
+            var currentProvince =  leftFilter.currentProvince;
+            var cityList = leftFilter.cityList;
+            var cityOptions = [];
+            var currentCity = '';
+            var areaList = [];
+            areaList = getAreaList();
+            cityOptions.push('<option value="">请选择</option>');
+            for (var i in cityList) {
+                cityOptions.push('<option value="'+ cityList[i].cityName +'">'+ cityList[i].cityName +'</option>')
             }
-        
-            function getCityList () {
-                doc.objectQuery(cityListUrl, {}, function(result) {
-                    console.log(result);
-                    if (result.Code === 0) {
-                        for (let i in result.numberData) {
-                            if(filter.currentCity === '') {
-                                filter.currentCity = result.numberData[i].RegionName;
-                            }
-                            filter.cityList.push({
-                                name: result.numberData[i].RegionName,
-                                id: result.numberData[i].Id
-                            })
-                            filter.cityOptions.push('<option value="'+ result.numberData[i].RegionName +'">'+ result.numberData[i].RegionName +'</option>')
-                        }
-                        $('select[name="CityName"]').html(filter.cityOptions.join('')).val(filter.currentCity);
-                        getAreaList();
-                        form.render('select');
-                    }
-                })
-            }
-            function getAreaList () {
-                doc.objectQuery(areaListUrl, {
-                    name: filter.currentCity
-                }, function (result) {
-                    console.log(result);
-                    filter.areaList = result.numberData[0].districts;
-                    let cityOptions = [];
-                    for (let i in filter.areaList) {
-                        cityOptions.push('<option value="'+ filter.areaList[i].name +'">'+ filter.areaList[i].name +'</option>')
-                    }
-                    $('select[name="AreaName"]').html(cityOptions.join('')).val(filter.currentArea);
-                  
-                    form.render('select');
-                })
-            }
+            leftFilter.areaList = areaList;
+            leftFilter.cityOptions = cityOptions;
            
-            doc.objectQuery(url, {"Id":id}, function (data) {
+            selectCity();
+        }
+        function getAreaList () {
+            var cityList = leftFilter.cityList;
+            var areaList = [];
+            for (var i in cityList) {
+                areaList = [].concat(areaList, cityList[i].mallAreaList || []);
+            }
+            return areaList;
+        }
+        function selectCity () {
+            var areaList = leftFilter.areaList;
+            var cityList = leftFilter.cityList;
+            var areaOptions = [];
+            var currentArea = '';
+            areaOptions.push('<option value="">请选择</option>');
+            for (var i in areaList) {
+                areaOptions.push('<option value="'+ areaList[i].areaName +'">'+ areaList[i].areaName +'</option>')
+            }
+            leftFilter.areaOptions = areaOptions;
+        }  
+        doc.objectQuery(url, {"Id":id}, function (data) {
              debugger;
-             filter.currentCity= data.numberData.CityName;
-             filter.currentArea= data.numberData.AreaName;
+             leftFilter.currentProvince= data.numberData.CityName;
+             leftFilter.currentCity= data.numberData.AreaName;
              var getTpl = editzafeiscript.innerHTML
            , view = document.getElementById('edit-zafei-view');
              laytpl(getTpl).render(data.numberData, function (html) {
                  view.innerHTML = html;
              });
              form.render('');
-             getCityList();
+             initFilter();
              form.on('select(CityName)', function (data) {
-                filter.currentCity = data.value;
-                getAreaList();
-            })
-            form.on('select(AreaName)', function (data) {
-                filter.currentArea = data.value;
-            })
+             leftFilter.currentProvince = data.value;
+            for (let i in leftFilter.provinceList) {
+            if (leftFilter.currentProvince === leftFilter.provinceList[i].provinceName) {
+                leftFilter.cityList = leftFilter.provinceList[i].mallCityList;
+            }
+            }
+            selectProvince();
+        $('select[name="AreaName"]').html(leftFilter.cityOptions.join(''));
+        form.render();
+       })
+        form.on('select(AreaName)', function (data) {
+        leftFilter.currentCity = data.value;
+        for (let i in leftFilter.cityList) {
+            if (leftFilter.currentCity === leftFilter.cityList[i].cityName) {
+                leftFilter.areaList = leftFilter.cityList[i].mallAreaList;
+            }
+        }
+        selectCity();
+        $('select[name="CellName2"]').html(leftFilter.areaOptions.join(''));
+        form.render();
+      
+    })
+    form.on('select(CellName)', function (data) {
+      var vals = []
+      $('.layui-form-checked span').each(function() {
+        vals.push($(this).text());
+      })
+      $('#CellName').val(vals.join(','));
+    })
                  //监听提交
            form.on('submit(save)', function (data) {
            data.field.Id=id;
+          
            var saveoption={
            url:'api/store/save',
            data:data.field,
@@ -139,14 +184,8 @@ function LoadData(id,tableid,layerindex){
      }
      doc.Submit(saveoption);
      return false;
- });
- $("#cancelbtn").click(function(){
-    layer.close(layerindex);
-   })
-             
+ });    
          });
-     
- 
     });
 }       
 </script>

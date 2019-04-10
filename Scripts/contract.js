@@ -55,9 +55,9 @@ tablebtnid: '#btnintable',
             type: 1,
             title: '编辑',
             skin: 'two-layer',
-            shadeClose: true, //开启遮罩关闭
+            shadeClose: false, //开启遮罩关闭
             maxmin: true, //开启最大化最小化按钮
-            area: ['1000px', '90%'],
+            area: ['80%', '90%'],
             success: function(layero, index) {
                 view(this.id).render(url, {
                     id:data.Id,
@@ -78,9 +78,9 @@ tablebtnid: '#btnintable',
             type: 1,
             title: '预览',
             skin: 'two-layer',
-            shadeClose: true, //开启遮罩关闭
+            shadeClose: false, //开启遮罩关闭
             maxmin: true, //开启最大化最小化按钮
-            area: ['1000px', '90%'],
+            area: ['80%', '90%'],
             success: function(layero, index) {
                 view(this.id).render(url, {
                  
@@ -95,6 +95,8 @@ tablebtnid: '#btnintable',
     doc.bindCommonEvents(BtnOption, data, layEvent, url);
    });
    $('#addmuban').click(function () {
+    doc.objectQuery("api/template/xqQuery", {"ispublic": 1}, function (data) {
+    var realdata = data.numberData;
     var url = $(this).attr('hturl');
     layer.open({
       type: 1,
@@ -112,15 +114,15 @@ tablebtnid: '#btnintable',
               type: 1,
               title: '添加模板',
               skin: 'two-layer',
-              shadeClose: true,
+              shadeClose: false,
               maxmin: true,
-              area: ['900px', '90%'],
+              area: ['80%', '90%'],
               success: function (layero, index) {
                 view(this.id).render(url, {
                   tableid: 'Zafei-main-table',
                   layerindex: index,
                   title: title,
-                  content: ''
+                  content: realdata.content
                 });
               }
             })
@@ -130,6 +132,7 @@ tablebtnid: '#btnintable',
           layer.closeAll();
         })
       }
+    })
     })
   })
     form.on('switch(sexDemo)', function(obj){

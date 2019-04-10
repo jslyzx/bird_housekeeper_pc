@@ -158,7 +158,7 @@ layui.use(['admin', 'form', 'user'], function() {
         admin = layui.admin,
         form = layui.form,
         router = layui.router();
-    form.render();
+        form.render();
 
     //提交
     form.on('submit(LAY-user-reg-submit)', function(obj) {
@@ -180,12 +180,12 @@ layui.use(['admin', 'form', 'user'], function() {
             data: field,
             type: "POST",
             done: function(res) {
-                if (res.code === 0) {
+                if (res.Code === 0) {
                     location.hash = '/user/login'; //跳转到登入页
                 }
             },
             success: function(res) {
-                if (res.code !== 0) {
+                if (res.Code !== 0) {
                     layer.msg(res.Message);
                     $('button[lay-submit]').prop('disabled', false);
                 }

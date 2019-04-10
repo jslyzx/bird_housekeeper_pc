@@ -10,7 +10,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         var form = layui.form;
         var doc = layui.htcsLG;
         var $ = layui.jquery;
-        apiurl =layui.setter.baseurl;
+        var apiurl =layui.setter.baseurl;
         var search={"RecrntType":2};       
         var url ='api/House/Queryhouselist';
         var storeurl ="api/cellname/Querylist";
@@ -29,6 +29,32 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             search.Status=result;
             loaddata(search);
         });
+        //导出
+        $("#excel").click(function(e){
+            debugger;
+            var url=apiurl+"HtcsExcel/hhouseexcel?search="+JSON.stringify(search)+"&access_token="+layui.data('layuiAdmin').access_token; 
+            var checkurl=apiurl+"HtcsExcel/checklogin?access_token="+layui.data('layuiAdmin').access_token;
+            $.ajax({
+                url: checkurl,
+                type: "get",
+                async: false,
+                data: JSON.stringify(search),
+               // dataType: 'json',
+                success: function(result) {
+                    if(result.Code==1002){
+                        location.hash = '/user/login'; //跳转到登入页
+                    }
+                    if(result.Code==0){
+                        window.location.href=url;
+                    }
+                },
+                error: function(a, b, c) {
+                    console.log(a, b, c)
+                    layer.msg("执行出现错误啦");
+                }
+            });
+            e.stopPropagation();    //阻止冒泡  
+        });    
         //监听几室
         form.on('select(Idletime)', function(data){
             search.Idletime=data.value;
@@ -125,6 +151,8 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
                     //debugger;
                     paradata.PageIndex=page;
                     doc.objectQuery(url, paradata, function (data) {
+                        $("#jian").html(data.other);
+                        $("#tao").html(data.numberCount);
                         laytpl(getTpl).render(data.numberData, function (html) {
                         setTimeout(function(){
                             next(html, page < data.numberCount/paradata.PageSize); //假设总页数为 10

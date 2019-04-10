@@ -58,6 +58,7 @@
     mymod.CreateInput($("#housetype"), option, function (result) {
         debugger;
         initLoad(result, function (data, chartdata, datakucun) {
+            debugger;
             InitTablekucun(datakucun);
             InitChart(chartdata);
         });
@@ -73,10 +74,11 @@
             var chartdata = [data.Stock.Vacancy10, data.Stock.Vacancy20, data.Stock.Vacancy30
       , data.Stock.Vacancyover30];
             var datakucun = [{
-                "All": data.Stock.All
+                "ALL": data.Stock.ALL
                  , "Configuration": data.Stock.Configuration
                  , "Vacancy": data.Stock.Vacancy
                  , "Rent": data.Stock.Rent
+                 ,"RentPert":data.Stock.RentPert
             }];
             callback(data, chartdata, datakucun);
         });
@@ -130,18 +132,14 @@
         , data: kucundata
         , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
         , cols: [[
-        { field: 'All', title: '全部',width: 100 }
+        { field: 'ALL', title: '全部',width: 100 }
       , { field: 'Configuration', title: '配置中' ,width: 100}
       , { field: 'Vacancy', title: '空置中',width: 100 }
       , { field: 'Rent', title: '已出租',width: 100 }
       , {
-          field: 'RentPert', width: 80,title: '空置率', templet: function (value) {
-              debugger;
-              var percent = 0;
-              if (value.Vacancy != 0 && value.All != 0) {
-                  percent = (value.Vacancy / value.All).toFixed(4) * 100;
-              }
-              return "<span style='color:red;font-size:larger;'>" + percent + "%</span>"
+          field: 'RentPert', width: 90,title: '空置率', templet: function (value) {
+             
+              return "<span style='color:red;font-size:larger;'>" + value.RentPert +"</span>"
           }
       }
         ]]

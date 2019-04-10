@@ -18,6 +18,9 @@
             laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
             });
+            //默认选中当前用户
+            
+            
             $("#cancelbtn").click(function(){
                 layer.close(layerindex);
                 return false;
@@ -52,7 +55,12 @@
                 elem: '#PayTime' //指定元素
                 ,value: myDate
             });
+            debugger
+            var userid=layui.data('layuiAdmin').userid;
+            $("#TranSactor").val(userid);
             form.render('');
+           
+           
             var url="api/Bill/billlist";
             var clos=[[ //表头
                    { type: 'numbers' , width: 80, title: '编号', }

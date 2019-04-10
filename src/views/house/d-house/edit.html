@@ -77,6 +77,7 @@ img {
             var doc = layui.htcsLG;
             var cityListUrl = 'api/BaseData/QueryCity1';
             var areaListUrl = 'api/Map/PCQueryArea';
+            var storeurl ="api/cellname/Querylist";
             var filter = {
                 currentCity:'',
                 cityList: [],
@@ -101,7 +102,17 @@ img {
             view.innerHTML = html;
             });
             form.render('');
-           
+            debugger;
+           //加载门店数据
+           doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+            var list=[];
+            var rdata=data.numberData;
+            for (var i in rdata) {
+                list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].Name +'</option>');
+            }
+            $('select[name="storeid"]').append(list.join(''));
+            form.render();
+            });
             getCityList();
             form.on('select(CityName)', function (data) {
                 console.log(data);
@@ -249,6 +260,18 @@ img {
                            <input type="text" name="Adress" id="Adress" value="{{d.Adress}}" autocomplete="off" class="layui-input" lay-verify="required"  /> 
                           </div> 
                       </div> 
+                      <div class="layui-inline"> 
+                      <label class="layui-form-label">门店</label> 
+                       <div class="layui-input-inline"> 
+                          <select name="storeid" id="storeidd" lay-search>
+                                  <option value="">请选择</option>
+                                  {{#  layui.each(d[2], function(index, item1){ }}
+    
+                                  <option value="{{item1.Id}}">{{item1.Name}}</option>
+                                  {{# });   }}   
+                          </select>
+                     </div> 
+                    </div> 
                      </div> 
                      <div class="layui-form-item"> 
                       <div class="layui-inline"> 

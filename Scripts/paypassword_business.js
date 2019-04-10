@@ -35,9 +35,9 @@ function LoadData(){
    doc.Submit(saveoption);
    return false;
 });
-$("#LAY-user-getsmscode1").click(function(){
-  cmdsend(7);
-})
+$("#LAY-user-getsmscode").click(function(){
+  mymod.sendyzm(8);
+ });
 function cmdsend(type){
   var $phone = $('#LAY-user-login-cellphone')
   ,phone = $phone.val();

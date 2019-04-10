@@ -400,3 +400,6 @@ body .htcs-tcclass .layui-layer-btn .layui-layer-btn0{    display: inline-block;
 .layui-table-click{
     background-color: #fff;
 }
+.fylx{color: #fff;background-color:#ff4b5e;padding: 5px;margin-right:10px;}
+
+.searchresult{color:#ff4b5e}

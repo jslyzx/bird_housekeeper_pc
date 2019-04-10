@@ -193,8 +193,12 @@
 </div>
 <script>
   function formatter(value){
-          if(value!=null){
-            return value.Name;
+    debugger;
+          if(value!=null&&value!="undefined"){
+            if(value.RealName==undefined){
+              return value.Mobile;
+            }
+            return value.RealName;
           }
           return "暂无姓名";
   }

@@ -21,6 +21,7 @@
             var jQuery=layui.jquery;
             var form = layui.form;
             doc.objectQuery(url, {}, function (data) {
+                var enumdata=data.numberData;
                 var getTpl = zcontractaddscript.innerHTML,view = document.getElementById('zcontract-add-view');
                 laytpl(getTpl).render(data.numberData, function (html) {
                     view.innerHTML = html;
@@ -37,15 +38,27 @@
                     elem: '#EndTime' //指定元素
                 });       
                 //验证规则
-                Create();
+                Create(enumdata);
                 EventOther();
                 form.render('');
             });
-            function Create() {
+            function Create(enumdata) {
                 if(id!=undefined){
                     $("#chosehouse").hide();
                     $("#HouseId").val(id);
                 }
+                //签约方式初始化
+                form.val("formcontract", {
+                "onlinesign": String(enumdata.onlinesign)
+                })
+                $("#fn-ts").html(enumdata.onlinesignstr);
+                changeswitch(enumdata.onlinesign);
+                //签约方式监听
+                form.on('radio(onlinesign)', function(data){
+                debugger;
+                changeswitch(data.value);
+                form.render('checkbox');
+                });  
                 form.on('checkbox(zafei)', function (data) {
                     var dom = data.elem;
                     var name = dom.title;
@@ -94,7 +107,14 @@
                     Eventzafei(type,id,yajin);
                 });
             }
-
+           function changeswitch(value){
+            if(value==1){
+                   $("#issendmessage").prop('checked', 'checked');  //改变开关为 开
+                }
+                if(value==0){
+                   $("#issendmessage").removeAttr('checked');  //改变开关为 开
+                }
+           }
             function EventOther(){
                 $("#cancelbtn").click(function(){
                     layer.close(layerindex);
@@ -385,7 +405,7 @@
     }
 </script>
 <script id="zcontractaddscript" type="text/html">
-    <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+    <form class="layui-form  layui-form-pane hcs-form form-panel"  lay-filter="formcontract" action="" >
             <div class="form-content">
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>租客信息</legend>
@@ -452,12 +472,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">出生年月</label>
-                        <div class="layui-input-inline" style="width:144px;">
-                            <input type="text" class="layui-input" id="BatethDay" name="BatethDay" placeholder="选填">
-                        </div>
-                    </div>
+                   
                     <div class="layui-inline">
                         <label class="layui-form-label">微信/QQ</label>
                         <div class="layui-input-inline" style="width:150px;">
@@ -468,6 +483,24 @@
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>合同信息</legend>
                 </fieldset>
+                <div class="layui-form-item" id="chosehouse">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">签约方式</label>
+                        <div class="layui-input-inline" style="width:350px;">
+                            <div class="layui-inline">
+                              <input type="radio" name="onlinesign" value="1" lay-filter="onlinesign" title="新签电子合同">
+                              <input type="radio" name="onlinesign" value="0" lay-filter="onlinesign" title="已签纸质合同" >
+                            </div>
+                        </div>
+                        <div class="layui-input-inline" style="width:350px;">
+                            <div class="layui-inline">
+                                <input type="checkbox" name="issendmessage" id="issendmessage"  lay-skin="switch" lay-text="开启|关闭">
+                            </div>
+                            <label style="width:auto;line-height:18px;">短信通知租客完成合同绑定</label>
+                            <p class="fn-red" id="fn-ts"></p>
+                        </div>
+                    </div>
+                </div>
                 <div class="layui-form-item" id="chosehouse">
                     <div class="layui-inline">
                         <label class="layui-form-label">选择房源</label>
@@ -587,6 +620,30 @@
                                     <option value="8">8天</option>
                                     <option value="9">9天</option>
                                     <option value="10">10天</option>
+
+                                    <option value="11">11天</option>
+                                    <option value="12">12天</option>
+                                    <option value="13">13天</option>
+                                    <option value="14">14天</option>
+                                    <option value="15">15天</option>
+                                    <option value="16">16天</option>
+                                    <option value="17">17天</option>
+                                    <option value="18">18天</option>
+                                    <option value="19">19天</option>
+                                    <option value="20">20天</option>
+                                    <option value="21">21天</option>
+                                    <option value="22">22天</option>
+
+                                    <option value="23">23天</option>
+                                    <option value="24">24天</option>
+                                    <option value="25">25天</option>
+                                    <option value="26">26天</option>
+                                    <option value="27">27天</option>
+                                    <option value="28">28天</option>
+                                    <option value="29">29天</option>
+                                    <option value="30">30天</option>
+                                    <option value="31">31天</option>
+                                
                                 </select>
                             </div>                          
                         

@@ -15,17 +15,16 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
         var tableoption = {
             domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, url: 'api/cellname/Querylist',
             ismuilti: true
-          
         };
         var BtnOption = {
-            area: ['40%', '40%'],
+            area: ['50%', '50%'],
             tableid: "sysuser-table",
             ismuilti:true,
             btnview: "sysuser-button-view",
             tooladd: "addstore",
-            tooledit: "editstore",
+            tooledit: "",
             tooldelete: "deletestore",
-            toolview: "editstore",
+            toolview: "viewstore",
             menuid:232,
             "realtable": "T_CELLNAME"
         };
@@ -35,13 +34,19 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
         var data = obj.data,
         layEvent = obj.event,
         url = $(this).data('url');
-        if(layEvent=="zsysuser-zhuanyi-bt"){
+        if (layEvent === 'editstore') { //编辑
+            if(data.regtype==4){
+                url="msystem/adress/edit";
+            }
+            if(data.regtype==5){
+                url="msystem/adress/areaedit";
+            }
             var editid = "layuibillreceivebtn";
             var view = layui.view;
             layer.open({
                 id: editid,
                 type: 1,
-                title: '转移房源',
+                title: '编辑',
                 skin: 'two-layer',
                 shadeClose: true, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
@@ -57,6 +62,26 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
         }
         doc.bindCommonEvents(BtnOption, data, layEvent, url);
        });
+       $("#addarea").click(function(){
+        var editid = "layuibillreceivebtn";
+        var view = layui.view;
+        layer.open({
+            id: editid,
+            type: 1,
+            title: "新增大区",
+            skin: 'two-layer',
+            shadeClose: true, //开启遮罩关闭
+            maxmin: true, //开启最大化最小化按钮
+            area: ['50%', '50%'],
+            success: function(layero, index) {
+                view(this.id).render('msystem/adress/addarea', {
+                    id: 0,
+                    tableid: "sysuser-table",
+                    layerindex: index
+                });
+            }
+        });
+       })
        function formastatus(value) {
         if (value.regtype ==1) {
             return '<span>' + "市" + '</span>'
@@ -69,6 +94,9 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
         } 
         if (value.regtype ==4) {
             return '<span>' + "门店" + '</span>'
+        } 
+        if (value.regtype ==5) {
+            return '<span>' + "大区" + '</span>'
         } 
     }
         $("#isnotactive").click(function () {

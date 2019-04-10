@@ -26,7 +26,6 @@
                                 <input type="text" name="EndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="EndTime">
                             </div>
                 </div>
-           
             <div class="m-search-item">
                     <select name="BillType" id="BillType" lay-filter="Type">
                             <option value="2">账单类型</option>
@@ -91,9 +90,9 @@
     </div>
     <div class="layui-tab layui-tab-card" lay-filter="tabletab">
         <ul class="layui-tab-title" style="margin-bottom:0;">
-            <li value="2" class="layui-this">所有</li>
-            <li value="0">未完成</li>
+            <li value="0" class="layui-this">未完成</li>
             <li value="1">已完成</li>
+            <li value="2" >所有</li>
         </ul>
         <div class="layui-tab-content" style="padding:0px;margin:0px;">
             <table id="bill-main-table" lay-filter="demoEvent"></table>

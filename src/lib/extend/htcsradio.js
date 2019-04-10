@@ -1,7 +1,15 @@
 ﻿layui.define(function (exports) { //提示：模块也可以依赖其它模块，如：layui.define('layer', callback);
     var $ = layui.jquery
   , jQuery = layui.jquery;
+  var $ = layui.$,
+  layer = layui.layer,
+  laytpl = layui.laytpl,
+  setter = layui.setter,
+  admin = layui.admin;
     var obj = {
+        sendyzm:function(type){
+            cmdsend(type);
+        },
         CreateInput:function(Dom, options, cllback) {
          
             
@@ -48,6 +56,53 @@
             return fmt;
         }
     };
+    function cmdsend(type) {
+        var $phone = $('#LAY-user-login-cellphone'),
+            phone = $phone.val();
+        var subdata = { "Phone": phone, "Type": type };
+        if (!/^1\d{10}$/.test(phone)) {
+            $phone.focus();
+            return layer.msg('请先输入正确的手机号');
+        }
+
+
+        var baseurl = setter.baseurl;
+        //请求发送短信的接口
+        admin.req({
+            url: baseurl + 'api/SysUser/Sendyzm' //实际使用请改成服务端真实接口
+                ,
+            type: "POST",
+            dataType: 'json',
+            data: subdata,
+            done: function(res) {
+                layer.msg('验证码已成功发送至您的手机', {
+                    offset: '15px',
+                    icon: 1,
+                    time: 3000
+                }, function() {
+                    $('#LAY-user-getsmscode').hide().next().show();
+                    setTimeOut()
+                });
+            }
+        });
+    }
+    var timeOut = 60;
+    function setTimeOut() {
+        var timer = setTimeout(function() {
+            setTimeOut()
+            if (timeOut > 0) {
+                timeOut--;
+                $('#timeout i').text(timeOut);
+            }
+        }, 1000)
+        if (timeOut <= 0) {
+            timeOut = 60
+            clearTimeout(timer)
+            $('#timeout i').text(timeOut);
+            $('#timeout').hide();
+            $('#LAY-user-getsmscode').show();
+        }
+    }
     //输出test接口
     exports('htcsradio', obj);
 }).addcss("htcsradio.css");

@@ -252,6 +252,7 @@
                 tableid: '',
                 btnjishu:0,
                 deletespname: '',
+                formatterbtn:'',
                 isloadmenu:true,
             }, options);
             
@@ -284,7 +285,13 @@
                     var i = btnhtml.indexOf('</dl>');
                     layui.each(result.numberData, function(index, item) {
                     if (item.Multiple === 0) {
-                        seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' + item.BtnName + '</a></dd>';
+                        if(options.formatterbtn==''){
+                            seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' +item.BtnName + '</a></dd>';
+                        }
+                        if(options.formatterbtn!=''){
+                            var formatter="{{ "+options.formatterbtn+"(d,'"+item.BtnNo+"','"+item.BtnName+"')}}"
+                            seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' + formatter+ '</a></dd>';
+                        }
                     }
                    });
                    btnhtml = btnhtml.slice(0, i) + seg + btnhtml.slice(i)

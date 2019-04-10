@@ -46,12 +46,13 @@ img {
                 alldata.push(data.numberData);
                 var image=alldata[1].PublicImg;
                 var arr=new Array();
-                    if(image!=null){
+                if(image!=null&&image!="undefined"){
                     image=image.substring(0,image.length-1);
                     arr=image.split(';');
+                    imageurl=alldata[1].PublicImg;
                 }
                 alldata.push(arr);
-                imageurl=alldata[1].PublicImg;
+               
                 laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
                 $("#Status").val(alldata[1].Status);
@@ -221,6 +222,10 @@ img {
                <label class="layui-form-label">价格</label> 
                <div class="layui-input-inline"> 
                 <input type="text" name="Price" autocomplete="off" class="layui-input" value="{{d[1].Price}}"  /> 
+               </div> 
+               <label class="layui-form-label">成本价</label> 
+               <div class="layui-input-inline"> 
+                <input type="text" name="costprice" autocomplete="off" class="layui-input" value="{{d[1].costprice}}"  /> 
                </div> 
               </div> 
               <div class="layui-inline"> 
@@ -418,7 +423,7 @@ img {
                     </div> 
                    </div>  
                    <div class="layui-row" id="himage">
-                         {{#  layui.each(d[2], function(index, item1){ }}
+                         {{#  layui.each(d[3], function(index, item1){ }}
                          <div class="layui-col-xs2">
                                  <div>
                                   <img class="house-img-all house-img hand" src="{{imgurl}}{{item1}}">

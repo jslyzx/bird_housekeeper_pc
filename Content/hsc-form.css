@@ -1,4 +1,11 @@
-﻿
+﻿.time{
+    line-height: 38px;
+    margin-left: 10px;
+    display: none;
+  }
+  .time i{
+    margin-right: 5px;
+  }
 .form-content{padding:10px;}
 .form-content-child{padding:10px;}
 .form-bottom{background-color:#e2e2e2;width:100%;
@@ -59,3 +66,4 @@ background: #f5f6f7;
  .layui-form-select ul{
      z-index:999999
  }
+ .fn-red{color: crimson;}

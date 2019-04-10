@@ -75,7 +75,7 @@ Layout = null;
                 alldata.push(data.numberData);
                  imageurl += alldata[1].PrivateImage;
                   var arr=new Array();
-                  if(imageurl!=null){
+                  if(imageurl!=null&&imageurl!="undefined"){
                     imageurl=imageurl.substring(0,imageurl.length-1);
                     arr=imageurl.split(';');
                   }
@@ -475,6 +475,10 @@ function formatterzhouqi(value) {
                              <label class="layui-form-label">价格</label> 
                              <div class="layui-input-inline"> 
                               <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Price}}" disabled="" /> 
+                             </div>
+                             <label class="layui-form-label">成本价</label> 
+                             <div class="layui-input-inline"> 
+                              <input type="text" name="costprice" autocomplete="off" class="layui-input gray" value="{{d[1].costprice}}" disabled="" /> 
                              </div> 
                             </div> 
                            </div> 
@@ -543,6 +547,12 @@ function formatterzhouqi(value) {
                                                 <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].CellName}}" disabled="" /> 
                                                </div> 
                                            </div> 
+                                           <div class="layui-inline"> 
+                                            <label class="layui-form-label">门店</label> 
+                                            <div class="layui-input-inline"> 
+                                             <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{doc.ns(d[2].store)}}" disabled="" /> 
+                                            </div> 
+                                        </div>
                             </div>
                             <div class="layui-form-item"> 
                                     <div class="layui-inline"> 
@@ -576,7 +586,21 @@ function formatterzhouqi(value) {
                                 </div> 
                                
                               
-                               </div>   
+                               </div>  
+                               <div class="layui-form-item"> 
+                                    <div class="layui-inline"> 
+                                     <label class="layui-form-label">房管员</label> 
+                                     <div class="layui-input-inline"> 
+                                      <input type="text" name="Status" id="Status" autocomplete="off"  class="layui-input gray" disabled value="{{doc.ns(d[2].housekeepername)}}" /> 
+                                     </div> 
+                                    </div> 
+                                    <div class="layui-inline"> 
+                                            <label class="layui-form-label">电话</label> 
+                                            <div class="layui-input-inline"> 
+                                             <input type="text" name="Status" id="Status" autocomplete="off"  class="layui-input gray" disabled value="{{doc.ns(d[2].housekeeperphone)}}" /> 
+                                            </div> 
+                                    </div> 
+                                </div>  
                                <div class="title"> 
                                 <h3 class="red"> 图片信息</h3> 
                                </div>

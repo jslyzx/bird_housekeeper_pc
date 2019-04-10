@@ -22,14 +22,14 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         formid: "#bill-search-form",
         arr: [
             [ //表头
-                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应收时间', templet: formadaoqi, width: 150 }, { title: '账单周期', width: 200, templet: formatterzhouqi }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, {  templet: formasign, width:120, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
+                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应收时间', templet: formadaoqi, width: 150 }, { title: '账单周期', width: 200, templet: formatterzhouqi }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, {  templet: formasign, width:200, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
             ]
         ],
         url: 'api/Bill/Querylist',
         ismuilti: true,
         "tabfield": "PayStatus",
         tablebtnid: '#billbtnintable',
-        "search":{"BillType":1,"PayStatus":2,"Object":0}
+        "search":{"BillType":1,"PayStatus":0,"Object":2}
     };
     //查询条件
     form.on('select(Type)', function(data){
@@ -39,6 +39,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
     });  
     form.render('');
     // doc.InitTable(tableoption);
+    
     var BtnOption = {
         area: ['900px', '90%'],
         tableid: "bill-main-table",
@@ -49,7 +50,8 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         tooledit: "bill-edit-btn",
         tooldelete: "bill-delete-btn",
         menuid: 108,
-        "realtable": "T_BILL"
+        "realtable": "T_BILL",
+        formatterbtn:'formatterbtn'
     };
     doc.InitButton(BtnOption, billbtnscribt, tableoption);
     //监听工具栏按钮
@@ -82,7 +84,28 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
                 }
             });
         }
-        if (layEvent=== 'fukuan') { //退款
+        if (layEvent === 'signbill') { //标记账单
+            var url="api/Procedure/signbill";
+            var pdata={};
+            pdata.Ids=data.Id;
+            pdata.Other=data.PayStatus;
+            doc.objectQuery(url, pdata, function (data) {
+                debugger;
+                if(data.Code==0){
+                    layer.msg(data.Message, {
+                        icon: 1,
+                        time: 800 //2秒关闭（如果不配置，默认是3秒）
+                    });
+                doc.reflash(BtnOption.tableid,BtnOption);
+                }else{
+                    layer.open({
+                        title: '温馨提示'
+                        , content: data.Message
+                    });
+                }
+            });
+        }
+        if (layEvent=== 'fukuan') { //处理账单
             if(data.BillType!=1&&data.BillType!=0){
                 layer.msg("未知账单无法操作");
                 return;
@@ -194,17 +217,32 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         var days = d1 - d2;
         day = parseInt(days / (1000 * 60 * 60 * 24));
         if (day == 0) {
-            return '<span>' + "今日收款" + '</span>';
+            return '<span>' + "今日付款" + '</span>';
         }
         if (day < 0) {
             day=0-day;
             return '<span style="color:#ff5153">' + "逾期" + day + "天" + '</span>';
         }
         if (day > 0) {
-            return '<span>' + day + "天后收款" + '</span>';
+            return '<span>' + day + "天后付款" + '</span>';
         }
     }
-
+    function formasign(value) {
+        debugger;
+        var result="";
+        var result1="";
+        var retu=value.sign;
+        if(value.stage!=0){
+            retu+="-"+value.stage+"期"
+        }
+       
+        if(value.PayStatus==5){
+          
+            result1='<span style="background-color: #FF5722;color:white;padding:3px;margin-left:2px;">暂停打款</span>'
+        }
+        result='<span>' +retu+ '</span>';
+        return result+result1;
+    }
     function formastatus(value) {
         if (value.Status ==1) {
             return '<span>' + "已逾期" + '</span>'
@@ -231,13 +269,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         }
         return '<span>' + "未知" + '</span>'
     }
-    function formasign(value) {
-        var retu=value.sign;
-        if(value.stage!=0){
-            retu+="-"+value.stage+"期"
-        }
-        return '<span>' +retu+ '</span>'
-    }
+   
 
     function formatterreveice(value) {
         if (value.ShouldReceive == null) {
@@ -245,6 +277,19 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         }
         return util.toDateString(value.ShouldReceive, 'yyyy-MM-dd')
     }
-
+    
 
 });
+function formatterbtn(value,field,name){
+   
+    if(field=="signbill"){
+       if(value.PayStatus==0){
+           return "标记暂停打款";
+       }
+       if(value.PayStatus==5){
+        return "恢复正常打款";
+       }
+       return name;
+    }
+    return name;
+}

@@ -17,6 +17,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
     var table = layui.table;
     var doc = layui.htcsLG;
     var util = layui.util;
+    var   apiurl =layui.setter.baseurl;
     $ = layui.jquery;
     form = layui.form;
     $form = $('form');
@@ -63,6 +64,48 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
         deletespname:"sp_plyzdeletecontract",
         menuid:191
     };
+    $("#excel").click(function(e){
+        debugger;
+        var search={"HouseType":$("#HouseType").val()==""?0:$("#HouseType").val(),"Content":$("#Content").val()};
+        if($("#BeginTime1").val()!=""){
+            search.BeginTime=$("#BeginTime1").val();
+        }
+        if($("#EndTime1").val()!=""){
+            search.EndTime=$("#EndTime1").val();
+        }
+        if($("#tBeginTime").val()!=""){
+            search.tBeginTime=$("#tBeginTime").val();
+        }
+        if($("#tEndTime").val()!=""){
+            search.BeginTime=$("#tEndTime").val();
+        }
+       // var url='api/HtcsExcel/contractexcel?search='+JSON.stringify(search); 
+       // $(this).attr("href",url);
+        debugger;
+      
+        var url=apiurl+"HtcsExcel/ycontractexcel?search="+JSON.stringify(search)+"&access_token="+layui.data('layuiAdmin').access_token; 
+        var checkurl=apiurl+"HtcsExcel/checklogin?access_token="+layui.data('layuiAdmin').access_token;
+        $.ajax({
+            url: checkurl,
+            type: "get",
+            async: false,
+            data: JSON.stringify(search),
+           // dataType: 'json',
+            success: function(result) {
+                if(result.Code==1002){
+                    location.hash = '/user/login'; //跳转到登入页
+                }
+                if(result.Code==0){
+                    window.location.href=url;
+                }
+            },
+            error: function(a, b, c) {
+                console.log(a, b, c)
+                layer.msg("执行出现错误啦");
+            }
+        });
+        e.stopPropagation();    //阻止冒泡  
+    });
     doc.InitButton(BtnOption, zcontractbtnscribt, tableoption);
      //监听工具栏按钮
      table.on('tool(demoEvent)', function(obj) {

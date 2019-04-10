@@ -72,7 +72,7 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">办理人</label>
                                     <div class="layui-input-inline">
-                                        <select name="TranSactor" lay-search>
+                                        <select name="TranSactor" id="TranSactor" lay-search>
                                                 <option value="">请选择</option>
                                                 {{#  layui.each(d[0], function(index, item1){ }}
                                                 <option value="{{item1.Id}}">{{item1.RealName}}</option>
@@ -81,13 +81,13 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">支付方式</label>
+                                    <label class="layui-form-label">支付方式1</label>
                                     <div class="layui-input-inline">
-                                        <select name="PayType" >
-                                            <option value="">现金</option>
-                                            <option value="0">支付宝</option>
-                                            <option value="1" selected="">微信</option>
-                                            <option value="1" selected="">银行转账</option>
+                                        <select name="PayType" id="PayType" >
+                                            <option value="现金">现金</option>
+                                            <option value="支付宝">支付宝</option>
+                                            <option value="微信" >微信</option>
+                                            <option value="银行转账">银行转账</option>
                                         </select>
                                     </div>
                                 </div>

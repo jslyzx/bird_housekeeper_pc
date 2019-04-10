@@ -11,16 +11,15 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width:auto;" >操作类型</label>
                     <div class="layui-input-inline">
-                        <select name="type" lay-verify="required" id="type">
-                             <option value="">请选择</option>
-                            <option value="新增房源">新增房源</option>
-                            <option value="编辑房源">编辑房源</option>
-                            <option value="新增合同">新增合同</option>
-                            <option value="重置合同">重置合同</option>
-                            <option value="删除合同">删除合同</option>
-                            <option value="新增业主合同">新增业主合同</option>
-                            <option value="重置业主合同">重置业主合同</option>
-                            <option value="删除业主合同">删除业主合同</option>
+                        <select name="type" lay-verify="required" id="type">                 
+                                <option value="">操作类型</option>
+                                <option value="房源操作">房源操作</option>
+                                <option value="租客合同操作">租客合同操作</option>
+                                <option value="业主合同操作">业主合同操作</option>
+                                <option value="账单操作">账单操作</option>
+                                <option value="用电日志" >用电日志</option>
+                                <option value="家具日志" >家具日志</option>
+                          
                         </select>
                     </div>
                 </div>
@@ -44,7 +43,7 @@
                </div>
            <div class="form-bottom">
                <div class="form-wrap">
-                   <button class="layui-btn layui-btn layui-btn-primary"  lay-filter="cancel">取消</button>
+                    <button class="layui-btn layui-btn-primary" id="cancelbtn" >取消</button>
                    <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
                </div>
            </div>
@@ -64,6 +63,10 @@ function LoadData(houseid,tableid,layerindex){
            form.render('');
            doc.tjgd();
            $("#houseid").val(houseid);
+           
+           $("#cancelbtn").click(function(){
+           layer.close(layerindex);
+           })
           form.on('submit(save)', function (data) {
            var saveoption={
            url:'api/RzService/add',

@@ -7,9 +7,12 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     var laydate = layui.laydate;
     var table = layui.table;
     var houseid=parent.houseid;
-
+    var form = layui.form;
     laydate.render({
-        elem: '#CreateTime'
+        elem: '#tBeginTime'
+    });
+    laydate.render({
+        elem: '#tEndTime'
     });
     var option1 = { data: [{ "value": 0, "text": "全部" }, { "value": 2, "text": "逾期" }, { "value": 3, "text": "今天" }, { "value": 4, "text": "1-7天" }], rdefault: 0 };
     mymod.CreateInput($("#yuqitype"), option1, function (result) {
@@ -32,7 +35,9 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
 ]], url: config.url,ismuilti: true,
 search:{"houseid":houseid}
     };
-   
+    form.on('select(type)', function (data) {
+        $('#guest-search-form button[lay-filter="search"]').click();
+    })
     var BtnOption = {
         area: ['60%', '50%'],
         tableid: config.table,

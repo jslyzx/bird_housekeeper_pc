@@ -17,7 +17,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     mymod.CreateInput($("#yuqitype"), option1, function (result) {
         
     });
-    var config={tableid:"#repaire-main-table",table:"repaire-main-table",formid:"#repaire-search-form",url:"api/Repaire/hRepairList"
+    var config={tableid:"#repaire-main-table",table:"repaire-main-table",formid:"#repaire-search-form",url:"api/Repaire/hRepairLble",formid:"#repaire-search-form",url:"api/Repaire/hRepairList"
 ,btnview:"guest-button-view",toolview:"repaire-view-btn",tooladd:"repaire-add-btn",tooledit:"repaire-edit-btn",tooldelete:"repaire-delete-btn",tabfield:"Status"};
     var tableoption = {
         tabfield:config.tabfield,

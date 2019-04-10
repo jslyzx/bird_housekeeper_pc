@@ -5,10 +5,7 @@
     .layui-content{
         height: calc(100% - 30px);
     }
-    #view{
-        height: calc(100% - 100px);
-        overflow: auto;
-    }
+   
 </style>
 
 <body style="background-color:#ffffff;">
@@ -108,7 +105,7 @@
                 <form class="layui-form hcs-form" action="">
                         <div class="m-search-item" >
                                 <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="房源编号" id="Id">
-                            </div>
+                         </div>
                             <div class="m-search-item" style="width:300px;">
                                     <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="房间号" id="CellName">
                                 </div>
@@ -122,11 +119,14 @@
                                                 </select>
                                              </div>           
                     <div class="m-search-item">
-
                         <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
-                                        </div>
-
-                                        <a class="layui-btn" href="" id="excel" >导出</a>
+                        <span class="searchresult"><span id="tao">0</span>套</span>
+                    </div>
+                    <div class="m-search-item" style="margin-left:15px;">
+                        <span class="layui-btn layui-btn-primary"
+                        href="" id="excel" >导出</span>
+                    </div>
+                   
                                   
                 </form>
                 <form class="layui-form hcs-form layui-form-justify">
@@ -143,7 +143,7 @@
                     
                 </form>
             </div>
-            <div id="view"></div>
+            <div id="view" ></div>
             <div id="fy"></div>
         </div>
     </div>
@@ -151,3 +151,4 @@
   
 <script src="../../../../Scripts/d-publicbessins.js"></script>
 <!-- <script src="../../../../Scripts/Common/CityLd.js"></script> -->
+<div id="view" style="background-color: red"></div>

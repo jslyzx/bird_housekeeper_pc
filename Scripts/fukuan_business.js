@@ -26,6 +26,9 @@
         laydate.render({
             elem: '#PayTime' //指定元素
         });
+        debugger
+        var userid=layui.data('layuiAdmin').userid;
+        $("#TranSactor").val(userid);
         form.render('');
         var url="api/Bill/billlist";
         var clos=[[ //表头
