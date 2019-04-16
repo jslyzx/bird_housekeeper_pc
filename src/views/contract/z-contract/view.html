@@ -65,7 +65,7 @@
     </div>
     
     <script id="zcontractaddscript1" type="text/html">
-        {{#   var doc = layui.htcsLG; }}
+        {{#   var doc = layui.htcsLG;var util = layui.util; }}
         <div class="form-wrapper">
         <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
             <div class="form-content">
@@ -96,7 +96,7 @@
                             </select>
                         </div>
                         <div class="layui-input-inline" style="width:150px;">
-                            <input type="tel" name="Document"  value="{{doc.ns(d[2].Document)}}" placeholder="选填" autocomplete="off" class="layui-input" id="Document">
+                            <input type="tel" name="Document"  value="" placeholder="选填" autocomplete="off" class="layui-input" id="Document">
                         </div>
                     </div>
                     </div>
@@ -135,12 +135,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">出生年月</label>
-                        <div class="layui-input-inline" style="width:144px;">
-                            <input type="text" class="layui-input" id="BatethDay" name="BatethDay" value="{{doc.ns(d[2].BatethDay)}}" placeholder="选填">
-                        </div>
-                    </div>
+                  
                     <div class="layui-inline">
                         <label class="layui-form-label">微信</label>
                         <div class="layui-input-inline" style="width:150px;">
@@ -156,11 +151,11 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">合同时间</label>
                         <div class="layui-input-inline" style="width:200px;">
-                            <input type="tel" name="BeginTime" lay-verify="required" value="{{d[1].BeginTime}}" autocomplete="off" class="layui-input" id="BeginTime" placeholder="合同开始时间">
+                            <input type="tel" name="BeginTime" lay-verify="required" value="{{util.toDateString(d[1].BeginTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="BeginTime" placeholder="合同开始时间">
         
                         </div>
                         <div class="layui-input-inline" style="width:200px;">
-                            <input type="tel" name="EndTime" lay-verify="EndTime"   value="{{d[1].EndTime}}" autocomplete="off" class="layui-input" id="EndTime" placeholder="合同结束时间">
+                            <input type="tel" name="EndTime" lay-verify="EndTime"   value="{{util.toDateString(d[1].EndTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="EndTime" placeholder="合同结束时间">
                         </div>
                     </div>
                 </div>
@@ -185,7 +180,7 @@
                                 {{#  });   }}
                             </select>
                         </div>
-                        <label class="layui-form-label" >首付款方式</label>
+                       
                         <div class="layui-input-inline" style="width: 100px;">
                             <select lay-verify="required" id="DepositType" name="DepositType">
                                     <option value="">押几</option>
@@ -195,15 +190,7 @@
                                     <option value="4">押四</option>                                    
                             </select>
                         </div>
-                        <div class="layui-input-inline" style="width: 100px;">
-                                <select lay-verify="required" id="FirstPay" name="FirstPay">
-                                        <option value="">付几</option>
-                                        <option value="1">付一</option>
-                                        <option value="2">付二</option>
-                                        <option value="3">付三</option>
-                                        <option value="4">付四</option>
-                                </select>
-                            </div>
+                        
                     </div>
                 </div>
                 <div class="layui-form-item">

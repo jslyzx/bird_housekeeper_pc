@@ -112,12 +112,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">开户银行</label>
                             <div class="layui-input-inline" style="width:150px;">
-                                <select lay-verify="" id="bank" name="bank">
-                                    <option value="">请选择</option>
-                                    {{#  layui.each(d[3], function(index, item1){ }}
-                                    <option value="{{item1.Name}}">{{item1.Name}}</option>
-                                    {{#  });   }}
-                                </select>
+                                <input type="text" class="layui-input gray"  id="bank" name="accounts" placeholder="选填">
+                             
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -155,12 +151,7 @@
                        
                         <label class="layui-form-label" >付款方式</label>
                         <div class="layui-input-inline" style="width: 100px;">
-                            <select lay-verify="required" id="PinLv" name="PinLv" lay-filter="Type">
-                                <option value="">请选择</option>
-                                {{#  layui.each(d[1].pinlv, function(index, item1){ }}
-                                <option value="{{item1.key}}">{{item1.Value}}</option>
-                                {{#  });   }}
-                            </select>
+                            <input type="tel"  lay-verify="required|number" autocomplete="off"  class="layui-input gray" value="{{d[1].Pinlv}}月1付" >
                         </div>
                        
                         <label class="layui-form-label">月租金</label>

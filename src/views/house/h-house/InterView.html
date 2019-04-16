@@ -75,6 +75,9 @@ Layout = null;
                 // imageurl=alldata[1].PrivateImage;
                 doc.objectQuery(gqurl, { "Id": ParentRoomid }, function (data) {
                   alldata.push(data.numberData);
+                  if(alldata[1].PrivateImage!=null){
+                    imageurl += alldata[1].PrivateImage;
+                  }
                   imageurl += alldata[2].PublicImg;
                   var arr=new Array();
                   if(imageurl!="undefined"&&imageurl!=null){

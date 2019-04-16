@@ -94,6 +94,8 @@
   {{# LoadData(d.params.id, d.params.tableid, d.params.layerindex, d.params.title, d.params.content)}}
 </script>
 <form class="layui-form layui-form-pane">
+    <div style="color:red;padding: 10px;">*注意:大括号及其内部的文字不可更改.</div>
+  
   <div class="contract-template-header">
     <form class="layui-form">
       <select name='template'>
@@ -139,15 +141,15 @@
         cm.showHint({hint: CodeMirror.hint.anyword});
       }
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        value: content,
-        lineNumbers: false,
-        lineWrapping: true,  // 长句子折行
-        // theme: "twilight",
-        autofocus: true,
-        // addModeClass: true,
-        // mode: { name: 'text/x-markdown'},
-        // extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
-      });
+            value: content,
+            lineNumbers: false,
+            lineWrapping: true,  // 长句子折行
+            autofocus: true,
+            readOnly: false,
+            autoCloseTags: true
+        });
+        editor.setValue(content);
+        editor.refresh();
       editor.on('change', function (cm, co) {
         console.log(cm, co)
         $('.markdown-html').html(marked(cm.getValue()));
@@ -160,7 +162,8 @@
           url: url,
           data: {
             title: title,
-            content: editor.getValue()
+            content: editor.getValue(),
+            htmlcontent:marked(editor.getValue())
           },
           callBack: function (resultData) {
             console.log(resultData.code);

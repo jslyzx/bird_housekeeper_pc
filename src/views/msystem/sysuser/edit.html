@@ -15,12 +15,14 @@
 <script>
      var tuizulist = [];
       function LoadData(id,tableid,layerindex){
+          debugger;
         layui.use(['formSelects','laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
             var $ = layui.jquery;
             var form = layui.form;
             var deletebilllist=[];
+            var registrationId="";
             var table=layui.table;
             var url =  "api/Sysuser/QueryUser";
             var formSelects = layui.formSelects;
@@ -39,6 +41,7 @@
              doc.objectQuery(url, data, function (result) {   
                  debugger;
                 var realdata = result.numberData;
+                registrationId=realdata.registrationId;
                 Password=realdata.Password;
                 var getTpl = sysuereditscript.innerHTML,
                 view = document.getElementById('sysuer-edit-view');
@@ -124,6 +127,7 @@
         }
         data.field.Id=id;
         var datafield=data.field;
+        datafield.registrationId=registrationId;
         datafield.Password=Password;
         datafield.listrole=getarr(); ; 
         datafield.deletebilllist=deletebilllist;

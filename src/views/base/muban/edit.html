@@ -1,6 +1,8 @@
 <!-- <script src="../../../../Scripts/test.js"></script> -->
+
 <script type="text/html" template>
     <link href="../../../../Content/codemirror.css" rel="stylesheet" />
+
   </script>
   <style>
     .layui-layer-content {
@@ -94,6 +96,7 @@
     {{# LoadData(d.params.id, d.params.tableid, d.params.layerindex, d.params.title, d.params.content)}}
   </script>
   <form class="layui-form layui-form-pane">
+    <div style="color:red;padding: 10px;">*注意:大括号及其内部的文字不可更改.</div>
     <div class="contract-template-header">
       <form class="layui-form">
         <select name='template'>
@@ -118,6 +121,7 @@
   <script>
     function LoadData(id,tableid,layerindex, title, content) {
       layui.use(['codemirror', 'markdown', 'marked', 'htcsLG', 'form'], function () {
+        debugger;
         let $ = layui.$;
         let CodeMirror = layui.codemirror;
         let marked = layui.marked;
@@ -145,7 +149,8 @@
             lineWrapping: true,  // 长句子折行
             autofocus: true,
             readOnly: false,
-            autoCloseTags: true
+            autoCloseTags: true,
+            mode: "htmlmixed"
         });
         editor.setValue(content);
         editor.refresh();
@@ -164,7 +169,8 @@
             data: {
               Id:id,
               title: title,
-              content: marked(editor.getValue())
+              content:editor.getValue(),
+              htmlcontent:marked(editor.getValue())
             },
             tableid:tableid,
             callBack: function (resultData) {
