@@ -12,6 +12,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         var $ = layui.jquery;
         apiurl =layui.setter.baseurl;
         var nowid=0;
+        var parentname;
         var search={"RecrntType":3};       
         var url ='api/IndependHouse/PCQueryhouselist';
         var paradata = { "PageSize": 10, "PageIndex": 1,"RecrntType":3 };
@@ -131,7 +132,9 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
                         $("#tao").html(data.other);
                         var floors=[];
                         if(data.Code==0){
+                            debugger;
                             nowid=data.numberData.Id;
+                            parentname=data.numberData.Name;
                             Eventhouse();
                             if(data.numberData!=null){
                                 floors=data.numberData.floors;
@@ -377,7 +380,7 @@ function ViewEvent(pId) {
     $(".addcontract").click(function (index,value) {
         debugger;
         var id = $(this).attr("id").replace("addcontract-", "");
-        var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+        var name = $(this).parent().parent().parent().find(".housename").html();
         var view = layui.view;
         layer.open({
             type: 1,
@@ -393,8 +396,8 @@ function ViewEvent(pId) {
             success: function (layero, index) {
                 //debugger;
                 view("domedit").render('contract/z-contract/add', {
-                    id: id,
-                    ParentRoomid:parentid,
+                    houseid: id,
+                    housename:parentname+"-"+name,
                     layerindex:index
                 });
             }

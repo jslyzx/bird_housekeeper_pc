@@ -376,7 +376,11 @@ function ViewEvent() {
    //录入合同
    
    $(".addcontract").click(function(){
-    var id = $(this).attr("id");
+       debugger;
+    var id = $(this).attr("id").replace("addcontract-", "");
+    var name = $(this).parent().parent().parent().find(".housename").html();
+    var parentname = $(this).parent().parent().parent().parent().parent().parent().parent().find('.m-title').html();
+    name=parentname+'-'+name;
     var view = layui.view;
     id=id.replace("addcontract-", "");
     layer.open({
@@ -386,13 +390,13 @@ function ViewEvent() {
         skin: 'two-layer',
         anim: -1,
         shade: .1,
-        shadeClose: true,
+        shadeClose: false,
         maxmin: true,
         area: ['1120px', '90%'],
         success: function (layero, index) {
             view("domedit").render('contract/z-contract/add', {
-                id: id,
-                ParentRoomid:id,
+                houseid: id,
+                housename:name,
                 layerindex:index
             });
         }

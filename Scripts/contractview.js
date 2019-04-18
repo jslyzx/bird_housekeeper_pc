@@ -177,16 +177,17 @@ table.on('tool(demoEvent3)', function(obj) {
               }); 
               });
               form.render('');
+              debugger;
+              $("#Document").val(alldata[1].Teant.Document);
               $("#DocumentType").val(alldata[1].Teant.DocumentType);
               $("#Work").val(alldata[2].Work);
               $("#Hobby").val(alldata[2].Hobby);
-            
               $("#PinLv").val(alldata[1].Pinlv);
               $("#DepositType").val(alldata[1].DepositType);
               $("#Recivetype").val(alldata[1].Recivetype);
               $("#BeforeDay").val(alldata[1].BeforeDay);
-              $("#Image").val(alldata[1].Image);
-              $("#zjImage").val(alldata[1].zjImage);
+              $("#yType").val(alldata[1].Type);
+             
               //查询附件个数
               if(alldata[1].Image!=null){
                   var arr=new Array();

@@ -47,7 +47,7 @@ tablebtnid: '#btnintable',
        var data = obj.data,
        layEvent = obj.event,
        url = $(this).data('url');
-      if (layEvent=== 'editmuban') { //预览
+      if (layEvent=== 'editmuban') { 
         var editid = "layuibilleditbtn";
         var view = layui.view;
         layer.open({
@@ -97,7 +97,12 @@ tablebtnid: '#btnintable',
    $('#addmuban').click(function () {
     doc.objectQuery("api/template/xqQuery", {"ispublic": 1}, function (data) {
     var realdata = data.numberData;
-    var url = $(this).attr('hturl');
+    var content="";
+    if(realdata!=null){
+        content=realdata.content;
+    }
+    debugger;
+    var url = "base/muban/add";
     layer.open({
       type: 1,
       title: '添加模板',
@@ -122,7 +127,7 @@ tablebtnid: '#btnintable',
                   tableid: 'Zafei-main-table',
                   layerindex: index,
                   title: title,
-                  content: realdata.content
+                  content: content
                 });
               }
             })

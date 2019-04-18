@@ -1,4 +1,4 @@
-﻿function LoadData(id,tableid,layerindex){
+﻿function LoadData(id,tableid,layerindex,btnOption){
     layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form'], function () {
     var laytpl = layui.laytpl;
     var doc = layui.htcsLG;
@@ -85,6 +85,7 @@
          url:'api/Bill/receivebill',
          data:data.field,
          tableid:tableid,
+         btnOption:btnOption,
          callBack:function(resultData){
             if (resultData.Code == 0) {
                 layer.close(layerindex);

@@ -195,6 +195,7 @@
             })
         },
         reflash: function(tableid,options) {
+            debugger;
             searchpara.access_token = layui.data('layuiAdmin').access_token;
             table.reload(tableid, { where: searchpara });
             // 单击行变色并选中
@@ -439,13 +440,18 @@
         deletetable: function(url, id, tableid, realtable, spname,layindex,options) {
             var url = baseurl + url;
             var subdata = { "ids": id, "Table": realtable, "spname": spname };
-            var index = layer.load(1); //换了种风格
+            var index = layer.load(1); 
+            //通用删除传递code权限识别
             $.ajax({
                 url: url,
                 type: "POST",
                 async: false,
                 data: subdata,
                 dataType: 'json',
+                headers: {
+                    access_token: layui.data('layuiAdmin').access_token,
+                    Code:options.tooldelete
+                },
                 success: function(result) {
                     layer.close(index);
                     var resultData = result;

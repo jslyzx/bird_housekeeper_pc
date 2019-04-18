@@ -59,6 +59,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
         btnview:  "zcontract-button-view",
         toolview: "ycontract-view-btn",
         tooladd:  "ycontract-add-btn",
+        url:'contract/y-contract/view',//查看界面路径
         tooledit: "ycontract-edit-btn",
         tooldelete:"ycontract-delete-btn",
         deletespname:"sp_plyzdeletecontract",

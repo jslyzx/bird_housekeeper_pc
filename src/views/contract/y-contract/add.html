@@ -8,11 +8,11 @@
          .rizu{display: none;}
      </style>
   <script type="text/html" template >
-    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
   </script>
   <script>
       var indexclose;
-      function LoadData(id,tableid,layerindex){
+      function LoadData(id,tableid,layerindex,btnOption){
         layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form','util'], function () {
                 var laytpl = layui.laytpl;
                 var util = layui.util;
@@ -352,6 +352,7 @@
           url:'api/OwerContract/SaveData',
           data:tjdata,
           tableid:tableid,
+          btnOption:btnOption,
           callBack:function(resultData){
             if (resultData.Code == 0) {
                 layer.close(layerindex);

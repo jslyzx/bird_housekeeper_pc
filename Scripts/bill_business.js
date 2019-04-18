@@ -142,7 +142,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         ismuilti: true,
         "tabfield": "PayStatus",
         tablebtnid: '#billbtnintable',
-        "search":{"BillType":0,"PayStatus":2,"Object":2}
+        "search":{"BillType":0,"PayStatus":0,"Object":2}
     };
     //查询条件
     form.on('select(Type)', function(data){
@@ -161,6 +161,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         tooladd: "bill-add-btn",
         tooledit: "bill-edit-btn",
         tooldelete: "bill-delete-btn",
+        url:'bill/z-bill/view',//查看界面路径
         menuid: 108,
         "realtable": "T_BILL"
     };
@@ -190,7 +191,8 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
                     view(this.id).render(url, {
                         id: data.Id,
                         tableid: "bill-main-table",
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });
@@ -224,7 +226,8 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
                     view(this.id).render(lurl, {
                         id: data.Id,
                         tableid: "bill-main-table",
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });

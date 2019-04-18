@@ -50,6 +50,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         tooledit: "bill-edit-btn",
         tooldelete: "bill-delete-btn",
         menuid: 108,
+        url:'bill/y-bill/view',//查看界面路径
         "realtable": "T_BILL",
         formatterbtn:'formatterbtn'
     };
@@ -79,7 +80,8 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
                     view(this.id).render(url, {
                         id: data.Id,
                         tableid: "bill-main-table",
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });
@@ -134,7 +136,8 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
                     view(this.id).render(lurl, {
                         id: data.Id,
                         tableid: "bill-main-table",
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });

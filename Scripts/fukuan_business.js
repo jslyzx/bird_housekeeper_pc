@@ -1,4 +1,4 @@
-﻿function LoadData(id,tableid,layerindex){
+﻿function LoadData(id,tableid,layerindex,btnOption){
     layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form','element'], function () {
     var laytpl = layui.laytpl;
     var doc = layui.htcsLG;
@@ -22,10 +22,13 @@
             return false;
          });
         var laydate = layui.laydate;
+        var myDate = new Date();
         //执行一个laydate实例
         laydate.render({
             elem: '#PayTime' //指定元素
+            ,value: myDate
         });
+       
         debugger
         var userid=layui.data('layuiAdmin').userid;
         $("#TranSactor").val(userid);
@@ -52,6 +55,7 @@
          url:'api/Bill/receive',
          data:data.field,
          tableid:tableid,
+         btnOption:btnOption,
          callBack:function(resultData){
             if (resultData.Code == 0) {
                 layer.close(layerindex);

@@ -327,7 +327,7 @@ function ViewEvent() {
     //租客登记
     $(".addcontract").click(function (index,value) {
         var id = $(this).attr("id").replace("addcontract-", "");
-    
+        var name = $(this).parent().parent().parent().find(".housename").html();
         var view = layui.view;
         layer.open({
             type: 1,
@@ -342,8 +342,8 @@ function ViewEvent() {
             
             success: function (layero, index) {
                 view("domedit").render('contract/z-contract/add', {
-                    id: id,
-                   
+                    houseid: id,
+                    housename:name,
                     layerindex:index
                 });
             }
