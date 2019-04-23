@@ -1,0 +1,174 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script src="../../../../Scripts/jquery-1.10.2.js"></script>
+<style>
+    #sysuer-add-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ #sysuer-add-view  thead tr{height: 45px;}
+#sysuer-add-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+</style>
+<script>
+      function LoadData(id,tableid,layerindex,btnOption){
+       
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;   
+            var form = layui.form;
+            var laydate = layui.laydate;   
+            var houseid="";
+            laydate.render({
+              elem: '#appointment',
+              type:'datetime'
+            });
+            $("#cancel").click(function(){
+            layer.close(layerindex);
+            return false;
+            });
+            initsubject();
+            inithouse();
+            form.render();  
+            //监听提交
+            form.on('submit(save)', function (data) {
+            debugger;
+            var datafield=data.field;
+            datafield.houseid=houseid;
+            debugger;
+            var saveoption={
+            url:'api/clean/add',
+            data:datafield,
+            tableid:tableid,
+            btnOption:btnOption,
+            callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+     });
+     function initsubject(){
+        var url="api/clean/subject";
+            doc.objectQuery(url, {  }, function (data) {
+            var provinceList = data.numberData;
+            var provinceOptions = [];
+            provinceOptions.push('<option value="">请选择</option>');
+            for (var i in provinceList) {
+              provinceOptions.push('<option value="'+ provinceList[i].Name +'">'+ provinceList[i].Name +'</option>');
+            }
+            $('select[name="project"]').append(provinceOptions.join(''));
+            form.render();
+           })
+     }
+     function inithouse(){
+       //选择房源
+       $('#houseid').devbridgeAutocomplete({
+                    lookup: function (query, done) {
+                        var querydata = {};
+                        querydata.Name = query;
+                        querydata.PageSize = 100;
+                        querydata.PageIndex = 1;
+                        doc.objectQuery("api/House/Querybyname", querydata, function (result) {
+                            if (result.numberData != null) {
+                                var realresut = [];
+                                $.each(result.numberData, function (tindex, tvalue) {
+                                    var val = {};
+                                    val.value = tvalue.Name;
+                                    val.data = tvalue.HouseId;
+                                    realresut.push(val);
+                                });
+                                var dresult = {
+                                    suggestions: realresut
+                                };
+                                done(dresult);
+                            }
+                        })
+                    },
+                    minChars: 1,
+                    onSelect: function (suggestion) {
+                        isSearch = true; 
+                        houseid=suggestion.data;
+                    },
+                    triggerSelectOnValidInput:false,
+                    result: function (event, data, formatted) {
+                        // 必须阻止事件的默认行为，否则autocomplete默认会把ui.item.value设为输入框的value值
+                        event.preventDefault();     
+                    },
+                    showNoSuggestionNotice: true,
+                    noSuggestionNotice: function () {
+
+                        return '<span>找不到小区,可手动添加</span>'
+
+                    },
+                    groupBy: 'category'
+                });   
+}
+
+});
+      }
+</script>
+<body>
+      
+
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+        </script>
+        <div class="form-wrapper">
+                <form class="layui-form layui-form-pane hcs-form form-panel" action="" id="add-bill-form"> 
+                <div class="form-content">
+         
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">保洁人</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+
+                                <input type="tel" name="applyperson" autocomplete="off" class="layui-input" id="applyperson" lay-verify="required">
+                            </div>
+                            <label class="layui-form-label">手机号</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="phone" lay-verify="required" autocomplete="off" class="layui-input" id="phone" lay-verify="required">
+                            </div>
+                         
+                    </div>
+                    </div>
+                    <div class="layui-form-item">
+                                <label class="layui-form-label">保洁房源</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="tel" name="houseid" autocomplete="off" class="layui-input" id="houseid">
+                                </div>
+                                <label class="layui-form-label" >保洁详情</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <select name="project" lay-verify="" id="project">
+                                              
+                                               
+                                     </select>  
+                                 </div>                             
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">预约时间</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="appointment" autocomplete="off" class="layui-input" id="appointment">
+                        </div>
+                        <div class="layui-input-inline" >
+                            <textarea name="Remark" placeholder="需求描述" class="layui-textarea"></textarea>
+                          </div>
+            </div>
+                 
+
+                </div>
+                <div class="form-bottom">
+                        <div class="form-wrap">
+                            <button class="layui-btn layui-btn layui-btn-primary" id="cancel" >取消</button>
+                            <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                        </div>
+                        </div>
+        </form>   
+</body>
+<script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
+<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />

@@ -1,0 +1,23 @@
+<script>
+    
+     function LoadData(){
+       layui.use(['laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+           var $ = layui.jquery;
+           var form = layui.form;
+           var deletebilllist=[];
+           var table=layui.table;
+           var url =  "HtcsExcel/DownloadFile?filename=201903261103236c4452c6-7753-4153-8d09-96a276cf13c4.jpg";
+         
+           var allresult = [];
+           var Password="";
+            //加载详情
+            doc.objectQuery(url, {}, function (result) {   
+                debugger;
+            }); 
+           });
+        }
+        LoadData();
+</script>
+222

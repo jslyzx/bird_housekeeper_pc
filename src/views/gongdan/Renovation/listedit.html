@@ -1,0 +1,202 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    #sysuer-add-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ #sysuer-add-view  thead tr{height: 45px;}
+#sysuer-add-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+</style>
+<script>
+      function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;
+            var url = "api/Renovationlist/Repairxq";
+            var form = layui.form;
+            var laydate = layui.laydate;
+            doc.objectQuery(url, {"Id":id},
+          function(data1) {
+          var getTpl = demo.innerHTML,
+          view = document.getElementById('view');
+          laytpl(getTpl).render(data1.numberData,
+          function(html) {
+            view.innerHTML = html;
+          });
+              //监听提交
+              form.on('submit(save)', function (data) {
+               debugger;
+           var datafield=data.field;
+           datafield.Id = id;
+           var tjdata =datafield;
+           var saveoption={
+           url:'api/Renovationlist/Save',
+           data:tjdata,
+           tableid:tableid,
+           callBack:function(resultData){
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+          }
+        }
+        doc.Submit(saveoption);
+        return false;
+        });
+        $("#cancelbtn").click(function(){
+            layer.close(layerindex);
+            return false;
+            });
+          $("#addimage").click(function () {
+                    debugger;
+                 var addid="layui-contract-addimage";
+                 var view = layui.view;
+                 layer.open({
+                    id:addid,
+                    type: 1,
+                    title: '上传文件',
+                    skin: 'two-layer',
+                    //anim: 4,
+                    shadeClose: true,//开启遮罩关闭
+                    //shade: ['0.5'],
+                    maxmin: true, //开启最大化最小化按钮
+                    area:['800px', '500px'],
+                    success: function(layero,index){
+                        view(this.id).render('upload/index', {
+                            img:$("#Image").val(),
+                            type:1,
+                            layerindex:index
+                        });
+                      }
+                });  
+               });
+               $("#addzjimage").click(function () {
+                    debugger;
+                 var addid="layui-contract-addzjimage";
+                 var view = layui.view;
+                 indexclose=layer.open({
+                    id:addid,
+                    type: 1,
+                    title: '上传文件',
+                    skin: 'two-layer',
+                    //anim: 4,
+                    shadeClose: true,//开启遮罩关闭
+                    //shade: ['0.5'],
+                    maxmin: true, //开启最大化最小化按钮
+                    area:['800px', '500px'],
+                    success: function(layero,index){
+                        view(this.id).render('upload/index', {
+                            img:$("#Image").val(),
+                            type:2,
+                            layerindex:index
+                        });
+                      }
+                });  
+               });
+            form.render('');
+        });
+        });
+      }
+      function formastatus(value) {
+        if (value.status == 1) {
+            return '<span>' + "未审核" + '</span>'
+        } 
+        if (value.status == 2) {
+            return '<span>' + "审核失败" + '</span>'
+        } 
+        if (value.status == 3) {
+            return '<span>' + "审核成功" + '</span>'
+        } 
+    }
+    function complteimg(name,type, number){
+        layui.use(['jquery'], function () {
+            var $ = layui.jquery;
+            if(type==1){
+             $("#Image").val(name);
+             $("#imgnumber").html(number);
+            }
+            if(type==2){
+             $("#zjImage").val(name);
+             $("#imgzjnumber").html(number);
+            }
+        })
+      }
+</script>
+<body>
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+        <script id="demo" type="text/html">
+            {{#   var doc = layui.htcsLG;}}
+            <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >                <div class="form-content">
+                        <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">状态</label>
+                                    <div class="layui-input-inline" style="width:300px;">
+                                        <input type="tel" lay-verify="required"   value="{{formastatus(d.status)}}" name="status" disabled autocomplete="off" class="layui-input gray" id="status">
+                                    </div>
+                                    <label class="layui-form-label">原因</label>
+                                    <div class="layui-input-inline" style="width: 200px;">
+                                            <input type="tel" lay-verify="required" value="{{d.reson}}" name="reson" disabled autocomplete="off" class="layui-input gray" id="reson">
+                                    </div>
+                                </div>
+                            </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">流程</label>
+                            <div class="layui-input-inline" style="width:300px;">
+                                <input type="tel" lay-verify="required"   value="{{d.process}}" name="process" disabled autocomplete="off" class="layui-input gray" id="process">
+                            </div>
+                            <label class="layui-form-label">金额</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="tel" lay-verify="required" value="{{d.amount}}" name="amount"   autocomplete="off" class="layui-input" id="amount">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">创建人</label>
+                                <div class="layui-input-inline" style="width:300px;">
+                                    <input type="tel"    value="{{d.createperson}}" name="createperson" disabled autocomplete="off" class="layui-input gray" id="createperson">
+                                </div>
+                                <label class="layui-form-label">创建时间</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                        <input type="tel"  value="{{d.time}}" name="time"  disabled autocomplete="off" class="layui-input gray" id="time">
+                                </div>
+                            </div>
+                        </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                                <textarea name="bank"  value="{{d.bank}}" id="bank"  placeholder="备注" class="layui-textarea"></textarea>                </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">附件</label>
+                                <div class="layui-input-block">
+                                    <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 清单<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                    <input type="tel" name="detailedlist" value="{{doc.ns(d.detailedlist)}}" autocomplete="off" class="layui-input gray" disabled  id="Image" >
+                                </div>
+                                <div class="layui-input-block">
+                                        <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 现场图片<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
+                                        <input type="tel" name="scene"  value="{{doc.ns(d.scene)}}" autocomplete="off" class="layui-input gray" disabled id="zjImage">
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="form-bottom">
+                        <div class="form-wrap">
+                            <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancel">取消</button>
+                            <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                        </div>
+                    </div>
+        </form>    
+    </script>
+    <div  class="form-wrapper">
+    <div id="view">
+    </div> 
+</div> 
+</body>

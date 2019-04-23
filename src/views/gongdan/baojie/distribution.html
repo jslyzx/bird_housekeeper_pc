@@ -1,0 +1,80 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    #sysuer-add-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ #sysuer-add-view  thead tr{height: 45px;}
+#sysuer-add-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+</style>
+<script>
+      function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;   
+            var form = layui.form;
+            var url="api/BaseData/Queryfgy";
+            doc.objectQuery(url, {  }, function (data) {
+            var provinceList = data.numberData;
+            var provinceOptions = [];
+            provinceOptions.push('<option value="">请选择</option>');
+            for (var i in provinceList) {
+              provinceOptions.push('<option value="'+ provinceList[i].Id +'">'+ provinceList[i].RealName +'</option>');
+            }
+            $('select[name="UserId"]').append(provinceOptions.join(''));
+            form.render();
+           })
+            $("#cancel").click(function(){
+            layer.close(layerindex);
+            return false;
+            });
+            form.render();   
+            //监听提交
+            form.on('submit(save)', function (data) {
+            debugger;
+            data.field.Id=id;
+            var saveoption={
+            url:'api/Guest/distribution',
+            data:data.field,
+            tableid:tableid,
+            callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+            }
+           }
+           doc.Submit(saveoption);
+           return false;
+           });
+        });
+      }
+</script>
+<body>
+      
+
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+        <div class="form-wrapper">
+                <form class="layui-form layui-form-pane hcs-form form-panel" action="" id="add-bill-form"> 
+                <div class="form-content">       
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: auto;">分配人</label>
+                        <div class="layui-input-inline" style="width:auto;">
+                            <select lay-filter="UserId" lay-verify="required" name="UserId" lay-search></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-bottom">
+                        <div class="form-wrap">
+                            <button class="layui-btn layui-btn layui-btn-primary" id="cancel" >取消</button>
+                            <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                        </div>
+                </div>
+        </form>    
+        </body>

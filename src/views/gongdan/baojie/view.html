@@ -1,0 +1,298 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script src="../../../../Scripts/jquery-1.10.2.js"></script>    
+<style>
+  .topsend{padding-left:10px;}
+  .timeimg{width:100px;height: 160px;margin-right: 10px;margin-top: 5px;}
+</style>
+<script>
+var Fujian;
+function LoadData(id, tableid, layerindex) {
+
+    layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'],
+    function() {
+        var laytpl = layui.laytpl;
+        var doc = layui.htcsLG;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#IntoTime'
+        });
+        //加载客源详情
+        doc.objectQuery('api/Guest/Queryxq', {
+                "Id": id
+            },
+            function(data) {
+                var getTpl = xqscript.innerHTML,
+                view = document.getElementById('guestxq-view-view');
+                laytpl(getTpl).render(data.numberData,
+                function(html) {
+                    view.innerHTML = html;
+                });
+        },false);
+        doc.tjgd();
+        form.render();
+        Inittime();
+        var tabbleid = "sysuserchildaddtable";
+        //发送跟进记录
+        form.on('submit(save)',
+        function(data) {
+            debugger;
+            var datafield = data.field;
+            datafield.GuestId = id;
+        
+            datafield.Fujian = Fujian;
+            var saveoption = {
+                url: 'api/Guestrz/addrz',
+                data: datafield,
+                tableid: tableid,
+                callBack: function(resultData) {
+                    debugger;
+                    if (resultData.Code == 0) {
+                        Fujian="";
+                        Inittime();
+                    }
+                }
+            }
+            doc.simpleSubmit(saveoption);
+            return false;
+        });
+        function Inittime() {
+            doc.objectQuery('api/Guestrz/rzQuerylist', {
+                "GuestId": id
+            },
+            function(data) {
+                var getTpl = guesttimescript.innerHTML,
+                view = document.getElementById('guestrz-view-view');
+                laytpl(getTpl).render(data.numberData,
+                function(html) {
+                    view.innerHTML = html;
+                });
+            });
+
+        }
+        $("#addimage").click(function() {
+            debugger;
+            var addid = "layui-guest-addimage";
+            var view = layui.view;
+            layer.open({
+                id: addid,
+                type: 1,
+                title: '上传文件',
+                skin: 'two-layer',
+                //anim: 4,
+                shadeClose: true,
+                //开启遮罩关闭
+                //shade: ['0.5'],
+                maxmin: true,
+                //开启最大化最小化按钮
+                area: ['800px', '500px'],
+                success: function(layero,index) {
+                    view(this.id).render('upload/index', {
+                        img: Fujian,
+                        type: 1,
+                        layerindex:index
+                    });
+                }
+            });
+        });
+    });
+}
+function complteimg(name, type, number) {
+    debugger;
+    layui.use(['jquery'],
+    function() {
+        var $ = layui.jquery;
+        Fujian=name;
+
+    })
+}
+function getimgarr(str) {
+    debugger;
+    var imgarr = [];
+    if (str != "" && str != undefined) {
+        str = str.substr(0, str.length - 1);
+        imgarr = str.split(';');
+    }
+    return imgarr;
+} 
+function formatterstatus(value){
+ if(value==1){
+    return  "待分配"
+ }
+ if(value==2){
+    return  "跟进中"
+}
+if(value==3){
+    return  "已完成"
+}
+return  "未知"
+}
+function formatterurent(value){
+ if(value==1){
+    return  "正常"
+ }
+ if(value==2){
+    return  "紧急"
+}
+if(value==3){
+    return  "延后"
+}
+return  "未知"
+}
+</script>
+<body>
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+        <script id="guesttimescript" type="text/html">
+            {{#  layui.each(d, function(index, item){ }}
+            <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text">
+                      <h3 class="layui-timeline-title">{{item.CreateTime}}</h3>
+                      <p>
+                            {{item.CreatePerson}}进行{{item.Type}},备注:{{item.Cont}}
+                      </p>
+                      <p>  
+                            {{#  layui.each(getimgarr(item.Fujian), function(index, item){ }}
+                            <image src="{{item}}" class="timeimg"></image>
+                            {{#  });   }}
+                      </p>
+                    </div>
+                  </li>
+            {{#  });   }}
+           
+         </script>
+         //客源详情
+         <script id="xqscript" type="text/html">
+            {{#   var doc = layui.htcsLG; }}
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">姓名</label>
+                        <div class="layui-input-inline" style="width:270px;">
+                           
+                            <input type="tel" name="Name"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Name)}}/{{doc.ns(d.Sex)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="Phone"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Phone)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{formatterstatus(d.Status)}}" disabled>
+                            </div>
+                        </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">创建时间</label>
+                        <div class="layui-input-inline" style="width:270px;">
+                            <input type="tel" name="House"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.CreateTime)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">来源</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Source)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                            <label class="layui-form-label">紧急程度</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{formatterurent(d.Ugent)}}" disabled>
+                            </div>
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">价格区间</label>
+                        <div class="layui-input-inline" style="width:270px;">
+                            <input type="tel" name="House"  autocomplete="off" class="layui-input gray" value="{{d.MaxPrice}}-{{d.MinPrice}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">期望地址</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.HopeAdress)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                            <label class="layui-form-label">租期(月)</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.RectDate)}}" disabled>
+                            </div>
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">户型</label>
+                        <div class="layui-input-inline" style="width:270px;">
+                            <input type="tel" name="Huxing"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Huxing)}}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                            <label class="layui-form-label" style="text-align:left;width:auto;">其他</label>
+                            <div class="layui-input-inline" style="width:270px;">
+                                <input type="tel" name="Other"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Other)}}" disabled>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                                <label class="layui-form-label" style="text-align:left;width:auto;">创建人</label>
+                                <div class="layui-input-inline" style="width:270px;">
+                                    <input type="tel" name="CreatePerson"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.CreatePerson)}}" disabled>
+                                </div>
+                         </div>
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">备注</label>
+                        <div class="layui-input-inline" style="width:370px;">
+                            <input type="tel" name="House"  autocomplete="off" class="layui-input gray" value="{{doc.ns(d.Remark)}}" disabled>
+                        </div>
+                    </div>
+                    
+                   
+            </div>
+           
+         </script>
+        <form class="layui-form layui-form-pane hcs-form" action="">
+                <div class="form-content">
+                        <div id="guestxq-view-view">
+                            </div>
+                        <div class="layui-form-item topsend" > 
+                                <div class="layui-input-inline" style="margin-right: 0;">
+                                        <select name="Type" lay-verify="" id="Type">
+                                            <option value="带看">带看</option>
+                                            <option value="来电">来电</option>      
+                                             </select>  
+                                    </div>
+                                    <div class="layui-input-inline" style="width:500px;">
+                                        <input type="tel" name="Cont" autocomplete="off" class="layui-input" id="Cont" lay-verify="required" placeholder="添加跟进记录">
+                                    </div>
+                                    <div class="layui-input-inline" style="width:100px;">
+                                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">跟进</button>   
+                                    </div> 
+                                   <!-- <a class="layui-btn" id="addimage">添加图片</a>-->
+                         </div>
+                       
+                         <div class="wraptimelines">
+                                <ul class="layui-timeline">
+                                        <div id="guestrz-view-view">
+                                        </div>
+                                </ul>
+                         </div>
+                </div>
+           
+       
+           
+        </form>    
+
+    
+
+</body>
