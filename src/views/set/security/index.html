@@ -12,7 +12,7 @@
           <div class="layui-form" lay-filter="">
            
             <div class="layui-form-item">
-              <label class="layui-form-label " style="width:120px;">在线支付</label>
+              <label class="layui-form-label " style="width:180px;">在线支付</label>
               <div class="layui-input-inline">
                 {{# if(d.OnlinePay==1){ }}
                 <input type="checkbox" name="OnlinePay"  lay-filter="OnlinePay" lay-skin="switch" lay-text="开启|关闭"  checked>
@@ -23,7 +23,7 @@
              
             </div>
             <div class="layui-form-item">
-              <label class="layui-form-label" style="width:120px;">电子合同</label>
+              <label class="layui-form-label" style="width:180px;">电子合同</label>
               <div class="layui-input-inline">
                   {{# if(d.onlinesign==1){ }}
                   <input type="checkbox" name="onlinesign"  lay-filter="onlinesign" lay-skin="switch" lay-text="开启|关闭"  checked>
@@ -32,45 +32,46 @@
                   {{# } }}
               </div>
             </div>
+            
             <div class="layui-form-item">
-              <label class="layui-form-label" style="width:120px;">公司编号</label>
+              <label class="layui-form-label" style="width:180px;">自动发送催租短信</label>
+              <div class="layui-input-inline">
+                  {{# if(d.rentmessage==1){ }}
+                  <input type="checkbox" name="rentmessage"  lay-filter="rentmessage" lay-skin="switch" lay-text="开启|关闭"  checked>
+                  {{# }else{ }}
+                  <input type="checkbox" name="rentmessage" lay-filter="rentmessage" lay-skin="switch" lay-text="开启|关闭"  >
+                  {{# } }}
+              </div>
+            </div>
+
+
+            <div class="layui-form-item">
+              <label class="layui-form-label" style="width:180px;">公司编号</label>
               <div class="layui-input-inline">
                 <input type="text" name="nickname" value="{{d.Id}}" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
               </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width:120px;">电子合同数量</label>
+                <label class="layui-form-label" style="width:180px;">剩余电子合同数量</label>
                 <div class="layui-input-inline">
                   <input type="text" name="nickname" value="{{d.contractnumber}}" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
                 </div>
               </div>
               <div class="layui-form-item">
-                  <label class="layui-form-label" style="width:120px;">短信数量</label>
+                  <label class="layui-form-label" style="width:180px;">剩余短信数量</label>
                   <div class="layui-input-inline">
                     <input type="text" name="nickname" value="{{d.smsnumber}}" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
                   </div>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width:120px;">支付认证</label>
-                    <div class="layui-input-inline">
-                      <input type="text" name="nickname" value="贤心" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
-                    </div>
-                  </div>
-                  
+                
                   <div class="layui-form-item">
-                      <label class="layui-form-label" style="width:120px;">企业认证</label>
-                      <div class="layui-input-inline">
-                        <input type="text" name="nickname" value="贤心" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" disabled class="layui-input gray">
-                      </div>
-                  </div>
-                  <div class="layui-form-item">
-                      <label class="layui-form-label" style="width:120px;">认证手机号</label>
+                      <label class="layui-form-label" style="width:180px;">认证手机号</label>
                       <div class="layui-input-inline">
                               <input type="text" value="{{doc.ns(d.phone)}}" name="phone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="" disabled class="layui-input">
                           </div>
                   </div>
                   <div class="layui-form-item">
-                      <label class="layui-form-label" style="width:120px;">验证码</label>
+                      <label class="layui-form-label" style="width:180px;">验证码</label>
                       <div class="layui-input-inline">
                             <input type="text" name="yzm" value="" lay-verify="required" autocomplete="off" placeholder=""  class="layui-input gray">
                       </div>
@@ -79,8 +80,8 @@
                       
               </div>  
                   <div class="layui-form-item">
-                      <div class="layui-input-block">
-                              <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>        </div>
+                    <div class="layui-input-inline">
+                              <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存配置</button>        </div>
                     </div>
                   </div>
           </div>
@@ -106,6 +107,7 @@
     var onlinesign=0;
     var OnlinePay=0;
     var Id=0;
+    var rentmessage=0;
     form.render('');
     doc.objectQuery(url, {}, function (data) {
              debugger;
@@ -128,11 +130,21 @@
               }
              
             });
-            form.on('switch(OnlinePay)', function(data){
+            //催租短信
+            form.on('switch(onlinesign)', function(data){
+              debugger;
               if(this.checked==true){
-                OnlinePay=1;
+                onlinesign=1;
               }else{
-                OnlinePay=0;
+                onlinesign=0;
+              }
+             
+            });
+            form.on('switch(rentmessage)', function(data){
+              if(this.checked==true){
+                rentmessage=1;
+              }else{
+                rentmessage=0;
               }
           
             });
@@ -141,6 +153,7 @@
             data.field.Id=Id;
             data.field.onlinesign=onlinesign;
             data.field.OnlinePay=OnlinePay;
+            data.field.rentmessage=rentmessage;
             var saveoption={
             url:'api/account/function',
             data:data.field,
@@ -154,7 +167,7 @@
          });
           //开通在线缴费
        $body.on('click', '#LAY-user-getsmscode2', function(){
-       cmdsend(5);
+       cmdsend(6);
        });
          function cmdsend(type){
     var $phone = $('#LAY-user-login-cellphone')
