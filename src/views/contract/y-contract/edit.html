@@ -11,10 +11,10 @@
          .rizu{display: none;}
      </style>
   <script type="text/html" template >
-    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
   </script>
   <script>
-      function LoadData(id,tableid,layerindex){
+      function LoadData(id,tableid,layerindex,btnOption){
         layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form'], function () {
                 var laytpl = layui.laytpl;
                 var doc = layui.htcsLG;
@@ -138,7 +138,7 @@
                         var id = "";
                         var title="";
                         $.each(alldata[1].Yajin,function(index,item){
-                        if(item.IsYajin==1){
+                        if(item.IsYajin==1&&item.IsYajin!="常规押金"){
                         name=item.Name;
                         type=item.Type;
                         yajin=item.IsYajin;
@@ -380,7 +380,7 @@
             zafeilist.push(zafei);
         }
         });
-        
+        var datafield=data.field;
           //押金
         $.each($(".yajincontent .yajinlist"), function (index, item) {
         var id = "#" + item.id;
@@ -390,8 +390,13 @@
         zafei.IsYajin= 1;
         yajin.push(zafei);
         });
-        var datafield=data.field;
-   
+        
+        //常规押金
+        var cyajin={};
+            cyajin.Name='常规押金';
+            cyajin.Amount =datafield.Deposit;
+            cyajin.IsYajin= 1;
+            yajin.push(cyajin);
         var tjdata = {
             "Id":id, "Deposit":datafield.Deposit,
         "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
@@ -404,6 +409,7 @@
           url:'api/OwerContract/SaveData',
           data:tjdata,
           tableid:tableid,
+          btnOption:btnOption,
           callBack:function(resultData){
             if (resultData.Code == 0) {
                 layer.close(layerindex);

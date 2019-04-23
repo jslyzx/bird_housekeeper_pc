@@ -339,6 +339,13 @@
         yajin.push(zafei);
         });
         var datafield=data.field;
+        //常规押金
+        var cyajin={};
+            cyajin.Name='常规押金';
+            cyajin.Amount =datafield.Deposit;
+            cyajin.IsYajin= 1;
+            yajin.push(cyajin);
+      
         debugger;
         var tjdata = {
              "Deposit":datafield.Deposit,

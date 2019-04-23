@@ -30,7 +30,15 @@
         laydate.render({
             elem: '#monthstatic' //指定元素
             ,type: 'month'
-            ,value: new Date()
+            ,value: new Date() ,
+            done: function(value, date, endDate){
+                debugger;
+               //加载数据1
+             doc.objectQuery(url1, {"month":value  }, function (result) {
+             var data = result.numberData;
+             callback1(data);
+             });
+            }
         });
         
         //加载数据
@@ -169,11 +177,35 @@ myChart2.setOption(option);
      myChart1.setOption(option1);
         }
         function callback1(data){
+            debugger;
             //第二部分，调用封装好的代码：
-            toCanvas('canvas',50,"空置率");
-            toCanvas('canvas1',40,"续租率");
-            toCanvas1('canvas2',50,"结余");
-            toCanvas1('canvas3',50,"结余");
+            var kzpercentstr="";
+            var xzpercentstr="";
+            var viral="";
+            var real="";
+            if(data.kz!=undefined){
+                kzpercentstr=data.kz.percentstr;
+                $("#kz").val(data.kz.dataall);
+                $("#kcz").val(data.kz.dataself);
+            }
+            if(data.xz!=undefined){
+                xzpercentstr=data.xz.percentstr;
+                $("#xz").val(data.xz.dataall);
+                $("#dq").val(data.xz.dataself);
+            }
+            if(data.caiwu!=undefined){
+                viral=data.caiwu.viraljieyu;
+                real=data.caiwu.realjieyu;
+                $("#realshouru").val(data.caiwu.realshouru);
+                $("#realzhifu").val(data.caiwu.realzhifu);
+
+                $("#viralshou").val(data.caiwu.viralshou);
+                $("#viralfu").val(data.caiwu.viralfu);
+            }
+            toCanvas('canvas', kzpercentstr,"空置率");
+            toCanvas('canvas1',xzpercentstr,"续租率");
+            toCanvas1('canvas2',viral,"结余");
+            toCanvas1('canvas3',real,"结余");
         }
         function callback(data){      
         //拿房删房统计
@@ -382,8 +414,8 @@ var myChart2 = echarts.init(document.getElementById('ruzhulv'));
                                     <canvas id="canvas" width="200" height="200">
                                             <p>抱歉，您的浏览器不支持canvas</p>
                                      </canvas>
-                                     <div class="text first">已空置天数：207</div>
-                                     <div class="text">可出租天数：243</div>
+                                     <div class="text first">已空置天数：<span id="kz"></span></div>
+                                     <div class="text">可出租天数：<span id="kcz"></div>
                             </div>
                         </div>
                     </div>
@@ -394,8 +426,8 @@ var myChart2 = echarts.init(document.getElementById('ruzhulv'));
                                     <canvas id="canvas1" width="200" height="200">
                                             <p>抱歉，您的浏览器不支持canvas</p>
                                      </canvas>
-                                     <div class="text first">续租合同数：0</div>
-                                     <div class="text">到期合同数：0</div>
+                                     <div class="text first">续租合同数：<span id="xz"></span></div>
+                                     <div class="text">到期合同数：<span id="dq"></span></div>
                             </div>
                         </div>
                     </div>
@@ -406,8 +438,8 @@ var myChart2 = echarts.init(document.getElementById('ruzhulv'));
                                         <canvas id="canvas2" width="200" height="200">
                                                 <p>抱歉，您的浏览器不支持canvas</p>
                                          </canvas>
-                                         <div class="text first">续租合同数：0</div>
-                                         <div class="text">到期合同数：0</div>
+                                         <div class="text first">收入(含预期):<span id="viralshou"></span></div>
+                                         <div class="text">支出(含预期)<span id="viralfu"></span></div>
                                 </div>
                             </div>
                         </div>
@@ -418,8 +450,8 @@ var myChart2 = echarts.init(document.getElementById('ruzhulv'));
                                             <canvas id="canvas3" width="200" height="200">
                                                     <p>抱歉，您的浏览器不支持canvas</p>
                                              </canvas>
-                                             <div class="text first">收入(含预期)61,057元</div>
-                                             <div class="text">支出(含预期)25,507元</div>
+                                             <div class="text first">收入(实际)<span id="realshouru"></span>元</div>
+                                             <div class="text">支出(实际)<span id="realzhifu"></span>元</div>
                                     </div>
                                 </div>
                     </div>

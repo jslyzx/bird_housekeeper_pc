@@ -125,8 +125,6 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
                     type: 1,
                     title: '退租',
                     skin: 'two-layer',
-    
-                    //anim: 4,
                     shadeClose: true, //开启遮罩关闭
     
                     maxmin: true, //开启最大化最小化按钮

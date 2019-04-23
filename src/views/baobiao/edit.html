@@ -59,8 +59,8 @@
             form.render();
             var tabbleid="sysuserchildaddtable";
              
-//监听提交
-form.on('submit(save)', function (data) {
+        //监听提交
+         form.on('submit(save)', function (data) {
         debugger;
         var datafield=data.field;
         var huxing="";
@@ -87,7 +87,7 @@ form.on('submit(save)', function (data) {
         datafield.Other=other;
         debugger;
         var saveoption={
-          url:'api/Guest/add',
+          url:'api/clean/add',
           data:datafield,
           tableid:tableid,
           callBack:function(resultData){

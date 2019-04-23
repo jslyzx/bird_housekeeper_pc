@@ -62,7 +62,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
             layer.open({
                 id: editid,
                 type: 1,
-                title: ltitle,
+                title: '签约',
                 skin: 'two-layer',
                 shadeClose: true, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
@@ -70,7 +70,29 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,
-                        tableid: "bill-main-table",
+                        tableid: "guest-main-table",
+                        layerindex: index,
+                        Phone:data.Phone,
+                        Name:data.Name
+                    });
+                }
+            });
+        }
+        if (layEvent=== 'guest-distribution-btn') { //分配
+            var editid = "layuibillreceivebtn";
+            var view = layui.view;
+            layer.open({
+                id: editid,
+                type: 1,
+                title: '分配',
+                skin: 'two-layer',
+                shadeClose: true, //开启遮罩关闭
+                maxmin: true, //开启最大化最小化按钮
+                area: ['30%', '30%'],
+                success: function(layero, index) {
+                    view(this.id).render(url, {
+                        id: data.Id,
+                        tableid: "guest-main-table",
                         layerindex: index
                     });
                 }

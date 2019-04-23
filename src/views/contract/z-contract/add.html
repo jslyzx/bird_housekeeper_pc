@@ -7,12 +7,12 @@
          .rizu{display: none;}
      </style>
 <script type="text/html" template>
-    {{#  LoadData(d.params.tableid,d.params.layerindex,d.params.btnOption,d.params.houseid,d.params.housename)}}
+    {{#  LoadData(d.params.tableid,d.params.layerindex,d.params.btnOption,d.params.houseid,d.params.housename,d.params.Phone,d.params.Name)}}
   </script>
 <script>
     var indexclose;
   
-    function LoadData(tableid,layerindex,btnOption,houseid,housename){
+    function LoadData(tableid,layerindex,btnOption,houseid,housename,Phone,Name){
         layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form','util'], function () {
             var laytpl = layui.laytpl;
             var util = layui.util;
@@ -47,11 +47,16 @@
             function Create(enumdata) {
                 debugger;
                 if(houseid!=undefined){
-                 
                     $("#HouseId").val(houseid);
                     $("#HouseName").val(housename);
                     $("#HouseName").attr("disabled",true);
                     $("#HouseName").addClass("gray");
+                }
+                if(Phone!=undefined){
+                    $("#Phone").val(Phone);
+                }
+                if(Name!=undefined){
+                    $("#Name").val(Name);
                 }
                 //签约方式初始化
                 form.val("formcontract", {

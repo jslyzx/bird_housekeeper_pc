@@ -99,6 +99,17 @@
                     EventOther();
                 }); 
                 });
+                  //计算常规押金
+                  $(document).on('change','.Recent',function(){
+                    var zujin=$(".Recent").val();
+                    var yaji=$("#DepositType").val();
+                    $("#cyajin").val(zujin*yaji);
+                });
+                form.on('select(DepositType)', function(data){
+                    var zujin=$(".Recent").val();
+                    var yaji=$("#DepositType").val();
+                    $("#cyajin").val(zujin*yaji);
+                });
                 function initzafei(){
                         debugger;
                         var name ="";
@@ -132,7 +143,7 @@
                         var id = "";
                         var title="";
                         $.each(alldata[1].Yajin,function(index,item){
-                        if(item.IsYajin==1){
+                        if(item.IsYajin==1&&item.Name!="常规押金"){
                         name=item.Name;
                         type=item.Type;
                         yajin=item.IsYajin;

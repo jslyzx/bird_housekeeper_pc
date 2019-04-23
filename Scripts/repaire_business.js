@@ -18,7 +18,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         
     });
     var config={tableid:"#repaire-main-table",table:"repaire-main-table",formid:"#repaire-search-form",url:"api/Repaire/hRepairLble",formid:"#repaire-search-form",url:"api/Repaire/hRepairList"
-,btnview:"guest-button-view",toolview:"repaire-view-btn",tooladd:"repaire-add-btn",tooledit:"repaire-edit-btn",tooldelete:"repaire-delete-btn",tabfield:"Status"};
+,btnview:"guest-button-view",toolview:"repaire-edit-btn",tooladd:"repaire-add-btn",tooledit:"repaire-edit-btn",tooldelete:"repaire-delete-btn",tabfield:"Status"};
     var tableoption = {
         tabfield:config.tabfield,
         tablebtnid: '#repairebtnintable',
@@ -77,7 +77,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         }
         if (layEvent === 'overrepaire') { //完成维修
             if(data.Status!=1){
-                layer.msg("不是已接单状态不能接单");
+                layer.msg("不是已接单状态不能直接完成");
                 return;
             }
             var datafield={};

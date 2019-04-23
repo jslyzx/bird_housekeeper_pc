@@ -51,7 +51,7 @@ function LoadData(id,tableid,layerindex){
   tooladd: "bill-add-btn",
   tooledit: "bill-edit-btn",
   tooldelete: "bill-delete-btn",
-  menuid: 191,
+  menuid: 108,
   "realtable": "T_BILL"
 };
 doc.InitButton(BtnOption, billbtnscribt1, tableoption);
