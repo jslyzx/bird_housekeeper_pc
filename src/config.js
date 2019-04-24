@@ -9,8 +9,8 @@
  
 layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     exports('setter', {
-     baseurl: 'http://localhost:4527/'
-    //baseurl: 'http://106.14.96.37:81/'
+     // baseurl: 'http://localhost:4527/'
+    baseurl: 'http://106.14.96.37:81/'
     , weburl: 'http://localhost:89/'
     , imgurl: 'http://106.14.96.37:82/'
     ,container: 'LAY_app' //容器ID
@@ -60,7 +60,6 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       'htcsradio',
       'htcsLG',
       'utils',
-      'testTablePlug',
       'codemirror',
       'markdown',
       'marked',
