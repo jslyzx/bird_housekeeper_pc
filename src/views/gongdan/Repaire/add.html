@@ -16,10 +16,9 @@
 <script>
     var bxTypeList = [],bxIndex = 0,table,tabbleid="repairelistaddtable",doc;
       function LoadData(id,tableid,layerindex){
-        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+        layui.use(['laypage', 'layer', 'laytpl', 'form'], function () {
             var laytpl = layui.laytpl;
             doc = layui.htcsLG;
-            var $ = layui.jquery;
             var form = layui.form;
             var laydate = layui.laydate;
             var  houseid=0;
@@ -40,7 +39,7 @@
                 elem: '#AppiontTime'
                 ,type: 'datetime'
                 });
-               form.render('');
+              
                  //选择房源
                $('#Adress').devbridgeAutocomplete({
                     lookup: function (query, done) {
@@ -190,7 +189,7 @@ form.on('submit(save)', function (data) {
               list.push({
                 Id: $(item).find('[data-field="Id"] div').text(),
                 Project: $(item).find('[data-field="Project"] select').val(),
-                Content: $(item).find('[data-field="Content"] input').val(),
+                Remark: $(item).find('[data-field="Remark"] input').val(),
                 Image: $(item).find('[data-field="Image"] div').text()
               })
             });

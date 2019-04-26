@@ -1,4 +1,14 @@
 
+<style>
+  .time{
+  line-height: 38px;
+  margin-left: 10px;
+  display: none;
+}
+.time i{
+  margin-right: 5px;
+}
+</style>
 <title>设置我的资料</title>
 <script id="sysuereditscript" type="text/html"> 
   {{#   var doc = layui.htcsLG;}}
@@ -76,9 +86,12 @@
                             <input type="text" name="yzm" value="" lay-verify="required" autocomplete="off" placeholder=""  class="layui-input gray">
                       </div>
                       <div class="layui-input-inline">
-                              <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode2">获取验证码</button>                                  </div>
+                              <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode2">获取验证码</button>    
+                              <span class="time" id="timeout"><i>60</i>秒重新获取</span>                             
+                             </div>
                       
               </div>  
+                
                   <div class="layui-form-item">
                     <div class="layui-input-inline">
                               <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存配置</button>        </div>
@@ -185,7 +198,9 @@
       ,
        dataType: 'json'
       ,data: subdata
-      ,done: function(res){        
+      ,done: function(res){ 
+        $('#LAY-user-getsmscode2').hide().next().show();
+        setTimeOut()    
         layer.msg('验证码已成功发送至您的手机', {
           offset: '15px'
           ,icon: 1
@@ -193,7 +208,25 @@
         });
       }
     });
-  }    
+  } 
+  var timeOut = 60;
+
+function setTimeOut() {
+    var timer = setTimeout(function() {
+        setTimeOut()
+        if (timeOut > 0) {
+            timeOut--;
+            $('#timeout i').text(timeOut);
+        }
+    }, 1000)
+    if (timeOut <= 0) {
+        timeOut = 60
+        clearTimeout(timer)
+        $('#timeout i').text(timeOut);
+        $('#timeout').hide();
+        $('#LAY-user-getsmscode').show();
+    }
+}   
       
     });
   })

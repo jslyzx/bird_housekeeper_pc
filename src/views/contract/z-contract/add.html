@@ -172,7 +172,7 @@
                     if($("#BeginTime").val()!=""){
                         var dt = getDate($("#BeginTime").val());
                         var newDate = doc.DateAdd("m",Number(idvalue),dt);
-                      
+                        newDate = doc.DateAdd("d",-1,dt);
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
                     }
                 });
@@ -682,9 +682,7 @@
                                     <option value="26">26天</option>
                                     <option value="27">27天</option>
                                     <option value="28">28天</option>
-                                    <option value="29">29天</option>
-                                    <option value="30">30天</option>
-                                    <option value="31">31天</option>
+                                    <option value="30">一月</option>
                                 
                                 </select>
                             </div>                          

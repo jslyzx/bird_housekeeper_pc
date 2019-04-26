@@ -200,7 +200,7 @@ form.on('submit(save)', function (data) {
               list.push({
                 Id: $(item).find('[data-field="Id"] div').text(),
                 Project: $(item).find('[data-field="Project"] select').val(),
-                Content: $(item).find('[data-field="Content"] input').val(),
+                Remark: $(item).find('[data-field="Remark"] input').val(),
                 Image: $(item).find('[data-field="Image"] div').text()
               })
             });
@@ -248,7 +248,7 @@ form.on('submit(save)', function (data) {
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
     <script type="text/html" id="contentTpl">
-        <input type="text" name="Content" Idvalue="{{d.LAY_INDEX}}"  value="{{d.Content}}"
+        <input type="text" name="Content" Idvalue="{{d.LAY_INDEX}}"  value="{{d.Remark}}"
            autocomplete="off" class="layui-input RowContent">
     </script>
     <script type="text/html" id="checkboxTplxx">

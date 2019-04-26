@@ -74,6 +74,7 @@ img {
                 doc.objectQuery(cityListUrl, {}, function(result) {
                     console.log(result);
                     if (result.Code === 0) {
+                        filter.cityOptions.push('<option value="">请选择</option>')
                         for (let i in result.numberData) {
                             if(filter.currentCity === '') {
                                 filter.currentCity = result.numberData[i].RegionName;
@@ -286,7 +287,9 @@ img {
                             <label class="layui-form-label">城市</label> 
                             <!-- <div class="layui-input-inline">  -->
                                 <!-- <input type="tel" name="CityName" autocomplete="off" id="CityName" class="layui-input"   />                       </div>  -->
-                                <select name="CityName" id="CityName" lay-filter="CityName" lay-verify="required" lay-search></select>
+                                <select name="CityName" id="CityName" lay-filter="CityName" lay-verify="required" lay-search>
+                                        <option value="">请选择</option>
+                                </select>
                                 <input type="tel" name="City" autocomplete="off" id="City" class="layui-input gray"  style="display:none;"  />  
                             <!-- </div> -->
                             </div>
@@ -319,7 +322,7 @@ img {
                        <div class="layui-inline"> 
                         <label class="layui-form-label">门牌号</label> 
                         <div class="layui-input-inline"> 
-                         <input type="text" name="RoomId" autocomplete="off"  lay-verify="required|number"  class="layui-input"  /> 
+                         <input type="text" name="RoomId" autocomplete="off"  lay-verify="required"  class="layui-input"  /> 
                         </div> 
                        </div> 
                        

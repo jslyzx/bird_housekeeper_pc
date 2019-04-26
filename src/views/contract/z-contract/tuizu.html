@@ -49,12 +49,12 @@
             laydate = layui.laydate;
             var DataObj;
             var getTpl = billtuiscript.innerHTML
-                , view = document.getElementById('bill-tui-view');
+            , view = document.getElementById('bill-tui-view');
             //加载表头数据
             doc.objectQuery(url, {"Id": id}, function (data) {
                 laytpl(getTpl).render(data.numberData, function (html) {
                     view.innerHTML = html;
-                });
+            });
                 laydate.render({
                     elem: '#fukuanTime' //指定元素
                     , value: myDate
@@ -127,12 +127,7 @@
                 });
             }
 
-            //监听退租类型
-            form.on('select(tktypel)', function (data) {
-
-                tktypel = data.Value;
-                InitChild(tktypel, tuizutime);
-            });
+           
             //退款类别修改事件
             form.on('select(billlay)', function (obj) {
                 var oldData = table.cache["billlisttuittable"];
@@ -480,11 +475,11 @@
                     <div class="layui-inline">
                         <label class="layui-form-label" style="width:auto;">退租类型</label>
                         <div class="layui-input-inline">
-                            <select name="TkType" lay-verify="required">
-                                <option value="0">到期</option>
-                                <option value="1">违约</option>
-                                <option value="2">转租</option>
-                                <option value="3">协议退房</option>
+                            <select name="TkType" lay-verify="required" >
+                                <option value="1">到期</option>
+                                <option value="2">违约</option>
+                                <option value="3">转租</option>
+                                <option value="5">协议退房</option>
                             </select>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 
     <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
-    <script src="../../../../Scripts/jquery-1.10.2.js"></script>    
+     
      <style>
          .wrapguding{display:none;}
          .zafeitit{color:#FFB800;font-weight:500;}
@@ -127,7 +127,7 @@
                         pinlv=item.Pinlv;
                         $("[name='"+name+"']").attr("checked",true); 
                         var id = "zafei-" + name;
-                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" id="' + id + 'zafeiPinlv" name="zafeiPinlv"><option value="0">随押金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" id="' + id + 'zafeiPinlv" name="zafeiPinlv"></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
                         $(".zafeicontent").append(content);
                         initvalue(id,type,item.Amount,item.Pinlv,item.Reading,util.toDateString(item.ChaobiaoTime, 'yyyy-MM-dd'),item.Price);
                         form.render('');
@@ -170,6 +170,14 @@
                     $(rid+" .zafeiPrice").val(Price);
 
                 }
+                function changeswitch(value){
+                if(value==1){
+                   $("#issendmessage").prop('checked', 'checked');  //改变开关为 开
+                }
+                if(value==0){
+                   $("#issendmessage").removeAttr('checked');  //改变开关为 开
+                }
+               }
                 function Create(enumdata) {
                     debugger;
                      //签约方式初始化
@@ -737,9 +745,7 @@
                                     <option value="26">26天</option>
                                     <option value="27">27天</option>
                                     <option value="28">28天</option>
-                                    <option value="29">29天</option>
-                                    <option value="30">30天</option>
-                                    <option value="31">31天</option>
+                                    <option value="30">一月</option>
                                 </select>
                             </div>                          
                         
@@ -805,10 +811,3 @@
     </script>
     <div id="zcontract-add-view" class="form-wrapper">
     </div>
-   
-
-
-<script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
-<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  
-
-
