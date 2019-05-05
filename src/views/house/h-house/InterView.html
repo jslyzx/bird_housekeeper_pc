@@ -41,7 +41,13 @@ Layout = null;
     </style>
     <script>
         var houseid=0;
+        var paraid;
+        var paraParentRoomid;
+        var paralayerindex;
          function LoadData(id,ParentRoomid,layerindex){
+            paraid=id;
+            paraParentRoomid=ParentRoomid;
+            paralayerindex=layerindex;
             houseid=id;
             layui.use(['laypage','htcsradio', 'layer', 'laytpl', 'jquery', 'form','element','setter'], function(){
             var url = "api/House/Querydepent";
@@ -55,7 +61,7 @@ Layout = null;
             var util = layui.util;
             var paradata = { "Id": id, "ParentRoomid": ParentRoomid };
             var getTpl = housescript.innerHTML
-             , view = document.getElementById('house-edit-view');
+             , view = document.getElementById('viewhouse-edit-view');
              var element = layui.element;
              var form = layui.form;
              var table = layui.table;
@@ -75,12 +81,17 @@ Layout = null;
                 // imageurl=alldata[1].PrivateImage;
                 doc.objectQuery(gqurl, { "Id": ParentRoomid }, function (data) {
                   alldata.push(data.numberData);
-                  if(alldata[1].PrivateImage!=null){
+                  debugger;
+                  if(alldata[1].PrivateImage!=null&&alldata[1].PrivateImage!="undefined"){
                     imageurl += alldata[1].PrivateImage;
                   }
-                  imageurl += alldata[2].PublicImg;
+                  if(alldata[2].PublicImg!=null&&alldata[2].PublicImg!="undefined"){
+                    imageurl += alldata[2].PublicImg;
+                  }
+               
                   var arr=new Array();
-                  if(imageurl!="undefined"&&imageurl!=null){
+                  if(imageurl!="undefined"&&imageurl!=null&&imageurl!=""){
+                      debugger;
                     imageurl=imageurl.substring(0,imageurl.length-1);
                     arr=imageurl.split(';');
                   }
@@ -121,6 +132,9 @@ Layout = null;
                          });
                        }
                     });
+                  });
+                  $(".reflash").click(function (index,value) {
+                        reflash();
                   });
                 });
               });
@@ -450,6 +464,11 @@ function formatterzhouqi(value) {
         }
         return util.toDateString(value.ShouldReceive, 'yyyy-MM-dd')
     }
+    function reflash(){
+        debugger;
+        
+        LoadData(paraid,paraParentRoomid,paralayerindex);
+    }
 </script>
 </head>
 
@@ -652,7 +671,7 @@ function formatterzhouqi(value) {
                                     </div>
                          </form> 
                     </script>
-                <div id="house-edit-view">
+                <div id="viewhouse-edit-view">
                 </div>
             </div>
             <div class="layui-tab-item">

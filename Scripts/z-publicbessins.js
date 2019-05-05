@@ -20,7 +20,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             search.Status=result;
             loaddata(search);
         });
-        doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+        doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
             var list=[];
             var rdata=data.numberData;
             for (var i in rdata) {
@@ -60,6 +60,10 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             search.Idletime=data.value;
             loaddata(search);
         });  
+        form.on('select(sign)', function(data){
+            search.sign=data.value;
+            loaddata(search);
+        }); 
         form.on('select(store)', function(data){
             search.storeid=data.value;
             loaddata(search);

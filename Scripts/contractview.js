@@ -53,7 +53,8 @@ function LoadData(id,tableid,layerindex){
   tooledit: "bill-edit-btn",
   tooldelete: "bill-delete-btn",
   menuid: 108,
-  "realtable": "T_BILL"
+  "realtable": "T_BILL",
+  formatterbtn:['formatterbillbtn']
 };
 doc.InitButton(BtnOption, billbtnscribt1, tableoption);
 //监听工具栏按钮
@@ -164,17 +165,6 @@ table.on('tool(demoEvent3)', function(obj) {
               alldata.push(Teant);
                   laytpl(getTpl).render(alldata, function (html) {
                   view.innerHTML = html;
-                  
-              //执行一个laydate实例
-              laydate.render({
-                  elem: '#BatethDay' //指定元素
-              });
-              laydate.render({
-                  elem: '#BeginTime' //指定元素
-              });
-              laydate.render({
-                  elem: '#EndTime' //指定元素
-              }); 
               });
               form.render('');
               debugger;
@@ -182,12 +172,11 @@ table.on('tool(demoEvent3)', function(obj) {
               $("#DocumentType").val(alldata[1].Teant.DocumentType);
               $("#Work").val(alldata[2].Work);
               $("#Hobby").val(alldata[2].Hobby);
-              $("#PinLv").val(alldata[1].Pinlv);
-              $("#DepositType").val(alldata[1].DepositType);
-              $("#Recivetype").val(alldata[1].Recivetype);
-              $("#BeforeDay").val(alldata[1].BeforeDay);
-              $("#yType").val(alldata[1].Type);
              
+              $("#viewDepositType").val(alldata[1].DepositType);
+              $("#viewRecivetype").val(alldata[1].Recivetype);
+              $("#viewBeforeDay").val(alldata[1].BeforeDay);
+              $("#viewyType").val(alldata[1].Type);
               //查询附件个数
               if(alldata[1].Image!=null){
                   var arr=new Array();
@@ -204,8 +193,7 @@ table.on('tool(demoEvent3)', function(obj) {
               initzafei();
               //初始化押金
               inityajin();
-               //验证规则
-              Create();
+            
               EventOther();
               viewbtn();
           });
@@ -218,15 +206,16 @@ table.on('tool(demoEvent3)', function(obj) {
             var title="";
         $.each(alldata[1].Otherfee,function(index,item){
             if(item.IsYajin==0){
+                debugger;
             name=item.Name;
             type=item.Type;
             yajin=item.IsYajin;
             title=item.Name;
             $("[name='"+name+"']").attr("checked",true); 
             var id = "zafei-" + name;
-            var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" id="' + id + 'zafeiPinlv" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
-            $(".zafeicontent").append(content);
-            initvalue(id,type,item.Amount,item.Pinlv,item.Reading,util.toDateString(item.ChaobiaoTime, 'yyyy/MM/dd'),item.Price);
+            var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select disabled lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><input   disabled lay-verify="required" id="' + id + 'zafeiPinlv" class="layui-input gray zafeiPinlv" name="zafeiPinlv"></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div disabled class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine gray" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+            $(".viewzafeicontent").append(content);
+            initvalue(id,type,item.Amount,item.strPinlv,item.Reading,util.toDateString(item.ChaobiaoTime, 'yyyy/MM/dd'),item.Price);
             form.render('');
             Eventzafei(type,id,yajin);
             }
@@ -246,10 +235,10 @@ table.on('tool(demoEvent3)', function(obj) {
             title=item.Name;
             $("[name='"+name+"']").attr("checked",true); 
             var id = "yajin-" + name;
-            var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input" class="zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
-            $(".yajincontent").append(content);
+            var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" disabled lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><input disabled lay-verify="required" class="layui-input gray zafeiPinlv" name="zafeiPinlv"></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input" class="zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" disabled name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input yajinJine gray" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+            $(".viewyajincontent").append(content);
             $( "#" +id+" .yajinJine").val(item.Amount);
-            initvalue(id,type,item.Amount,item.Pinlv,item.Reading,item.ChaobiaoTime,0);
+            initvalue(id,type,item.Amount,item.strPinlv,item.Reading,item.ChaobiaoTime,0);
             form.render('');
             Eventzafei(type,id,yajin);
             }
@@ -343,58 +332,8 @@ table.on('tool(demoEvent3)', function(obj) {
                 }
             })
           }
-          function Create() {
-            form.on('checkbox(zafei)', function (data) {
-                var dom = data.elem;
-                var name = dom.name;
-                var type = dom.attributes.ztype.nodeValue;
-                var yajin=dom.attributes.zyajin.nodeValue;
-                var id = "zafei-" + name;
-                var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + dom.title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随押金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline zafeiPrice" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
-              
-                if (dom.checked == true)
-                {
-                    $(".zafeicontent").append(content);
-                } else {
-                    $("#"+id).remove();
-                }
-                form.render('');
-                $("#"+id+" .zafeiType").val(type);
-                Eventzafei(type,id,yajin);
-            });
-            form.on('checkbox(yajin)', function (data) {
-                var dom = data.elem;
-                var name = dom.name;
-                var type = dom.attributes.ztype.nodeValue;
-                var yajin=dom.attributes.zyajin.nodeValue;
-                var id = "yajin-" + name;
-                var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + dom.title + '</label><div class="layui-input-inline zafeiType" style="width: 140px;"><input type="tel" name="yajinJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div>';
-              
-                if (dom.checked == true)
-                {
-                    $(".yajincontent").append(content);
-                } else {
-                    $("#"+id).remove();
-                }
-                form.render('');
-                $(id+" .zafeiType").val(type);
-                Eventzafei(type,id,yajin);
-        });
-        }
           
-         form.on('select(Recivetype)', function(data){
-             var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option>';
-             var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5号</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option>';
-             if(data.value==1){
-                    $("#BeforeDay").empty();
-                    $("#BeforeDay").append(hao);
-             }
-             if(data.value==2){
-              $("#BeforeDay").empty();
-               $("#BeforeDay").append(tian);
-              }
-              form.render('select');
-         });
+        
          function EventOther(){
              //监听提交
    $("#viewcontract").click(function(){
@@ -417,97 +356,8 @@ table.on('tool(demoEvent3)', function(obj) {
           }
       });
    })
-          $('#HouseName').devbridgeAutocomplete({
-              lookup: function (query, done) {
-                  var querydata = {};
-                  
-                  querydata.Name = query;
-                 
-                  querydata.PageSize = 100;
-                  querydata.PageIndex = 1;
-                  doc.objectQuery("api/House/Querybyname", querydata, function (result) {
-                      debugger;
-                      if (result.numberData != null) {
-                          var realresut = [];
-                          
-                          $.each(result.numberData, function (tindex, tvalue) {
-                              var val = {};
-                              val.value = tvalue.Name;
-                              val.data = tvalue.HouseId;
-                              val.HouseType = tvalue.HouseType;
-                              realresut.push(val);
-                          });
-                          var dresult = {
-                              suggestions: realresut
-                          };
-                          done(dresult);
-                      }
-                  })
-               
-              },
-              minChars: 1,
-              onSelect: function (suggestion) {
-                  isSearch = true;
-                  $("#HouseId").val(suggestion.data);
-                  $("#HouseType").val(suggestion.HouseType);
-              },
-              triggerSelectOnValidInput:false,
-              result: function (event, data, formatted) {
-                  // 必须阻止事件的默认行为，否则autocomplete默认会把ui.item.value设为输入框的value值
-                  event.preventDefault();     
-              },
-              showNoSuggestionNotice: true,
-              noSuggestionNotice: function () {
-
-                  return '<span>找不到小区,可手动添加</span>'
-
-              },
-              groupBy: 'category'
-          });
-          $("#addimage").click(function () {
-           var addid="layui-contract-addimage";
-           var view = layui.view;
-           layer.open({
-              id:addid,
-              type: 1,
-              title: '上传文件',
-              skin: 'two-layer',
-              //anim: 4,
-              shadeClose: true,//开启遮罩关闭
-              //shade: ['0.5'],
-              maxmin: true, //开启最大化最小化按钮
-              area:['800px', '500px'],
-              success: function(layero,index){
-                  view(this.id).render('upload/index', {
-                      img:$("#Image").val(),
-                      type:1,
-                      layerindex:index
-                  });
-                }
-          });  
-         });
-         $("#addzjimage").click(function () {
-           var addid="layui-contract-addzjimage";
-           var view = layui.view;
-           indexclose=layer.open({
-              id:addid,
-              type: 1,
-              title: '上传文件',
-              skin: 'two-layer',
-              //anim: 4,
-              shadeClose: true,//开启遮罩关闭
-              //shade: ['0.5'],
-              maxmin: true, //开启最大化最小化按钮
-              area:['800px', '500px'],
-              success: function(layero,index){
-                  view(this.id).render('upload/index', {
-                      img:$("#Image").val(),
-                      type:2,
-                      layerindex:index
-                  });
-                }
-          });  
-         });
+        
+      
          }
           function Eventzafei(type,id,isyajin) {
               var rid = "#" + id;
@@ -662,3 +512,22 @@ function complteimg(name,type, number){
       }
   })
 } 
+function formatterbillbtn(value,field,name){
+       
+    if(field=="fukuan"){
+        if(value.sign=="租客退款"){
+            return "租客退款";
+        }
+        if(value.sign=="业主退款"){
+            return "业主退款";
+        }
+       if(value.BillType==0){
+           return "收款";
+       }
+       if(value.BillType==1){
+        return "付款";
+       }
+       return name;
+    }
+    return name;
+}

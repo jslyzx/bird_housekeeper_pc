@@ -15,7 +15,7 @@
 </style>
 <script>
     var bxTypeList = [],bxIndex = 0,table,tabbleid="repairelistaddtable",doc;
-      function LoadData(id,tableid,layerindex){
+      function LoadData(id,tableid,layerindex,btnOption){
         layui.use(['laypage', 'layer', 'laytpl', 'form'], function () {
             var laytpl = layui.laytpl;
             doc = layui.htcsLG;
@@ -199,6 +199,7 @@ form.on('submit(save)', function (data) {
           url:'api/Repaire/save',
           data:tjdata,
           tableid:tableid,
+          btnOption:btnOption,
           callBack:function(resultData){
             if (resultData.Code == 0) {
                 layer.close(layerindex);
@@ -230,7 +231,7 @@ form.on('submit(save)', function (data) {
 
 <body>
     <script type="text/html" template>
-        {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
         </script>
         <!--工具条-->
 <script type="text/html" id="barDemo1">

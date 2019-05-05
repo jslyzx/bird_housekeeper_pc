@@ -204,7 +204,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
           , { field: 'Recent', width: 80, title: '租金' }
           , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
           , { field: 'Phone', width: 150, title: '租客电话' }
-          , { field: 'CreatePerson', width: 100, title: '创建人' }  
+          , { field: 'CreatePersonstr', width: 100, title: '创建人' }  
     ]], url: 'api/Contract/Query',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable'
     };
@@ -229,7 +229,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
             layEvent = obj.event,
             url = $(this).data('url');
             if (layEvent === 'zcontract-tuizu-btn') { //退租
-                if(data.Status!=1&&data.Status!=5&&data.Status!=6&&data.Status!=9){
+                if(data.Status!=1&&data.Status!=5&&data.Status!=6&&data.Status!=9&&data.Status!=4){
                     layer.msg("合同状态不为待签约和在租中不能进行退租操作");
                     return;
                 }
@@ -294,6 +294,9 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
        }
        if (value.Status == 5) {
            return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
+       }
+       if (value.Status == 2) {
+          return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
        }
        if (value.Status == 6) {
            return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">已到期</span></div>'

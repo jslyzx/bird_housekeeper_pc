@@ -163,7 +163,9 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         tooldelete: "bill-delete-btn",
         url:'bill/z-bill/view',//查看界面路径
         menuid: 108,
-        "realtable": "T_BILL"
+        "realtable": "T_BILL",
+      
+        formatterbtn:['formatterbillbtn']
     };
     doc.InitButton(BtnOption, billbtnscribt, tableoption);
     //监听工具栏按钮
@@ -365,6 +367,26 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         }
         return util.toDateString(value.ShouldReceive, 'yyyy-MM-dd')
     }
+   
 
 
 });
+function formatterbillbtn(value,field,name){
+       
+    if(field=="fukuan"){
+        if(value.sign=="租客退款"){
+            return "租客退款";
+        }
+        if(value.sign=="业主退款"){
+            return "业主退款";
+        }
+       if(value.BillType==0){
+           return "收款";
+       }
+       if(value.BillType==1){
+        return "付款";
+       }
+       return name;
+    }
+    return name;
+}

@@ -1,6 +1,8 @@
 
     <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
-    <script src="../../../../Scripts/jquery-1.10.2.js"></script>    
+    <script type="text/html" template>
+        <script src="{{layui.setter.base }}/Scripts/jquery-1.10.2.js"></script>
+    </script>
      <style>
          .wrapguding{display:none;}
          .zafeitit{color:#FFB800;font-weight:500;}
@@ -159,6 +161,14 @@
                     $(rid+" .zafeiPrice").val(Price);
 
                 }
+                function changeswitch(value){
+                if(value==1){
+                   $("#issendmessage").prop('checked', 'checked');  //改变开关为 开
+                }
+                if(value==0){
+                   $("#issendmessage").removeAttr('checked');  //改变开关为 开
+                }
+               }
                 function Create(enumdata) {
                     debugger;
                      //签约方式初始化
@@ -227,7 +237,7 @@
                     form.render('select');
                 });
                 function rizutype(value){
-                    if(value==0){
+                    if(value==1){
                     $(".yuezu").hide();
                     $(".rizu").show();
                     //不验证
@@ -237,13 +247,13 @@
                     $("#Recent").removeAttr("lay-verify");
                      //验证
                     $("#Recent1").attr("lay-verify","required");
-                    $("#Type").val(0);
+                    $("#Type").val(1);
                     //常规押金可编辑
                     $("#cyajin").removeClass("gray");
                     $("#cyajin").attr("disabled",false);
                 }
                 //月租
-                if(value==1){
+                if(value==2){
                     $(".yuezu").show();
                     $(".rizu").hide();
                       //不验证
@@ -253,7 +263,7 @@
                     $("#Type").attr("lay-verify","required");
                     $("#DepositType").attr("lay-verify","required");
                     $("#PinLv").attr("lay-verify","required");
-                    $("#yType").val(1);
+                    $("#yType").val(2);
                     //常规押金不可编辑
                     $("#cyajin").addClass("gray");
                     $("#cyajin").attr("disabled",true);
@@ -262,24 +272,26 @@
                 }
                function EventOther(){
                     //快捷键
-                 $(".btkj").click(function(){
+                    $(".btkj").click(function(){
                     var idvalue=$(this).attr("idvalue");
                     if($("#BeginTime").val()!=""){
                         var dt = getDate($("#BeginTime").val());
-                        var newDate = doc.DateAdd("m",Number(idvalue),dt,);
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt);
+                        newDate = doc.DateAdd("d",-1,dt);
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
                     }
-                })
-                //关闭
-                $("#cancelbtn").click(function(){
-                layer.close(layerindex);
-                return false;
                 });
                 function getDate(strDate){    
                     var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
                     function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
                     return date;    
                 }
+                //关闭
+                $("#cancelbtn").click(function(){
+                layer.close(layerindex);
+                return false;
+                });
+               
                      //计算押金
                      $(document).on('change','.Recent',function(){
                         var zujin=$(".Recent").val();

@@ -19,7 +19,7 @@ img {
 </style>
 <script>
        var imageurl="";
-      function LoadData(id,tableid,layerindex){
+      function LoadDataedit(id,tableid,layerindex){
         layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
@@ -57,6 +57,7 @@ img {
                 $("#Status").val(data.numberData.Status);
                 $("#Orientation").val(alldata[1].Orientation);
                 $("#Huxing").val(data.numberData.Huxing);
+               
                 form.render('');
                
                 $("#addimage").click(function () {
@@ -102,6 +103,7 @@ img {
             tableid:tableid,
             callBack:function(resultData){
             if (resultData.Code == 0) {
+                reflash();
                 layer.close(layerindex);
             }
             }
@@ -139,9 +141,30 @@ img {
         }
         return arr;
        }  
+       function  parsesign(value){
+           debugger;
+           if(value==0){
+              return  "未知";
+            }
+            if(value==1){
+              return  "到期";
+            }
+            if(value==2){
+                return  "违约";
+            }
+            if(value==3){
+                return  "转租";
+            }
+            if(value==4){
+                return  "新房";
+            }
+            if(value==5){
+                return  "协议退房";
+            }
+       } 
 </script>
 <script type="text/html" template >
-    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+    {{#  LoadDataedit(d.params.id,d.params.tableid,d.params.layerindex)}}
 </script>
 <script id="billeditscript1" type="text/html">
     {{#  var setter = layui.setter;var imgurl = setter.imgurl;var doc = layui.htcsLG; }}
@@ -192,6 +215,17 @@ img {
                     </select>  
                </div> 
               </div> 
+
+              <div class="layui-inline"> 
+                    <label class="layui-form-label">房源标记</label> 
+                    <div class="layui-input-inline"> 
+                         <select name="sign" lay-verify="" id="sign">
+                                 <option value="{{d[1].sign}}">{{parsesign(d[1].sign)}}</option>
+                                 <option value="3">转租</option>
+                         </select>  
+                    </div> 
+                   </div> 
+
              </div> 
              <div class="layui-form-item"> 
               <div class="layui-inline"> 
@@ -203,6 +237,12 @@ img {
                             <option value="西">西</option>
                             <option value="南">南</option>
                             <option value="北">北</option>
+                            <option value="东南">东南</option>
+                            <option value="东北">东北</option>
+                            <option value="西南">西南</option>
+                            <option value="西北">西北</option>
+                            <option value="南北">南北</option>
+                            <option value="其他">其他</option>
                     </select>  
                </div> 
                <label class="layui-form-label" style="text-class="layui-form-label" style="text-align:left;width:auto;">面积</label> 

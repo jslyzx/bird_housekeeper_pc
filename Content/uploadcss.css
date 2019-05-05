@@ -1,4 +1,9 @@
-﻿.layui-upload-list{}
+﻿.form-content {
+    flex: 1;
+    overflow: auto;
+    padding-bottom: 61px;
+}
+.layui-upload-list{}
 .item {
     float:left;
     background-color: #fff;

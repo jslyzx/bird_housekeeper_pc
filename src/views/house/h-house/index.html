@@ -1,6 +1,8 @@
 ﻿<title>合租房源</title>
 <link href="../../../../Content/Home.css" rel="stylesheet" />
-<script src="../../../../Scripts/jquery-1.10.2.js"></script>
+<script type="text/html" template>
+    <script src="{{layui.setter.base }}/Scripts/jquery-1.10.2.js"></script>
+  </script>
 <style>
     .layui-content{
         height: calc(100% - 30px);
@@ -104,59 +106,61 @@
         </div>
         <div class="right-content">
             <div class="m-search">
-                    <div class="layui-left-na">
-                    <form class="layui-form hcs-form">
-                                <div class="m-search-item" >
-                                    <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="房源编号" id="Id">
-                                </div>
-                                <div class="m-search-item" style="width:300px;">
-                                    <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区名,小区地址，房间号" id="CellName">
-                                </div>
-                                <div class="m-search-item">
-                                <select name="ShiNumber" lay-verify="" id="ShiNumber" lay-filter="ShiNumber">         
-                                    <option value="">居室</option>
-                                    <option value="1">1居</option>
-                                    <option value="2">2居</option>
-                                    <option value="3">3居</option>
-                                    <option value="4">4居</option>
-                                    <option value="5">5居</option>
-                                </select>
-                            
-                                 </div>  
-                                 <div class="m-search-item">
-                                        <select name="storeid"  id="storeid" lay-filter="store">         
-                                            <option value="">门店</option>
-                                        
-                                        </select>
-                                 </div> 
-                                 <div class="m-search-item">
-                                    <select name="Idletime" lay-verify="" lay-filter="Idletime">         
-                                        <option value="">空置天数</option>
-                                        <option value="1">小于10天</option>
-                                        <option value="2">11到20天</option>
-                                        <option value="3">21到30天</option>
-                                        <option value="4">大于30天</option>
-                                    </select>
-                                 </div>
-                                <div class="m-search-item">
-                                    <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
-                                    <span class="searchresult"><span id="tao">0</span>套/<span id="jian">0</span>间</span>
-                                </div> 
-                                <div class="m-search-item" style="margin-left:15px;">
-                                    <span class="layui-btn layui-btn-primary"
-                                    href="" id="excel" >导出</span>
-                                </div>
+                    <form class="layui-form">
+                            <div class="layui-form-item">
+                                    <div class="layui-form-item" style="margin-bottom:5px;">
+                                            <div class="m-search-item" style="width:300px;">
+                                                    <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区名,小区地址，房间号，房管员" id="Content">
+                                           </div>
+                                           <div class="m-search-item">
+                                                <select name="ShiNumber" lay-verify="" id="ShiNumber" lay-filter="ShiNumber">         
+                                                    <option value="">居室</option>
+                                                    <option value="1">1居</option>
+                                                    <option value="2">2居</option>
+                                                    <option value="3">3居</option>
+                                                    <option value="4">4居</option>
+                                                    <option value="5">5居</option>
+                                                </select>
+                                            </div>
+                                            <div class="m-search-item">
+                                                    <select name="Idletime" lay-verify="" lay-filter="Idletime">         
+                                                        <option value="">空置天数</option>
+                                                        <option value="1">小于10天</option>
+                                                        <option value="2">11到20天</option>
+                                                        <option value="3">21到30天</option>
+                                                        <option value="4">大于30天</option>
+                                                    </select>
+                                                 </div>
+                                                 <div class="m-search-item">
+                                                        <select name="sign" lay-verify="" lay-filter="sign">         
+                                                            <option value="">房源标记</option>
+                                                            <option value="1">到期</option>
+                                                            <option value="2">违约</option>
+                                                            <option value="3">转租</option>
+                                                            <option value="4">新房</option>
+                                                            <option value="5">协议退房</option>
+                                                        </select>
+                                                 </div>
+                                                <div class="m-search-item">
+                                                    <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+                                                    <span class="searchresult"><span id="tao">0</span>套/<span id="jian">0</span>间</span>
+                                                </div> 
+                                                 <div class="m-search-item" style="margin-left:15px;">
+                                                    <span class="layui-btn layui-btn-primary"
+                                                    href="" id="excel" >导出</span>
+                                                </div>
+                                 
+                                   </div>   
+                           </div>
                     </form>
-                    </div>
-                    
-                   
             </div>
-            <div class="" id="all-row">
-                <i class="layui-icon" style="font-size:27px;float: right;">&#xe61a;</i>
+            
+            <div class="all-row hm-search" id="all-row">
+                    <i class="layui-icon" style="font-size:27px;">&#xe61a;</i>
             </div>
-            <div style="clear:both"></div>
-            <div class="m-search" style="padding-right:20px;" >
+            <div class="hm-search" >
                 <div id="house-othersrarch"></div>
+              
             </div>
           
             <div id="view" class="flow-default"></div>
@@ -166,6 +170,7 @@
     </div>
     
 </body>
-  
-<script src="../../../../Scripts/publicbessins.js"></script>
+<script type="text/html" template>
+    <script src="{{layui.setter.base }}/Scripts/publicbessins.js"></script>
+  </script>
 <!-- <script src="../../../../Scripts/Common/CityLd.js"></script> -->

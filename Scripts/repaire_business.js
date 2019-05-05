@@ -47,6 +47,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         toolview: config.toolview,
         tooledit: config.tooledit,
         tooldelete:config.tooldelete,
+        url:'gongdan/Repaire/view',
         menuid:177
     };
     doc.InitButton(BtnOption, repairebuttonview, tableoption);

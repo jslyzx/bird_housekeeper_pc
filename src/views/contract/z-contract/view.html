@@ -10,16 +10,15 @@
             .form-wrapper{height: 540px;}
          }
      </style>
-  <script type="text/html" template >
-    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
-  </script>
-  <script type="text/html" template>
-    <link href="../../../../Content/codemirror.css" rel="stylesheet" />
-  </script>
-  <script src="../../../Scripts/contractview.js"></script>
+ 
+
  
  <script type="text/html" template >
     {{#  LoadData(d.params.id,d.params.ParentRoomid,d.params.layerindex)}}
+  </script>
+  <script type="text/html" template>
+    <link href="../../../../Content/codemirror.css" rel="stylesheet" />
+    <script src="{{layui.setter.base }}/Scripts/contractview.js"></script>
   </script>
   <script id="billbtnscribt1" type="text/html">
   </script>

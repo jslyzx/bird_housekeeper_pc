@@ -53,6 +53,10 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             loaddata(search);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
+        form.on('select(sign)', function(data){
+            search.sign=data.value;
+            loaddata(search);
+        }); 
         var flow = layui.flow;
         // 三级联动数据
         var leftFilter = {

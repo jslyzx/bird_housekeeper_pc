@@ -47,7 +47,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
           , { field: 'Recent', width: 80, title: '租金' }
           , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
           , { field: 'Phone', width: 180, title: '电话' }
-          , { field: 'CreatePerson', width: 100, title: '创建人' }
+          , { field: 'CreatePersonstr', width: 100, title: '创建人' }
     ]], url: 'api/OwerContract/Query',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable'
     };

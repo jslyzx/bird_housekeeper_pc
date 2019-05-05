@@ -13,13 +13,13 @@
   <script type="text/html" template >
     {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
   </script>
-  <script type="text/html" template>
-    <link href="../../../../Content/codemirror.css" rel="stylesheet" />
-  </script>
-  <script src="../../../Scripts/ycontractview.js"></script>
- 
+
  <script type="text/html" template >
     {{#  LoadData(d.params.id,d.params.ParentRoomid,d.params.layerindex)}}
+  </script>
+  <script type="text/html" template>
+    <script src="{{layui.setter.base}}Scripts/ycontractview.js"></script>
+    <link href="../../../../Content/codemirror.css" rel="stylesheet" />
   </script>
   <script id="billbtnscribt1" type="text/html">
   </script>
@@ -76,13 +76,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline" style="width: 144px;">
-                            <input type="tel" name="Name" lay-verify="required" placeholder="必填" value="{{d[2].Name}}" autocomplete="off" class="layui-input" id="Name">
+                            <input type="tel" name="Name" lay-verify="required" placeholder="必填" value="{{d[2].Name}}" disabled autocomplete="off" class="layui-input gray" id="Name">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label" >手机号</label>
                         <div class="layui-input-inline" style="width: 150px;">
-                            <input type="tel" name="Phone" lay-verify="required" autocomplete="off" value="{{d[2].Phone}}" class="layui-input" id="Phone" placeholder="必填">
+                            <input type="tel" name="Phone" lay-verify="required" autocomplete="off" value="{{d[2].Phone}}" disabled class="layui-input gray" id="Phone" placeholder="必填">
                         </div>
                     </div>   
                     <div class="layui-inline">
@@ -96,7 +96,7 @@
                             </select>
                         </div>
                         <div class="layui-input-inline" style="width:150px;">
-                            <input type="tel" name="Document"  value="{{doc.ns(d[2].Document)}}" placeholder="选填" autocomplete="off" class="layui-input" id="Document">
+                            <input type="tel" name="Document"  value="{{doc.ns(d[2].Document)}}" placeholder="选填" autocomplete="off" class="layui-input gray" id="Document" disabled>
                         </div>
                     </div>
                     </div>
@@ -106,20 +106,20 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">收款人</label>
                             <div class="layui-input-inline" style="width:200px;">
-                                <input type="text" class="layui-input" value="{{doc.ns(d[1].payee)}}" id="payee" name="payee" placeholder="选填">
+                                <input type="text" class="layui-input gray" value="{{doc.ns(d[1].payee)}}" id="payee" name="payee" placeholder="选填" disabled>
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">开户银行</label>
                             <div class="layui-input-inline" style="width:150px;">
-                                <input type="text" class="layui-input gray"  id="bank" name="accounts" placeholder="选填">
+                                <input type="text" class="layui-input gray"  id="bank" name="accounts" placeholder="选填" disabled>
                              
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">银行卡账号</label>
                             <div class="layui-input-inline" style="width:200px;">
-                                <input type="text" class="layui-input" value="{{doc.ns(d[1].accounts)}}" id="accounts" name="accounts" placeholder="选填">
+                                <input type="text" class="layui-input gray" value="{{doc.ns(d[1].accounts)}}" id="accounts" name="accounts" placeholder="选填" disabled>
                             </div>
                         </div>
                         
@@ -132,11 +132,11 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">合同时间</label>
                         <div class="layui-input-inline" style="width:200px;">
-                            <input type="tel" name="BeginTime" lay-verify="required" value="{{util.toDateString(d[1].BeginTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="BeginTime" placeholder="合同开始时间">
+                            <input type="tel" name="BeginTime" lay-verify="required" value="{{util.toDateString(d[1].BeginTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input gray" id="BeginTime" disabled placeholder="合同开始时间">
         
                         </div>
                         <div class="layui-input-inline" style="width:200px;">
-                            <input type="tel" name="EndTime" lay-verify="EndTime"   value="{{util.toDateString(d[1].EndTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input" id="EndTime" placeholder="合同结束时间">
+                            <input type="tel" name="EndTime" lay-verify="EndTime"   value="{{util.toDateString(d[1].EndTime, 'yyyy-MM-dd')}}" autocomplete="off" class="layui-input gray" disabled id="EndTime" placeholder="合同结束时间">
                         </div>
                         <div class="layui-btn-group">
                             <a class="layui-btn  layui-btn-primary btkj" idvalue="1">1月</a>
@@ -156,31 +156,29 @@
                        
                         <label class="layui-form-label">月租金</label>
                         <div class="layui-input-inline" style="width: 100px;">
-                            <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent" id="Recent">
+                            <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent gray" disabled id="Recent">
                         </div>
-                       
+                        <label class="layui-form-label" style="text-align:left;width:auto;">免租期</label> 
+                        <div class="layui-input-inline" style="width:auto;" >
+                            <input type="text" name="RentFree" autocomplete="off"  value="{{doc.ns(d[1].RentFree)}}" disabled   class="layui-input gray"  /> 
+                        </div>
                     </div>
                 </div>
                 
-                      <div class="layui-form-item">
-                      <label class="layui-form-label">常规押金</label>
-                      <div class="layui-input-inline" style="width: 100px;">
-                          <input type="tel" name="Deposit"  value="{{d[1].Deposit}}" lay-verify="required|number"  autocomplete="off" class="layui-input" id="cyajin">
-                      </div>
-                    </div>
+                     
           
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">支付时间</label>
                         <div class="layui-input-inline" style="width:200px;">
-                            <select lay-verify="required" id="Recivetype" name="Recivetype" lay-filter="Recivetype">
+                            <select lay-verify="required" id="Recivetype" name="Recivetype" lay-filter="Recivetype" disabled >  
                                 <option value="1">按账单开始时间提前收租</option>
                                 <option value="2">按固定日期收租</option>
                             </select>
                         </div>
                         
                         <div class="layui-input-inline" style="width:100px;" id="howtian">
-                                <select lay-verify="required" id="BeforeDay" name="BeforeDay">
+                                <select lay-verify="required" id="BeforeDay" name="BeforeDay" disabled>
                                     <option value="0">0天</option>
                                     <option value="1">1天</option>
                                     <option value="2">2天</option>
@@ -190,17 +188,9 @@
                         
                     </div>
                 </div>
-                <div class="layui-form-item">
-                     <label class="layui-form-label">杂费</label>
-                     <div class="layui-input-block">
-                         {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==0){ }}
-                         
-                             <input type="checkbox"  name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
-                         {{# } });   }}
-                     </div>
-                </div>
                 
-                 <div class="zafeicontent">
+                
+                 <div class="viewzafeicontent">
         
                  </div>
                  <div class="layui-form-item">
@@ -211,14 +201,14 @@
                         {{#  } });   }}
                     </div>
                   </div>
-                  <div class="yajincontent">
+                  <div class="viewyajincontent">
         
                   </div>
                     <div class="layui-form-item">
                         <div class="layui-form-item">
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-block">
-                                <input type="tel" name="Remark" autocomplete="off"  value="{{d[1].Remark}}" class="layui-input" id="Remark">
+                                <input type="tel" name="Remark" autocomplete="off"  value="{{doc.ns(d[1].Remark)}}" class="layui-input" id="Remark">
                             </div>
                         </div>
                     </div>

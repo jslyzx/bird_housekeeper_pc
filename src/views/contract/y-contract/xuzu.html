@@ -232,15 +232,15 @@
                 
                function EventOther(){
                     //快捷键
-                 $(".btkj").click(function(){
+                    $(".btkj").click(function(){
                     var idvalue=$(this).attr("idvalue");
                     if($("#BeginTime").val()!=""){
-                        debugger;
                         var dt = getDate($("#BeginTime").val());
-                        var newDate = doc.DateAdd("m",Number(idvalue),dt,);
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt);
+                        newDate = doc.DateAdd("d",-1,dt);
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
                     }
-                })
+                });
                 function getDate(strDate){    
                     var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
                     function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    

@@ -1,6 +1,9 @@
 <title>合租房源</title>
 <link href="../../../../Content/Home.css" rel="stylesheet" />
-<script src="../../../../Scripts/jquery-1.10.2.js"></script>
+<script type="text/html" template>
+    <script src="{{layui.setter.base }}/Scripts/jquery-1.10.2.js"></script>
+  </script>
+
 <style>
     .layui-content{
         height: calc(100% - 30px);
@@ -117,11 +120,22 @@
                                                     <option value="3">21到30天</option>
                                                     <option value="4">大于30天</option>
                                                 </select>
-                                             </div>           
+                                             </div>      
+                                             <div class="m-search-item">
+                                                    <select name="sign" lay-verify="" lay-filter="sign">         
+                                                        <option value="">房源标记</option>
+                                                        <option value="1">到期</option>
+                                                        <option value="2">违约</option>
+                                                        <option value="3">转租</option>
+                                                        <option value="4">新房</option>
+                                                        <option value="5">协议退房</option>
+                                                    </select>
+                                             </div>     
                     <div class="m-search-item">
                         <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
                         <span class="searchresult"><span id="tao">0</span>套</span>
                     </div>
+                    
                     <div class="m-search-item" style="margin-left:15px;">
                         <span class="layui-btn layui-btn-primary"
                         href="" id="excel" >导出</span>
@@ -148,7 +162,7 @@
         </div>
     </div>
 </body>
-  
-<script src="../../../../Scripts/d-publicbessins.js"></script>
-<!-- <script src="../../../../Scripts/Common/CityLd.js"></script> -->
+<script type="text/html" template>
+    <script src="{{layui.setter.base }}/Scripts/d-publicbessins.js"></script>
+</script>
 <div id="view" style="background-color: red"></div>

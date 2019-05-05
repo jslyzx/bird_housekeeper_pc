@@ -17,17 +17,10 @@
         });
         var laydate = layui.laydate;
         laydate.render({
-         elem: '#ShouldReceive1' //指定元素
+         elem: '#time' ,
+         value: new Date()
         });
-        laydate.render({
-         elem: '#lasttime1' //指定元素
-        });
-        laydate.render({
-         elem: '#BeginTime' //指定元素
-        });
-        laydate.render({
-         elem: '#EndTime' //指定元素
-        });
+      
         form.render('');
         $("#cancelbtn").click(function(){
          layer.close(layerindex);
@@ -83,24 +76,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="layui-form-item">
-                                            <div class="layui-inline">
-                                                <label class="layui-form-label" style="text-align:left;width:auto;">账单周期</label>
-                                                <div class="layui-input-inline" style="width: 122px;">
-                                                    <input type="text" name="BeginTime" id="BeginTime" autocomplete="off" class="layui-input"  value="{{d.lasttime}}">
-                                                </div>
-                                                <div class="layui-form-mid">到</div>
-                                                <div class="layui-input-inline" style="width:122px;">
-                                                    <input type="text" name="EndTime" id="EndTime" lay-verify="required"  autocomplete="off" class="layui-input"  value="">
-                                                </div>
-                                            </div>
-                                            <div class="layui-inline">
-                                                <label class="layui-form-label">应付款时间</label>
-                                                <div class="layui-input-inline">
-                                                    <input type="text" name="receivetime"lay-verify="required"   autocomplete="off" id="ShouldReceive1" class="layui-input"  value="">
-                                                </div>
-                                            </div>   
-                                        </div>    
+                                            
                                         <div class="layui-form-item">
                                                 <div class="layui-inline">
                                                     <label class="layui-form-label" style="text-align:left;width:auto;">费用类型</label>
@@ -119,7 +95,7 @@
                                                 <div class="layui-inline">
                                                     <label class="layui-form-label" style="text-align:left;width:auto;">上次抄表时间</label>
                                                     <div class="layui-input-inline" style="width: 122px;">
-                                                        <input type="text" name="project" id="project" autocomplete="off" class="layui-input gray" disabled  value="{{d.lasttime}}">
+                                                        <input type="text" name="lasttime" id="lasttime" autocomplete="off" class="layui-input gray" disabled  value="{{d.lasttime}}">
                                                     </div>
                                                 </div>
                                                 <div class="layui-inline">
@@ -144,7 +120,7 @@
                                                 <div class="layui-inline">
                                                     <label class="layui-form-label">抄表时间</label>
                                                     <div class="layui-input-inline">
-                                                        <input type="text" name="time" lay-verify="required"  autocomplete="off" id="lasttime1" class="layui-input" >
+                                                        <input type="text" name="time" lay-verify="required"  autocomplete="off" id="time" class="layui-input" >
                                                     </div>
                                                 </div>   
                                         </div>  

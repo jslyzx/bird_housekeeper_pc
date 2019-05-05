@@ -77,7 +77,7 @@
                     var type = dom.attributes.ztype.nodeValue;
                     var yajin=dom.attributes.zyajin.nodeValue;
                     var id = "zafei-" + name;
-                    var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + dom.title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" id="' + id + 'zafeiPinlv" class="zafeiPinlv" name="zafeiPinlv"></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input" class="zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                    var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + dom.title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" id="' + id + 'zafeiPinlv" class="zafeiPinlv" name="zafeiPinlv"></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice"></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
                     if (dom.checked == true)
                     {
                         $(".zafeicontent").append(content);
@@ -132,8 +132,9 @@
                     return false;
                 });
                 form.on('select(timeType)', function(data){
+                    debugger;
                     //日租
-                    if(data.value==0){
+                    if(data.value==1){
                         $(".yuezu").hide();
                         $(".rizu").show();
                         //不验证
@@ -143,13 +144,13 @@
                         $("#Recent").removeAttr("lay-verify");
                          //验证
                         $("#Recent1").attr("lay-verify","required");
-                        $("#Type").val(0);
+                        $("#Type").val(1);
                         //常规押金可编辑
                         $("#cyajin").removeClass("gray");
                         $("#cyajin").attr("disabled",false);
                     }
                     //月租
-                    if(data.value==1){
+                    if(data.value==2){
                         $(".yuezu").show();
                         $(".rizu").hide();
                           //不验证
@@ -159,7 +160,7 @@
                         $("#Type").attr("lay-verify","required");
                         $("#DepositType").attr("lay-verify","required");
                         $("#PinLv").attr("lay-verify","required");
-                        $("#yType").val(1);
+                        $("#yType").val(2);
                         //常规押金不可编辑
                         $("#cyajin").addClass("gray");
                         $("#cyajin").attr("disabled",true);
@@ -421,6 +422,9 @@
                 btnOption:btnOption,
                 callBack:function(resultData){
                     if (resultData.Code == 0) {
+                        if(houseid!=undefined){
+                            layui.index.render();
+                        }
                         layer.close(layerindex);
                     }
                 }

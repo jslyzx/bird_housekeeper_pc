@@ -1,5 +1,7 @@
 ﻿
-<script src="../../../../Scripts/bill_business.js"></script>
+<script type="text/html" template>
+    <script src="{{layui.setter.base}}/Scripts/bill_business.js"></script>
+</script>
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 <style>
     .fywz {
@@ -27,7 +29,7 @@
                             </div>
                 </div>
             <div class="m-search-item">
-                    <select name="BillType" id="BillType" lay-filter="Type">
+                    <select name="sign" id="sign" lay-filter="Type">
                             <option value="2">账单类型</option>
                             <option value="0">收款账单</option>
                             <option value="1">付款账单</option> 
@@ -102,6 +104,4 @@
     </div>
 
 </div>
-<script>
 
-</script>

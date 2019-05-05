@@ -9,8 +9,8 @@
  
 layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     exports('setter', {
-     // baseurl: 'http://localhost:4527/'
-    baseurl: 'http://106.14.96.37:81/'
+      baseurl: 'http://localhost:4527/'
+     //baseurl: 'http://106.14.96.37:81/'
     , weburl: 'http://localhost:89/'
     , imgurl: 'http://106.14.96.37:82/'
     ,container: 'LAY_app' //容器ID
@@ -51,6 +51,7 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       ,'/user/forget' //找回密码
       ,'/template/tips/test' //独立页的一个测试 demo
       ,'/house/rz' //登入页
+      ,'/jiaocheng/xq' //登入页
     ]
     
     //扩展的第三方模块
@@ -64,7 +65,9 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       'markdown',
       'marked',
       'multiSelect',
-      'formSelects'
+      'formSelects',
+      'ckplayer'
+    
     ]
     
     //主题配置

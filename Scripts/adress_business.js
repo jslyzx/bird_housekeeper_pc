@@ -9,12 +9,13 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
     var namearr = [[ //表头
         { type: 'checkbox'}
       , { field: 'Id', width: 100, title: '编号' }
+      , { field: 'CityName', width: 180, title: '所属区' }
       , { field: 'Name', width: 180, title: '名称' }
       , { width: 180, title:'类别',templet: formastatus}
       ]];
         var tableoption = {
             domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, url: 'api/cellname/Querylist',
-            ismuilti: true
+            ismuilti: true, "tabfield": "regtype",
         };
         var BtnOption = {
             area: ['50%', '50%'],

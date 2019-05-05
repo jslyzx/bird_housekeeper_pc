@@ -35,7 +35,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
     form.on('select(Type)', function(data){
         debugger;
         var tableid = tableoption.domid.replace("#", "");
-        doc.queryPara({"BillType":data.value},tableid);
+        doc.queryPara({"BillType":1},tableid);
     });  
     form.render('');
     // doc.InitTable(tableoption);
@@ -52,7 +52,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         menuid: 108,
         url:'bill/y-bill/view',//查看界面路径
         "realtable": "T_BILL",
-        formatterbtn:'formatterbtn'
+        formatterbtn:['formatterbillbtn']
     };
     doc.InitButton(BtnOption, billbtnscribt, tableoption);
     //监听工具栏按钮
@@ -291,6 +291,25 @@ function formatterbtn(value,field,name){
        }
        if(value.PayStatus==5){
         return "恢复正常打款";
+       }
+       return name;
+    }
+    return name;
+}
+function formatterbillbtn(value,field,name){
+   
+    if(field=="fukuan"){
+        if(value.sign=="租客退款"){
+            return "租客退款";
+        }
+        if(value.sign=="业主退款"){
+            return "业主退款";
+        }
+       if(value.BillType==0){
+           return "收款";
+       }
+       if(value.BillType==1){
+        return "付款";
        }
        return name;
     }

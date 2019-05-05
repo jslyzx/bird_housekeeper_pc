@@ -37,8 +37,9 @@
         InitChart(chartdata);
         InitDaiban();
         InitNumber(data);
+        InitwebiBill(0,"index-daishou-table",isloadmenu);
     });
-    InitwebiBill(0,"index-daishou-table",isloadmenu);
+ 
     //切换刷新数据
     element.on('tab(test1)', function(){
         debugger;
@@ -213,11 +214,12 @@
             tooldelete:"bill-delete-btn",
             menuid: 108,
             isloadmenu:isloadmenu,
-            "realtable": "T_BILL"
+            "realtable": "T_BILL",
+            formatterbtn:['formatterbillbtn']
         };
         doc.InitButton(BtnOption, guestbtnscribt, tableoption);
         //监听工具栏按钮
-        table.on('tool(demoEvent2)', function(obj) {
+        table.on('tool(demoEvent)', function(obj) {
         var data = obj.data,
             layEvent = obj.event,
             url = $(this).data('url');
@@ -339,11 +341,11 @@
         tooldelete: "bill-delete-btn",
             menuid: 108,
             "realtable": "T_BILL",
-            formatterbtn:'formatterbtn'
+            formatterbtn:['formatterbtn','formatterbillbtn']
         };
         doc.InitButton(BtnOption, ybillbtnscribt , tableoption);
          //监听工具栏按钮
-    table.on('tool(demoEvent)', function(obj) {
+        table.on('tool(demoEvent)', function(obj) {
         var data = obj.data,
             layEvent = obj.event,
             url = $(this).data('url');
@@ -820,6 +822,25 @@ function formatterbtn(value,field,name){
        }
        if(value.PayStatus==5){
         return "恢复正常打款";
+       }
+       return name;
+    }
+    return name;
+}
+function formatterbillbtn(value,field,name){
+   
+    if(field=="fukuan"){
+        if(value.sign=="租客退款"){
+            return "租客退款";
+        }
+        if(value.sign=="业主退款"){
+            return "业主退款";
+        }
+       if(value.BillType==0){
+           return "收款";
+       }
+       if(value.BillType==1){
+        return "付款";
        }
        return name;
     }

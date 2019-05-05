@@ -25,7 +25,6 @@ img {
             var url1 ="api/BaseData/Queryfgy";
             var storeurl="api/cellname/Querylist";
             var tsurl="api/BaseData/Query";
-            var doc = layui.htcsLG;
             var allresult = [];
             var para={"teseorpeibei":0,"type":2};
             var getTpl = billeditscript.innerHTML
@@ -36,17 +35,18 @@ img {
                 alldata.push(result.numberData);
                 doc.objectQuery(url, { "Id": id }, function (data) {
                     alldata.push(data.numberData);
-                    imageurl=alldata[1].PublicImg;
+                    debugger;
+                    var image=alldata[1].PublicImg;
                     doc.objectQuery(url1, {  }, function (data) {
                         alldata.push(data.numberData);
-                        doc.objectQuery(storeurl, {"PageSize":100000,"PageIndex":1}, function (data) {
-                     alldata.push(data.numberData);
-                    var arr=new Array();
-                    if(alldata[1].PublicImg!=null){
-                        alldata[1].PublicImg=alldata[1].PublicImg.substring(0,alldata[1].PublicImg.length-1);
-                        arr=alldata[1].PublicImg.split(';');
-                    }
-                alldata.push(arr);
+                        doc.objectQuery(storeurl, {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
+                        alldata.push(data.numberData);
+                        var arr=new Array();
+                        if(image!=null&&image!="undefined"){
+                        image=image.substring(0,image.length-1);
+                        arr=image.split(';');
+                        }
+                 alldata.push(arr);
                 laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
                 doc.tjgd();
@@ -358,7 +358,7 @@ img {
                            </div> 
                           </div>  
                           <div class="layui-row" id="himage">
-                                {{#  layui.each(d[3], function(index, item1){ }}
+                                {{#  layui.each(d[4], function(index, item1){ }}
                                 <div class="layui-col-xs2">
                                         <div>
                                          <img class="house-img-all house-img hand" src="{{imgurl}}{{item1}}">

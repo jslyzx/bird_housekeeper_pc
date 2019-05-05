@@ -16,7 +16,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         var storeurl ="api/cellname/Querylist";
         var paradata = { "PageSize": 10, "PageIndex": 1,"RecrntType": 2};
         var option = { data: [{ "value": 0, "text": "全部" }, { "value": 1, "text": "未租" },  { "value": 2, "text": "已租" },{ "value": 3, "text": "装修中" }], rdefault: 0 };
-        doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+        doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
             var list=[];
             var rdata=data.numberData;
             for (var i in rdata) {
@@ -62,6 +62,10 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         });  
         form.on('select(ShiNumber)', function(data){
             search.ShiNumber=data.value;
+            loaddata(search);
+        }); 
+        form.on('select(sign)', function(data){
+            search.sign=data.value;
             loaddata(search);
         }); 
         form.on('select(store)', function(data){
@@ -516,6 +520,9 @@ function formatter1(value){
        if(value==4){
           return "新房"
        }
+       if(value==5){
+        return "协议退房"
+     }
        return "房源类型";
     
   }

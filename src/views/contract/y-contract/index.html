@@ -5,8 +5,10 @@
        body{overflow-y: scroll;}
     </style>
     <title>租客合同</title>
-    <script src="../../../Scripts/yContract_business.js"></script>
-    <script src="../../../../Scripts/Common/public-base.js"></script>
+    <script type="text/html" template>
+        <script src="{{layui.setter.base}}/Scripts/yContract_business.js"></script>
+    </script>
+   
     <link href="../../../Content/Home.css" rel="stylesheet" />
     <body style="overflow-y: scroll;">
         <!--结束-->
@@ -80,9 +82,10 @@
                     <li value="0" class="layui-this">所有</li>
                     <li value="5">在租</li>
                     <li value="6">即将到期</li>
-                    <li value="4" >待搬入</li>
-                    <li value="7">已退租</li>
+                    <li value="4">待搬入</li>
                     <li value="9">退款中</li>
+                    <li value="1">待签约</li>
+                    <li value="7">已退租</li>
                     
                 </ul>
                 <div class="layui-tab-content" style="padding:0px;margin:0px;">

@@ -15,7 +15,7 @@
 </style>
 <script>
     var bxTypeList = [],bxIndex = 0,table,tabbleid="repairelistaddtable",doc;
-      function LoadData(id,tableid,layerindex){
+      function LoadData(id,tableid,layerindex,btnOption){
         layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             doc = layui.htcsLG;
@@ -190,7 +190,7 @@ $(document).on('change','.RowContent',function(){
             //监听提交
 form.on('submit(save)', function (data) {
         var datafield=data.field;
-        datafield.Id=id;
+        datafield.Id=repaireid;
         datafield.HouseId=houseid;
         var repairelistaddtable = $('[lay-id="repairelistaddtable"] .layui-table-body .layui-table tr');
             var list = [];
@@ -210,6 +210,7 @@ form.on('submit(save)', function (data) {
           url:'api/Repaire/save',
           data:tjdata,
           tableid:tableid,
+          btnOption:btnOption,
           callBack:function(resultData){
             if (resultData.Code == 0) {
                 layer.close(layerindex);
@@ -237,8 +238,8 @@ form.on('submit(save)', function (data) {
 
 <body>
     <script type="text/html" template>
-        {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
-        </script>
+        {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+    </script>
         <!--工具条-->
 <script type="text/html" id="barDemo1">
     <a class="layui-btn layui-btn-xs" lay-event="add">添加</a>

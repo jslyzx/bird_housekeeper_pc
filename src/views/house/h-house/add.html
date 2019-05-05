@@ -42,12 +42,13 @@ img {
             var  AreamName="";
             var  Area=0;
             var  BusinessArea="";
+            var  location="";
             //加载编辑数据
             doc.objectQuery(tsurl, para, function (result) {
                     alldata.push(result.numberData);
                     doc.objectQuery(url1, {  }, function (data) {
                     alldata.push(data.numberData);
-                    doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+                    doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
                     alldata.push(data.numberData);
                     laytpl(getTpl).render(alldata, function (html) {
                     view.innerHTML = html;
@@ -157,6 +158,7 @@ img {
                                    val.business_area=tvalue.business_area;
                                    val.address=tvalue.address;
                                    val.adcode=tvalue.adcode;
+                                   val.location=tvalue.location;
                                    realresut.push(val);
                                 });
                                 var dresult = {
@@ -173,6 +175,7 @@ img {
                         Area=suggestion.adcode;
                         AreamName=suggestion.data;
                         BusinessArea=suggestion.business_area;
+                        location=suggestion.location;
                         $("#Adress").val(suggestion.address);
                        
                     },
@@ -226,6 +229,7 @@ img {
             data.field.AreamName=AreamName;
             data.field.Area=Area;
             data.field.BusinessArea=BusinessArea;
+            data.field.location=location;
             debugger;
             var arr=doc.getcheckbox("#peibei");
             data.field.PublicPeibei=arr;
@@ -238,6 +242,7 @@ img {
             debugger;
             if (resultData.Code == 0) {
                 layer.close(layerindex);
+                layui.index.render();
             }
             }
            }
@@ -310,7 +315,7 @@ img {
                       <div class="layui-inline"> 
                        <label class="layui-form-label">座/栋/号</label> 
                        <div class="layui-input-inline"> 
-                        <input type="text" name="BuildingNumber"  lay-verify="required" autocomplete="off" class="layui-input"  /> 
+                        <input type="text" name="BuildingNumber"  autocomplete="off" class="layui-input"  /> 
                        </div> 
                     </div> 
                        <div class="layui-inline"> 
@@ -466,6 +471,6 @@ img {
                    {{# });   }}                          
               </div>
            </script>
-    <script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
-    <link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  
+           <script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
+           <link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  
   

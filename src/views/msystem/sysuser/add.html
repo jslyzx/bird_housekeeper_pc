@@ -148,7 +148,7 @@
 				  doc.childtable(options);   
 				  EventBtn();
 			   }); 
-			   doc.objectQuery("api/cellname/Querylist", {"PageSize":100000,"PageIndex":1}, function (result) {  
+			   doc.objectQuery("api/cellname/Querylist", {"PageSize":100000,"PageIndex":1,"regtype":4}, function (result) {  
 				   debugger; 
 				   var realdata = result.numberData;
 				   var getTpl = storescript.innerHTML,

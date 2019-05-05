@@ -46,7 +46,7 @@ img {
                     alldata.push(result.numberData);
                     doc.objectQuery(url1, {  }, function (data) {
                     alldata.push(data.numberData);
-                    doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+                    doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
                     alldata.push(data.numberData);
                     laytpl(getTpl).render(alldata, function (html) {
                     view.innerHTML = html;
@@ -269,7 +269,8 @@ img {
             arr=img.split(';');
         }
         return arr;
-      }  
+      } 
+      
 </script>
         <script type="text/html" template >
             {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}

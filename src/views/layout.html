@@ -25,9 +25,9 @@
     </ul>
     <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
       
-      <li class="layui-nav-item" lay-unselect>
+      <!-- <li class="layui-nav-item" lay-unselect>
         <a lay-href="app/message/" layadmin-event="message">
-          <i class="layui-icon layui-icon-notice">消息</i>
+          <i class="layui-icon layui-icon-notice">消息</i> -->
           
           <!-- 如果有新消息，则显示小圆点 -->
           <!--<script type="text/html" template lay-url="../start/json/message/new.js">
@@ -36,9 +36,14 @@
           {{# } }}
           </script>-->
           
+        <!-- </a>
+      </li> -->
+    
+      <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <a   lay-href="jiaocheng/" >
+          <i class="layui-icon layui-icon-read">教程</i>
         </a>
       </li>
-    
       <li class="layui-nav-item layui-hide-xs" lay-unselect>
         <a   lay-href="set/base/money" >
           <i class="layui-icon layui-icon-rmb">钱包</i>
@@ -52,7 +57,7 @@
             <cite>{{formatter(d.numberData)}}</cite>
           </a>
           <dl class="layui-nav-child">
-            <dd><a lay-href="set/base/website">基本资料</a></dd>
+            <dd><a lay-href="set/base/password">基本资料</a></dd>
             <dd><a lay-href="set/security/">功能开关</a></dd>
             <dd layadmin-event="logout"><a>退出</a></dd>
             <hr>

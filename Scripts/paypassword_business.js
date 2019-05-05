@@ -5,6 +5,7 @@ function LoadData(){
   var doc = layui.htcsLG;
   var url = "api/Enterprise/querycompany";
   var $ = layui.jquery;
+  var mymod = layui.htcsradio;
   var form = layui.form,setter = layui.setter ,admin = layui.admin;
   var id;
   doc.objectQuery(url, {}, function (data) {

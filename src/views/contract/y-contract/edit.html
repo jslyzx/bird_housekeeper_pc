@@ -25,10 +25,12 @@
                 var form = layui.form;
                 var alldata=[];
                 var util = layui.util;
+                var enumdata;
                 var getTpl = zcontractaddscript.innerHTML
                , view = document.getElementById('zcontract-add-view');
                var laydate = layui.laydate;
                 doc.objectQuery(url, { }, function (data) {
+                     enumdata=data.numberData;
                      alldata.push(data.numberData);
                      doc.objectQuery(xqurl, {"Id":id }, function (data) {
                         alldata.push(data.numberData);
@@ -122,7 +124,7 @@
                         pinlv=item.Pinlv;
                         $("[name='"+name+"']").attr("checked",true); 
                         var id = "zafei-" + name;
-                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" id="' + id + 'zafeiPinlv" name="zafeiPinlv"><option value="0">随押金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                        var content = '<div id="zafei-' + name + '" class="zafeilist"><div class="layui-form-item"><label class="layui-form-label zafeitit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" id="' + id + 'zafeiPinlv" name="zafeiPinlv"></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" ></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiJine" lay-verify="" autocomplete="off" class="layui-input zafeiJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
                         $(".zafeicontent").append(content);
                         initvalue(id,type,item.Amount,item.Pinlv,item.Reading,util.toDateString(item.ChaobiaoTime, 'yyyy-MM-dd'),item.Price);
                         form.render('');
@@ -145,7 +147,7 @@
                         title=item.Name;
                         $("[name='"+name+"']").attr("checked",true); 
                         var id = "yajin-" + name;
-                        var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" name="zafeiPinlv"><option value="0">随租金结算</option><option value="1">一月一付</option><option value="2">二月一付</option><option value="3">三月一付</option><option value="4">四月一付</option><option value="5">五月一付</option></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" class=""></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel"  name="yajinJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
+                        var content = '<div id="yajin-' + name + '" class="yajinlist"><div class="layui-form-item"><label class="layui-form-label yajintit">' + title + '</label><label class="layui-form-label zisyajin">' +yajin + '</label><div class="wrap-jstype"><label class="layui-form-label">结算方式</label><div class="layui-input-inline zafeiType" style="width: 140px;"><select lay-verify="required" lay-filter="' + id + 'zafeiType" id="' + id + 'zafeiType" name="zafeiType" ><option value="1">按固定费用结算</option><option value="2">预充值</option><option value="3">按抄表结算</option></select></div></div><div class="wrappinlv"><label class="layui-form-label">付款频率</label><div class="layui-input-inline" style="width: 120px;"><select lay-verify="required" class="zafeiPinlv" name="zafeiPinlv"></select></div></div><div class="wraprice"><label class="layui-form-label">费用单价</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeiPrice" lay-verify="" autocomplete="off" class="layui-input zafeiPrice" class=""></div></div><div class="wrapguding"><label class="layui-form-label">金额</label><div class="layui-input-inline" style="width: 100px;"><input type="tel"  name="yajinJine" lay-verify="" autocomplete="off" class="layui-input yajinJine" ></div></div></div><div class="layui-form-item wrapbiao"><label class="layui-form-label">当前读数</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="zafeidushu" lay-verify="" autocomplete="off" class="layui-input zafeidushu" ></div><label class="layui-form-label">抄表日期</label><div class="layui-input-inline" style="width: 100px;"><input type="tel" name="Chaobiao" lay-verify="" autocomplete="off" class="layui-input Chaobiao"  placeholder=""></div></div></div>';
                         $(".yajincontent").append(content);
                         $( "#" +id+" .yajinJine").val(item.Amount);
                         initvalue(id,type,item.Amount,item.Pinlv,item.Reading,item.ChaobiaoTime);
@@ -232,15 +234,15 @@
                 
                function EventOther(){
                     //快捷键
-                 $(".btkj").click(function(){
+                    $(".btkj").click(function(){
                     var idvalue=$(this).attr("idvalue");
                     if($("#BeginTime").val()!=""){
-                        debugger;
                         var dt = getDate($("#BeginTime").val());
-                        var newDate = doc.DateAdd("m",Number(idvalue),dt,);
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt);
+                        newDate = doc.DateAdd("d",-1,dt);
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
                     }
-                })
+                });
                 function getDate(strDate){    
                     var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
                     function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
@@ -344,7 +346,17 @@
                     laydate.render({
                         elem: rid+' .Chaobiao' //指定元素
                     });
-                  
+                   //初始化杂费频率
+                   initoption(enumdata.zafeipinlv,".zafeiPinlv");
+                }
+                 //初始化杂费付费频率
+                 function  initoption(data,dom){
+                    var pinlvoption = [];
+                    for (var i in data) {
+                    pinlvoption.push('<option value="'+ data[i].key +'">'+ data[i].Value +'</option>');
+                    }
+                    $(dom).append(pinlvoption.join(''));
+                    form.render('select');
                 }
                 form.verify({
                     EndTime : function(value, item){

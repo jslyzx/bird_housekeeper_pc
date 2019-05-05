@@ -104,7 +104,7 @@ img {
             form.render('');
             debugger;
            //加载门店数据
-           doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1}, function (data) {
+           doc.objectQuery(storeurl,  {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
             var list=[];
             var rdata=data.numberData;
             for (var i in rdata) {
