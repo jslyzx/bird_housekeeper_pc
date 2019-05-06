@@ -250,6 +250,17 @@ layui.define(['laytpl', 'layer'], function(exports){
     ,router = layui.router();
     
     elem.find('title').remove();
+
+    //处理页面中的静态资源引用
+    Array.prototype.forEach.call(elem.find('link'),function(v){
+        v.setAttribute('href', v.getAttribute('href') + '?v=' + layui.cache.version);
+    });
+    Array.prototype.forEach.call(elem.find('script'),function(v){
+      if(v.getAttribute('src')){
+        v.setAttribute('src', v.getAttribute('src') + '?v=' + layui.cache.version);
+      }
+    });
+
     that.container[refresh ? 'after' : 'html'](elem.children());
     
     router.params = that.params || {};
