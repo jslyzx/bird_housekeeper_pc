@@ -103,8 +103,8 @@ img {
             tableid:tableid,
             callBack:function(resultData){
             if (resultData.Code == 0) {
-                reflash();
                 layer.close(layerindex);
+                layui.index.render();
             }
             }
            }
