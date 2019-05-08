@@ -291,11 +291,15 @@
                             seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' +item.BtnName + '</a></dd>';
                         }
                         if(options.formatterbtn.length>0){
-                            
+                            var formatter="";
+                        
                             $.each(options.formatterbtn,function(index,value){
-                                var formatter="{{ "+value+"(d,'"+item.BtnNo+"','"+item.BtnName+"')}}"
-                                seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' + formatter+ '</a></dd>';
+                                formatter="{{ "+value+"(d,'"+item.BtnNo+"','"+item.BtnName+"')}}";
                             })
+                            debugger;
+                            seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' + formatter+ '</a></dd>';
+                              
+                            
                         }
                     }
                    });

@@ -22,7 +22,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         formid: "#bill-search-form",
         arr: [
             [ //表头
-                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应收时间', templet: formadaoqi, width: 150 }, { title: '账单周期', width: 200, templet: formatterzhouqi }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, {  templet: formasign, width:200, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
+                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应付时间', templet: formadaoqi, width: 150 }, { title: '账单周期', width: 200, templet: formatterzhouqi }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, {  templet: formasign, width:200, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
             ]
         ],
         url: 'api/Bill/Querylist',
@@ -207,7 +207,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
 
     function formadaoqi(value) {
         // debugger;
-        var day = 0;
+        var day = value.Day;
         
         if (value.ShouldReceive == null) {
             return '<span>' + "未知" + '</span>';
@@ -215,19 +215,17 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         if (value.PayStatus == 1) {
             return '<span>' + util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd') + '</span>'
         } 
-        var d1 = new Date(util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd'));
-        var d2 = new Date(nowDate);
-        var days = d1 - d2;
-        day = parseInt(days / (1000 * 60 * 60 * 24));
+       
         if (day == 0) {
-            return '<span>' + "今日付款" + '</span>';
+            return '<span>' + "今日收款" + '</span>';
+        }
+        if (day > 0) {
+           
+            return '<span style="color:#ff5153">' + "逾期" + day + "天" + '</span>';
         }
         if (day < 0) {
             day=0-day;
-            return '<span style="color:#ff5153">' + "逾期" + day + "天" + '</span>';
-        }
-        if (day > 0) {
-            return '<span>' + day + "天后付款" + '</span>';
+            return '<span>' + day + "天后收款" + '</span>';
         }
     }
     function formasign(value) {

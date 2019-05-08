@@ -21,6 +21,7 @@
                 var $ = layui.jquery;
                 var jQuery=layui.jquery;
                 var form = layui.form;
+                var mymod = layui.htcsradio;
                 debugger;
                 var alldata=[];
                 doc.objectQuery(url, { }, function (data) {
@@ -45,7 +46,11 @@
                     });
                     laydate.render({
                         elem: '#EndTime' //指定元素
-                    });       
+                    });
+                    laydate.render({
+                    elem: '#CreateTime' //指定元素
+                    ,value:new Date()
+                    });           
                     //验证规则
                     Create();
                     EventOther();
@@ -58,6 +63,8 @@
                
 
                 function Create() {
+                     //加载签约人
+                    mymod.initfgy("CreatePerson");
                     form.on('checkbox(zafei)', function (data) {
                         debugger;
                         var dom = data.elem;
@@ -596,16 +603,28 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                            <label class="layui-form-label">签约人</label>
+                            <div class="layui-input-inline">
+                                    <select lay-verify="required" id="CreatePerson" name="CreatePerson" lay-search >
+                                      
+                                    </select>
+                            </div>
+                            <label class="layui-form-label">签约时间</label>
+                            <div class="layui-input-inline">
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" >
+                            </div>
+                    </div>
+                    <div class="layui-form-item">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">附件</label>
-                            <div class="layui-input-block">
-                                <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
-                                <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image" >
-                            </div>
-                            <div class="layui-input-block">
-                                    <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
-                                    <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
-                            </div>
+                                <label class="layui-form-label">附件</label>
+                                <div class="layui-input-inline">
+                                    <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                    <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image" >
+                                </div>
+                                <div class="layui-input-inline">
+                                        <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
+                                        <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
+                                </div>
                         </div>
                     </div>
         

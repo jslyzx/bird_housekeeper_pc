@@ -156,6 +156,7 @@
         tooladd:  "zcontract-add-btn",
         tooledit: "zcontract-edit-btn",
         tooldelete:"zcontract-delete-btn",
+        url:'contract/z-contract/view',//查看界面路径
         deletespname:"sp_pldeletecontract",
         menuid:165
     };
@@ -317,15 +318,31 @@
                
             });
             function formatterstatus(value) {
-        //0 不限 1预订 4待搬入 5在租 6已到期 7 已退租 8以作废 9 财务审核中	
+        //0 不限 1预订 4待搬入 5在租 6已到期 7 已退租 8以作废 9 财务审核中
+        if (value.Status ==1) {
+            return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">待签约</span></div>'
+        }	
        if (value.Status == 4) {
            return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">待搬入</span></div>'
        }
        if (value.Status == 5) {
            return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
        }
+       if (value.Status == 2) {
+          return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
+       }
        if (value.Status == 6) {
-           return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">已到期</span></div>'
+           if(value.Day>0){
+            return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">逾期'+value.Day+'天</span></div>'
+           }
+           if(value.Day<0){
+            value.Day=0-value.Day;
+            return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">'+value.Day+'天后</span></div>'
+           }
+           if(value.Day==0){
+            return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">今天到期</span></div>'
+           }
+           return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">即将到期</span></div>'
        }
        if (value.Status == 7) {
            return '<div><span style="padding:10px;background-color:#c2c2c2;color:#ffffff;border-radius:5px;">已退租</span></div>'
@@ -334,7 +351,7 @@
            return '<div><span style="padding:10px;background-color:#c2c2c2;color:#ffffff;border-radius:5px;">已作废</span></div>'
        }
        if (value.Status == 9) {
-           return '<div><span style="padding:10px;background-color:#FFB800;color:#ffffff;border-radius:5px;">财务审核中</span></div>'
+           return '<div><span style="padding:10px;background-color:#FFB800;color:#ffffff;border-radius:5px;">退租中</span></div>'
        }
 }
 function formatterhouse(value) {

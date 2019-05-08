@@ -507,6 +507,7 @@ function formatter(value,cont){
  
   return value;
 }
+
 function formatter1(value){
         if(value==1){
            return "到期"
@@ -526,5 +527,16 @@ function formatter1(value){
        return "房源类型";
     
   }
+
+
+  function formatterlist(value,cont){
+    if(value==null||value==""||value==undefined){
+       return '';
+    }
+    if(cont=="座"){
+      return value+"号";
+    }
+    return value;
+}
 
 

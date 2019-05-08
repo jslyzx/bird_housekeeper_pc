@@ -1,4 +1,4 @@
-﻿layui.define(function (exports) { //提示：模块也可以依赖其它模块，如：layui.define('layer', callback);
+﻿layui.define([ "htcsLG"],function (exports) { //提示：模块也可以依赖其它模块，如：layui.define('layer', callback);
     var $ = layui.jquery
   , jQuery = layui.jquery;
   var $ = layui.$,
@@ -6,6 +6,8 @@
   laytpl = layui.laytpl,
   setter = layui.setter,
   admin = layui.admin;
+  var doc = layui.htcsLG;
+  var form = layui.form;
     var obj = {
         sendyzm:function(type){
             cmdsend(type);
@@ -54,6 +56,35 @@
             for (var k in o)
                 if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             return fmt;
+        },
+        initfgy:function(dom){
+            var url="api/BaseData/Queryfgy";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].RealName +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                var userid=layui.data('layuiAdmin').userid;
+                $(vdom).val(userid);
+                form.render('select');
+            });
+        },
+        editinitfgy:function(dom,rid){
+            var url="api/BaseData/Queryfgy";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].RealName +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                $(vdom).val(rid);
+                form.render('select');
+            });
         }
     };
     function cmdsend(type) {

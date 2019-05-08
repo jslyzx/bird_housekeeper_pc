@@ -21,7 +21,7 @@
     <script src="{{layui.setter.base}}Scripts/ycontractview.js"></script>
     <link href="../../../../Content/codemirror.css" rel="stylesheet" />
   </script>
-  <script id="billbtnscribt1" type="text/html">
+  <script id="billbtnscribt2" type="text/html">
   </script>
   <script type="text/html" id="billbtnintable1">
           <ul class="layui-nav toolbar-nav">
@@ -50,9 +50,11 @@
             <div class="layui-tab-item">
                 <div class="layui-tab layui-tab-brief" lay-filter="tabletab">
                     <ul class="layui-tab-title" style="margin-bottom:0;">
-                            <li value="2" class="layui-this">所有</li>
-                            <li value="0">未完成</li>
+                           
+                            <li value="0" class="layui-this">未完成</li>
                             <li value="1">已完成</li>
+                            <li value="5" >暂停打款</li>
+                            <li value="2" >所有</li>
                     </ul>
                     <div class="layui-tab-content" style="padding:0px;margin:0px;">
                         <table id="bill-main-table-cont" lay-filter="demoEvent3"></table>
@@ -213,18 +215,30 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                            <div class="layui-inline">
+                        <label class="layui-form-label">创建人</label>
+                        <div class="layui-input-inline" style="width: 150px;">
+                            <input type="tel" name="CreatePerson" autocomplete="off" value="{{d[1].CreatePersonstr}}" class="layui-input gray" disabled id="Remark">
+                        </div>
+                        <label class="layui-form-label">创建时间</label>
+                        <div class="layui-input-inline" style="width: 150px;">
+                            <input type="tel" name="CreateTime" autocomplete="off" value="{{d[1].CreateTime}}" class="layui-input gray" disabled id="Remark">
+                        </div>
+                    </div>
+                    </div>
+                    <div class="layui-form-item">
                         <div class="layui-form-item">
                             <label class="layui-form-label">附件</label>
-                            <div class="layui-input-block">
+                            <div class="layui-input-inline">
                                 <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
                                 <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image">
                             </div>
-                            <div class="layui-input-block">
+                            <div class="layui-input-inline">
                                     <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
                                     <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
                             </div>
                         </div>
-                    </div>
+                    </div> 
         
                 </div>
         

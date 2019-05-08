@@ -1,8 +1,7 @@
 
     <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
-    <script type="text/html" template>
-        <script src="{{layui.setter.base }}/Scripts/jquery-1.10.2.js"></script>
-    </script>
+    <script src="../../../../Scripts/jquery-1.10.2.js"></script>
+   
      <style>
          .wrapguding{display:none;}
          .zafeitit{color:#FFB800;font-weight:500;}
@@ -657,6 +656,7 @@
                         </div>
                         <div class="layui-input-inline" style="width: 100px;">
                             <select lay-verify="required" id="DepositType" name="DepositType" lay-filter="DepositType">
+                                    <option value="0">不设押金</option>
                                     <option value="1">押一</option>
                                     <option value="2">押二</option>
                                     <option value="3">押三</option>

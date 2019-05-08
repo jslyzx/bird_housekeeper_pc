@@ -27,6 +27,7 @@
                 var util = layui.util;
                 var houseid=0;
                 var enumdata;
+                var mymod = layui.htcsradio;
                 var getTpl = zcontractaddscript.innerHTML
                , view = document.getElementById('zcontract-add-view');
                var laydate = layui.laydate;
@@ -48,9 +49,10 @@
                         Teant.Weinxin=alldata[1].Teant.Weinxin;        
                     }
                     alldata.push(Teant);
-                        laytpl(getTpl).render(alldata, function (html) {
-                        view.innerHTML = html;
-                        
+                    //加载签约人
+                    mymod.editinitfgy("CreatePerson",alldata[1].CreatePerson);
+                    laytpl(getTpl).render(alldata, function (html) {
+                    view.innerHTML = html;
                     //执行一个laydate实例
                     laydate.render({
                         elem: '#BatethDay' //指定元素
@@ -61,6 +63,10 @@
                     laydate.render({
                         elem: '#EndTime' //指定元素
                     }); 
+                    laydate.render({
+                    elem: '#CreateTime' //指定元素
+                    ,value:new Date()
+                    });    
                     });
                     form.render('');
                     $("#Document").val(alldata[1].Teant.Document);
@@ -180,6 +186,7 @@
                }
                 function Create(enumdata) {
                     debugger;
+                  
                      //签约方式初始化
                 form.val("formcontract", {
                 "onlinesign": String(enumdata.onlinesign)
@@ -786,13 +793,26 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">附件</label>
-                            <div class="layui-input-block">
-                                <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
-                                <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image">
+                            <label class="layui-form-label">签约人</label>
+                            <div class="layui-input-inline">
+                                    <select lay-verify="required" id="CreatePerson" name="CreatePerson" lay-search >
+                                      
+                                    </select>
                             </div>
-                            <div class="layui-input-block">
+                            <label class="layui-form-label">签约时间</label>
+                            <div class="layui-input-inline">
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" >
+                            </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                         
+                            <label class="layui-form-label">附件</label>
+                            <div class="layui-input-inline">
+                                <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image" >
+                            </div>
+                            <div class="layui-input-inline">
                                     <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
                                     <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
                             </div>

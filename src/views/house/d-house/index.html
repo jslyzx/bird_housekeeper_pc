@@ -43,7 +43,7 @@
                         <div class="m-top m-zt-y" id="m-top">
                             <ul>
                                 <li>
-                                    <span class="housename" style="">{{itemtop.Name}}</span>
+                                        <span class="zfylx">{{formatter1(itemtop.sign)}}</span><span class="housename" style="">{{itemtop.Name}}</span>
                                     <span class="caidan-icon" id="caidan-icon-{{itemtop.ID}}" view="false">
                                         <i class="layui-icon" id="lay-ic-{{itemtop.ID}}" style="font-size:22px;" view="false">&#xe65f;</i>
                                     </span>
@@ -145,6 +145,7 @@
                 </form>
                 <form class="layui-form hcs-form layui-form-justify">
                     <div class="m-search-item">
+                     
                         <a class="layui-btn" id="edithousedepend">编辑当前公寓</a>
                         <a class="layui-btn" id="addhousedepend">添加楼层</a>
                     </div>

@@ -26,6 +26,7 @@
                 var alldata=[];
                 var util = layui.util;
                 var enumdata;
+                var mymod = layui.htcsradio;
                 var getTpl = zcontractaddscript.innerHTML
                , view = document.getElementById('zcontract-add-view');
                var laydate = layui.laydate;
@@ -51,7 +52,8 @@
                     alldata.push(data1.numberData);
                         laytpl(getTpl).render(alldata, function (html) {
                         view.innerHTML = html;
-                        
+                        //加载签约人
+                    mymod.editinitfgy("CreatePerson",alldata[1].CreatePerson);
                     //执行一个laydate实例
                     laydate.render({
                         elem: '#BatethDay' //指定元素
@@ -61,6 +63,10 @@
                     });
                     laydate.render({
                         elem: '#EndTime' //指定元素
+                    }); 
+                    laydate.render({
+                    elem: '#CreateTime' //指定元素
+                    ,value:new Date()
                     }); 
                     });
                     form.render('');
@@ -169,6 +175,7 @@
                 }
                 function Create(enumdata) {
                     debugger;
+                
                     form.on('checkbox(zafei)', function (data) {
                     debugger;
                     var dom = data.elem;
@@ -552,7 +559,10 @@
                         <div class="layui-input-inline" style="width: 100px;">
                             <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent" id="Recent">
                         </div>
-                       
+                        <label class="layui-form-label" style="text-align:left;width:auto;">免租期</label> 
+                        <div class="layui-input-inline" style="width:auto;" >
+                            <input type="text" name="RentFree" autocomplete="off"  value="{{doc.ns(d[1].RentFree)}}"    class="layui-input"  /> 
+                        </div>
                     </div>
                 </div>
                 
@@ -647,16 +657,28 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                            <label class="layui-form-label">签约人</label>
+                            <div class="layui-input-inline">
+                                    <select lay-verify="required" id="CreatePerson" name="CreatePerson" lay-search >
+                                      
+                                    </select>
+                            </div>
+                            <label class="layui-form-label">签约时间</label>
+                            <div class="layui-input-inline">
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" >
+                            </div>
+                    </div>
+                    <div class="layui-form-item">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">附件</label>
-                            <div class="layui-input-block">
-                                <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
-                                <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image">
-                            </div>
-                            <div class="layui-input-block">
-                                    <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
-                                    <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
-                            </div>
+                                <label class="layui-form-label">附件</label>
+                                <div class="layui-input-inline">
+                                    <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
+                                    <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image" >
+                                </div>
+                                <div class="layui-input-inline">
+                                        <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
+                                        <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
+                                </div>
                         </div>
                     </div>
         

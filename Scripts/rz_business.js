@@ -19,7 +19,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         
     });
     var config={tableid:"#guest-main-table",table:"guest-main-table",formid:"#guest-search-form",url:"api/RzService/Querylist"
-,btnview:"guest-button-view",toolview:"guest-view-btn",tooladd:"addrzz",tooledit:"guest-edit-btn",tooldelete:"deletels",tabfield:"Status"
+,btnview:"guest-button-view",toolview:"guest-view-btn",tooladd:"addrzz",tooledit:"guest-edit-btn",tooldelete:"deleterz",tabfield:"Status"
 };
     var tableoption = {
         tabfield:config.tabfield,
@@ -47,7 +47,7 @@ search:{"houseid":houseid}
         tooledit: config.tooledit,
         tooldelete:config.tooldelete,
         menuid:237
-        ,"realtable":"T_FINANCE"
+        ,"realtable":"T_HOUSERZ"
     };
     doc.InitButton(BtnOption, guestbtnscribt, tableoption);
     $("#addrz").click(function(){

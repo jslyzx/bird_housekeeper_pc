@@ -9,7 +9,7 @@
 .form-content{padding:10px;}
 .form-content-child{padding:10px;}
 .form-bottom{background-color:#e2e2e2;width:100%;
-                  border-top:1px solid #e2e2e2; height: 60px; bottom: 0;position: absolute;z-index: 1000;
+                  border-top:1px solid #e2e2e2; height: 60px; bottom: 0;position: absolute;z-index: 555;
     }
 .two-layer .layui-layer-content{position: relative;overflow: hidden;}
 .form-bottom-child{bottom:0px;background-color:#eeeeee;width:100%;

@@ -22,6 +22,8 @@
             var jQuery=layui.jquery;
             var form = layui.form;
             var enumdata;
+            var mymod = layui.htcsradio;
+
             doc.objectQuery(url, {}, function (data) {
                 enumdata=data.numberData;
                 var getTpl = zcontractaddscript.innerHTML,view = document.getElementById('zcontract-add-view');
@@ -38,7 +40,11 @@
                 });
                 laydate.render({
                     elem: '#EndTime' //指定元素
-                });       
+                });   
+                laydate.render({
+                    elem: '#CreateTime' //指定元素
+                    ,value:new Date()
+                });    
                 //验证规则
                 Create(enumdata);
                 EventOther();
@@ -46,6 +52,8 @@
             });
             function Create(enumdata) {
                 debugger;
+                //加载签约人
+                mymod.initfgy("CreatePerson");
                 if(houseid!=undefined){
                     $("#HouseId").val(houseid);
                     $("#HouseName").val(housename);
@@ -595,10 +603,12 @@
                         </div>
                         <div class="layui-input-inline" style="width: 100px;">
                             <select lay-verify="required" id="DepositType" name="DepositType" lay-filter="DepositType">
+                                  
                                     <option value="1">押一</option>
                                     <option value="2">押二</option>
                                     <option value="3">押三</option>
-                                    <option value="4">押四</option>                                    
+                                    <option value="4">押四</option>  
+                                    <option value="0">不设押金</option>                                  
                             </select>
                         </div>
                         <label class="layui-form-label">月租金</label>
@@ -715,16 +725,29 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                            <label class="layui-form-label">签约人</label>
+                            <div class="layui-input-inline">
+                                    <select lay-verify="required" id="CreatePerson" name="CreatePerson" lay-search >
+                                      
+                                    </select>
+                            </div>
+                            <label class="layui-form-label">签约时间</label>
+                            <div class="layui-input-inline">
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" >
+                            </div>
+                    </div>
+                    <div class="layui-form-item">
                         <div class="layui-form-item">
                             <label class="layui-form-label">附件</label>
-                            <div class="layui-input-block">
+                            <div class="layui-input-inline">
                                 <a class="layui-btn layui-btn-primary" id="addimage"><i class="layui-icon">&#xe608;</i> 合同<span class="layui-badge layui-bg-gray" id="imgnumber">0</span></a>
                                 <input type="tel" name="Image" autocomplete="off" class="layui-input gray" disabled  id="Image" >
                             </div>
-                            <div class="layui-input-block">
+                            <div class="layui-input-inline">
                                     <a class="layui-btn layui-btn-primary" id="addzjimage"><i class="layui-icon">&#xe608;</i> 证件<span class="layui-badge layui-bg-gray" id="imgzjnumber">0</span></a>
                                     <input type="tel" name="zjImage" autocomplete="off" class="layui-input gray" disabled id="zjImage">
                             </div>
+                           
                         </div>
                     </div>
         </div>
