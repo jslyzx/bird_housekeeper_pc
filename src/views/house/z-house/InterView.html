@@ -10,7 +10,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>InterView</title>
     <link href="../../../../Content/Home.css" rel="stylesheet" />
-    <link href="../../../../Content/hsc-form.css" rel="stylesheet" />  
+    <link href="../../../../Content/hsc-form.css" rel="stylesheet" /> 
+    <link rel="stylesheet" type="text/css" href="../../../Content/tab-modify.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> 
     <style>
         .buttonleft{margin-left: 30px;}
         .buttonleft1{margin-left: 30px;}
@@ -477,14 +479,16 @@ function formatterzhouqi(value) {
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" style="padding: 10px;overflow: hidden;">
                 <script id="housescript" type="text/html">
+                  <div class="tab-title">
+                    <div class="obj-title">
+                      <span>房间信息</span>
+                      <a class="layui-btn  layui-btn-radius layui-btn-warm buttonleft">编辑</a>
+                    </div>
+                  </div>
                     {{# var doc= layui.htcsLG; }}
                          <form class="layui-form layui-form-pane hcs-form" action=""> 
                           <input type="text" name="Id" id="Id" autocomplete="off" class="layui-input" value="{{d[1].Id}}" style="display:none" /> 
                           <div class="wrap"> 
-                           <div class="title"> 
-                            <h3 class="red"> 房间信息 <a class="layui-btn  layui-btn-radius layui-btn-warm buttonleft">编辑</a></h3> 
-                        
-                           </div> 
                            <div class="layui-form-item"> 
                            
                             <div class="layui-inline"> 
@@ -632,6 +636,11 @@ function formatterzhouqi(value) {
             </div>
             <div class="layui-tab-item">
                 <div class="layui-tab layui-tab-brief" lay-filter="ztabletab">
+                  <div class="tab-title">
+                    <div class="obj-title">
+                      <span>租客合同</span>
+                    </div>
+                  </div>
                     <ul class="layui-tab-title" style="margin-bottom:0;">
                         <li value="0" class="layui-this" lay-id="0">全部合同</li>
                         <li value="5" class="" lay-id="5">在租合同</li>
@@ -644,6 +653,11 @@ function formatterzhouqi(value) {
             </div>
             <div class="layui-tab-item">
                 <div class="layui-tab layui-tab-brief" lay-filter="ytabletab">
+                  <div class="tab-title">
+                    <div class="obj-title">
+                      <span>业主合同</span>
+                    </div>
+                  </div>
                     <ul class="layui-tab-title" style="margin-bottom:0;">
                         <li value="0" class="layui-this" lay-id="0">全部合同</li>
                         <li value="5" class="" lay-id="5">在租合同</li>
@@ -655,6 +669,11 @@ function formatterzhouqi(value) {
                 </div>
             </div>
             <div class="layui-tab-item" style="height:700px;">
+              <div class="tab-title">
+                    <div class="obj-title">
+                      <span>日志</span>
+                    </div>
+                  </div>
             <iframe src="" isloaded="true" frameborder="0" class="house_iframe"></iframe>
             </div>
             

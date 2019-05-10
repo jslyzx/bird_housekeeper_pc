@@ -1,0 +1,58 @@
+.layui-tab-card>.layui-tab-title {
+    background-color: #fff;
+    border: none;
+}
+.layui-tab-card>.layui-tab-title li {
+    margin: 0;
+    color: #b8b8b8;
+    font-size: 16px;
+    font-weight: 700;
+    width: calc(12.5% - 10px);
+    width: -webkit-calc(12.5% - 10px);
+    position: relative;
+}
+.layui-tab-card>.layui-tab-title .layui-this:after {
+    border: none;
+    display: block;
+    position: absolute;
+    top: 29px;
+    left: 8px;
+    left: calc(50% - 8px);
+    color: #e0e7ec;
+    content: "\F0D8";
+    font: normal normal normal 30px/1 FontAwesome;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: auto;
+}
+.layui-tab-card>.layui-tab-title .layui-this.iframe:after {
+    top: 19px;
+}
+
+.layui-tab-card>.layui-tab-title .layui-this {
+    color: #000;
+}
+.layui-tab-card .tab-title {
+    height: 52px;
+    line-height: 52px;
+    background-color: #e0e7ec;
+    margin-left: -25px;
+    margin-right: -25px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.layui-tab-content {
+    padding-top: 0;
+}
+.layui-tab-card .tab-title .obj-title {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.layui-tab-card .tab-title .obj-title span{
+	font-size: 16px;
+}
