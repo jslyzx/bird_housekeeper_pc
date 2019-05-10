@@ -955,7 +955,7 @@
             }
         },
         tjgd: function() {
-            var contenth = $(".layui-layer-content").height() - $(".form-bottom").height();
+            var contenth = $(".layui-layer[type!='tips'] .layui-layer-content").height() - $(".form-bottom").height();
             $(".form-content").css("height", contenth);
         },
         formatterQuery: function(table, field, value, callBack) {

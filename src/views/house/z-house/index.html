@@ -20,6 +20,26 @@
     .m-top:hover .hover-menu{
         display: block;
     }
+    .hover-menu .drop-menu{
+        display: none;
+        position: absolute;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 2px;
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        background-clip: padding-box;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        list-style: none;
+        text-align: left;
+        font-size: 13px;
+        top: auto;
+        bottom: 100%;
+        min-width: 140px;
+        right: 0;
+    }
+    .hover-menu .drop-menu li a{
+        display: block;
+    }
 </style>
 <body style="background-color:#ffffff;">
         <script id="demo" type="text/html">
@@ -39,12 +59,19 @@
                     </ul>
                     <div class="hover-menu">
                         <div class="layui-btn-group">
-                          <button class="layui-btn layui-btn-primary layui-btn-sm deletedepent" id="deletedepent-{{itemtop.Id}}" data-tip="删除房间">
-                            <i class="layui-icon">&#xe640;</i>
+                          <button class="layui-btn layui-btn-primary layui-btn-sm viewdepent" id="viewdepent-{{itemtop.Id}}" data-tip="预览">
+                            <i class="layui-icon">&#xe615;</i>
                           </button>
-                          <button class="layui-btn layui-btn-primary layui-btn-sm editdepent" id="editdepent-{{itemtop.Id}}" data-tip="编辑房间">
+                          <!-- <button class="layui-btn layui-btn-primary layui-btn-sm editdepent" id="editdepent-{{itemtop.Id}}" data-tip="合同列表">
                             <i class="layui-icon">&#xe642;</i>
+                          </button> -->
+                          <button class="layui-btn layui-btn-primary layui-btn-sm more-opes" data-tip="更多操作">
+                            <i class="layui-icon">&#xe65f;</i>
                           </button>
+                          <ul class="drop-menu">
+                              <li class="editdepent" id="editdepent-{{itemtop.Id}}"><a href="javascript:;">编辑房间</a></li>
+                              <li class="deletedepent" id="deletedepent-{{itemtop.Id}}"><a href="javascript:;">删除房间</a></li>
+                          </ul>
                         </div>
                     </div>
                 </div>
@@ -62,15 +89,22 @@
                     </ul>
                     <div class="hover-menu">
                         <div class="layui-btn-group">
-                          <button class="layui-btn layui-btn-primary layui-btn-sm deletedepent" id="deletedepent-{{itemtop.Id}}" data-tip="删除房间">
-                            <i class="layui-icon">&#xe640;</i>
+                          <button class="layui-btn layui-btn-primary layui-btn-sm viewdepent" id="viewdepent-{{itemtop.Id}}" data-tip="预览">
+                            <i class="layui-icon">&#xe615;</i>
                           </button>
-                          <button class="layui-btn layui-btn-primary layui-btn-sm editdepent" id="editdepent-{{itemtop.Id}}" data-tip="编辑房间">
+                          <!-- <button class="layui-btn layui-btn-primary layui-btn-sm editdepent" id="editdepent-{{itemtop.Id}}" data-tip="合同列表">
                             <i class="layui-icon">&#xe642;</i>
-                          </button>
-                          <button class="layui-btn layui-btn-primary layui-btn-sm addcontract" id="addcontract-{{itemtop.Id}}" data-tip="登记租客">
+                          </button> -->
+                          <button class="layui-btn layui-btn-primary layui-btn-sm addcontract" id="addcontract-{{itemtop.Id}}" data-tip="添加合同">
                             <i class="layui-icon">&#xe770;</i>
                           </button>
+                          <button class="layui-btn layui-btn-primary layui-btn-sm more-opes" data-tip="更多操作">
+                            <i class="layui-icon">&#xe65f;</i>
+                          </button>
+                          <ul class="drop-menu">
+                              <li class="editdepent" id="editdepent-{{itemtop.Id}}"><a href="javascript:;">编辑房间</a></li>
+                              <li class="deletedepent" id="deletedepent-{{itemtop.Id}}"><a href="javascript:;">删除房间</a></li>
+                          </ul>
                         </div>
                     </div>
                 </div>

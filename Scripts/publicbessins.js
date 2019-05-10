@@ -335,8 +335,38 @@ function ViewEvent() {
 
 
     });
+
+    //预览
+    $('.viewdepent').click(function(){
+        var id = $(this).attr("id").replace("viewdepent-", "");
+       var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+       var view = layui.view;
+       layer.open({
+            type: 1,
+            id:"domInterView",
+            title: '房源详情',
+            skin: 'two-layer',
+            anim: -1,
+            offset: 'r',
+            shade: .1,
+            shadeClose: true,
+            maxmin: true,
+            area: ['70%', '100%'],
+            skin: "layui-anim layui-anim-rl layui-layer-adminRight",
+            success: function (layero, index) {
+                view("domInterView").render('house/h-house/InterView', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+        return false;
+    });
+
     //修改
     $(".editdepent").click(function (index,value) {
+        $('.drop-menu').hide();
        var id = $(this).attr("id").replace("editdepent-", "");
        var parentid = $(this).parent(".m-wrap-body").attr("parentid");
        var view = layui.view;
@@ -362,6 +392,7 @@ function ViewEvent() {
     });
     //删除房源
    $(".deletedepent").click(function(){
+    $('.drop-menu').hide();
     var id = $(this).attr("id");
     id=id.replace("deletedepent-", "");
     layer.open({
@@ -382,7 +413,6 @@ function ViewEvent() {
    //录入合同
    
    $(".addcontract").click(function(){
-       debugger;
     var id = $(this).attr("id").replace("addcontract-", "");
     var name = $(this).parent().parent().parent().find(".housename").html();
     var parentname = $(this).parent().parent().parent().parent().parent().parent().parent().find('.m-title').html();
@@ -408,6 +438,12 @@ function ViewEvent() {
         }
     });
    });
+
+   //更多操作
+   $('.more-opes').click(function(){
+    $(this).parent().find('.drop-menu').toggle();
+   });
+
    //删除整个房源
    $(".closehouse").click(function(){
     var id = $(this).attr("id");
@@ -494,11 +530,11 @@ $(".addhouse").click(function () {
     });
 });
         var tipIndex;
-        $('[data-tip]').hover(function(){
+        $('[data-tip]').mouseenter(function(event) {
             tipIndex = layer.tips($(this).data('tip'),$(this),{
               tips: 1
             });
-        },function(){
+        }).mouseleave(function(event) {
             layer.close(tipIndex);
         });
 

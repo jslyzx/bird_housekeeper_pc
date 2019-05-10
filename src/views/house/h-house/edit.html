@@ -43,7 +43,6 @@ img {
                 alldata.push(data.numberData);
                 var image=alldata[1].PrivateImage;
                 var arr=new Array();
-                debugger;
                     if(image!=null&&image!="undefined"){
                     image=image.substring(0,image.length-1);
                     arr=image.split(';');
@@ -142,7 +141,6 @@ img {
         return arr;
        }  
        function  parsesign(value){
-           debugger;
            if(value==0){
               return  "未知";
             }
