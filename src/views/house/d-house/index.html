@@ -8,7 +8,19 @@
     .layui-content{
         height: calc(100% - 30px);
     }
-   
+   .m-top:hover{
+        border-left-width: 7px;
+    }
+    .hover-menu{
+        display: none;
+        position: absolute;
+        line-height: 20px;
+        right: 8px;
+        bottom: -15px;
+    }
+    .m-top:hover .hover-menu{
+        display: block;
+    }
 </style>
 
 <body style="background-color:#ffffff;">
@@ -43,21 +55,22 @@
                         <div class="m-top m-zt-y" id="m-top">
                             <ul>
                                 <li>
-                                        <span class="zfylx">{{formatter1(itemtop.sign)}}</span><span class="housename" style="">{{itemtop.Name}}</span>
-                                    <span class="caidan-icon" id="caidan-icon-{{itemtop.ID}}" view="false">
-                                        <i class="layui-icon" id="lay-ic-{{itemtop.ID}}" style="font-size:22px;" view="false">&#xe65f;</i>
-                                    </span>
-                                </li>
-                                <li>
-                                    <ul class="project-span-box span-box" id="span-box-{{itemtop.ID}}">
-                                        <li style="line-height: 30px;height: 30px;" class="deletedepent" id="deletedepent-{{itemtop.ID}}"><a data="18220" class="deleteApartment">删除房源</a></li>
-                                        <li style="line-height: 30px;height: 30px;" class="editdepent" id="editdepent-{{itemtop.ID}}"><a class="view-del-project">编辑房源</a></li>
-                                    </ul>
+                                    <span class="zfylx">{{formatter1(itemtop.sign)}}</span><span class="housename" style="">{{itemtop.Name}}</span>
                                 </li>
                                 <li><span>{{formatter(itemtop.Price,"暂未定价")}}</span></li>
                                 <li><span>{{formatter(itemtop.Huxing,"户型")}}</span><span>{{formatter(itemtop.Measure,"面积")}}</span><span>{{formatter(itemtop.Orientation,"朝向")}}</span></li>
                                 <li><span>已租</span></li>
                             </ul>
+                            <div class="hover-menu">
+                                <div class="layui-btn-group">
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm deletedepent" id="deletedepent-{{itemtop.ID}}">
+                                    <i class="layui-icon">&#xe640;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm editdepent" id="editdepent-{{itemtop.ID}}">
+                                    <i class="layui-icon">&#xe642;</i>
+                                  </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {{# }else{ }}
@@ -66,22 +79,24 @@
                             <ul>
                                 <li>
                                     <span class="fylx">{{formatter1(itemtop.sign)}}</span><span class="housename">{{itemtop.Name}}</span>
-                                    <span class="caidan-icon" id="caidan-icon-{{itemtop.ID}}" view="false">
-                                        <i class="layui-icon" id="lay-ic-{{itemtop.ID}}" style="font-size:22px;" view="false">&#xe65f;</i>
-                                    </span>
-                                </li>
-                                <li>
-                                    <ul class="project-span-box span-box" id="span-box-{{itemtop.ID}}">
-                                        <li style="line-height: 30px;height: 30px;" class="deletedepent" id="deletedepent-{{itemtop.ID}}"><a data="18220" class="deleteApartment">删除房源</a></li>
-                                        <li style="line-height: 30px;height: 30px;" class="editdepent" id="editdepent-{{itemtop.ID}}"><a class="view-del-project">编辑房源</a></li>
-                                        <li style="line-height: 30px;height: 30px;" class="addcontract" id="addcontract-{{itemtop.ID}}"><a class="view-del-project">登记租客</a></li>
-                                       
-                                    </ul>
                                 </li>
                                 <li><span>{{formatter(itemtop.Price,"暂未定价")}}</span></li>
                                 <li><span>{{formatter(itemtop.Huxing,"户型")}}</span><span>{{formatter(itemtop.Measure,"面积")}}</span><span>{{formatter(itemtop.Orientation,"朝向")}}</span></li>
                                 <li><span>空置</span><span class="m-red">{{itemtop.Idletime}}天</span></li>
                             </ul>
+                            <div class="hover-menu">
+                                <div class="layui-btn-group">
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm deletedepent" id="deletedepent-{{itemtop.ID}}">
+                                    <i class="layui-icon">&#xe640;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm editdepent" id="editdepent-{{itemtop.ID}}">
+                                    <i class="layui-icon">&#xe642;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm addcontract" id="addcontract-{{itemtop.ID}}">
+                                    <i class="layui-icon">&#xe770;</i>
+                                  </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {{# } }}

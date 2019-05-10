@@ -29,6 +29,8 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
             search.Status=result;
             loaddata(search);
         });
+
+        
         //导出
         $("#excel").click(function(e){
             debugger;
@@ -491,6 +493,15 @@ $(".addhouse").click(function () {
         ViewEvent();
     });
 });
+        var tipIndex;
+        $('[data-tip]').hover(function(){
+            tipIndex = layer.tips($(this).data('tip'),$(this),{
+              tips: 1
+            });
+        },function(){
+            layer.close(tipIndex);
+        });
+
 }
 });
 
