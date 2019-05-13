@@ -355,6 +355,7 @@ function ViewEvent() {
      });
     //修改
     $(".editdepent").click(function (index,value) {
+        $('.drop-menu').hide();
        var id = $(this).attr("id").replace("editdepent-", "");
    
        var view = layui.view;
@@ -378,8 +379,43 @@ function ViewEvent() {
            }
        });
     });
+
+    //预览
+    $('.viewdepent').click(function(){
+        var id = $(this).attr("id").replace("viewdepent-", "");
+       var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+       var view = layui.view;
+       layer.open({
+            type: 1,
+            id:"domInterView",
+            title: '房源详情',
+            skin: 'two-layer',
+            anim: -1,
+            offset: 'r',
+            shade: .1,
+            shadeClose: true,
+            maxmin: true,
+            area: ['70%', '100%'],
+            skin: "layui-anim layui-anim-rl layui-layer-adminRight",
+            success: function (layero, index) {
+                view("domInterView").render('house/z-house/InterView', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+        return false;
+    });
+
+    //更多操作
+   $('.more-opes').click(function(){
+    $(this).parent().find('.drop-menu').toggle();
+   });
+
     //删除房源
    $(".deletedepent").click(function(){
+    $('.drop-menu').hide();
     var id = $(this).attr("id");
     id=id.replace("deletedepent-", "");
     layer.open({
