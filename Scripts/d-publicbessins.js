@@ -619,6 +619,10 @@ var tipIndex;
         }).mouseleave(function(event) {
             layer.close(tipIndex);
         });
+        $('.m-top').mouseenter(function(event) {
+            debugger
+            $(this).find('.drop-menu').hide();
+        });
 }
 });
 function formatter(value,cont){

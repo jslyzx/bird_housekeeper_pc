@@ -567,6 +567,11 @@ $(".addhouse").click(function () {
             layer.close(tipIndex);
         });
 
+        $('.m-top').mouseenter(function(event) {
+            debugger
+            $(this).find('.drop-menu').hide();
+        });
+
 }
 });
 
