@@ -1,0 +1,193 @@
+@{
+Layout = null;
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>InterView</title>
+    <link href="../../../../Content/Home.css" rel="stylesheet" />
+    <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+    <script>
+        var houseid=0;
+         function LoadData(id,ParentRoomid,layerindex){
+            houseid=id;
+            layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','element','setter'], function(){
+            var url = "api/House/Querydepent";
+            var para={"teseorpeibei":0,"type":2};
+            var tsurl='api/BaseData/Query';
+            var gqurl="api/House/publicHousexq";
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var setter = layui.setter;
+            var baseurl = setter.baseurl;
+            var imgurl1 = setter.imgurl;
+            var util = layui.util;
+            var paradata = { "Id": id, "ParentRoomid": ParentRoomid };
+             var element = layui.element;
+             var form = layui.form;
+             var table = layui.table;
+             var view1 = layui.view;
+             var alldata=[];
+             var imageurl="";
+             var contract=0;
+
+                var tableoption = {
+        domid: "#zcontract-index-table", formid: "#zcontract-search-form", arr: [[ //表头
+            { type: 'checkbox' }
+            ,{ field: 'Id', width: 100, title: '编号' }
+          , { field: 'Name', width: 100, title: '租客姓名' }
+          , { field: 'Status', width: 110, title: '状态', templet: formatterstatus }
+          , { field: 'Phone', width: 150, title: '租客电话' }
+          , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
+          , { field: 'Recent', width: 80, title: '租金' }
+          , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
+       
+    ]], height: 650, url: 'api/Contract/Query',
+        ismuilti: true,"tabfield":"Status",tablebtnid: '#zbtnintable',
+        "search":{"HouseId":id},tabletab:'ztabletab'
+    };
+    var BtnOption = {
+        area: ['1400px', '90%'],
+        editarea: ['1200px', '90%'],
+        tableid: "zcontract-index-table",
+        ismuilti:true,
+        url:'contract/z-contract/view',//查看界面路径
+        btnview:  "zcontract-button-view",
+        toolview: "zcontract-view-btn",
+        tooladd:  "zcontract-add-btn",
+        tooledit: "zcontract-edit-btn",
+        tooldelete:"zcontract-delete-btn",
+        deletespname:"sp_pldeletecontract",
+        menuid:165
+    };
+    doc.InitButton(BtnOption, zcontractbtnscribt, tableoption);
+     //监听工具栏按钮
+     table.on('tool(zdemoEvent)', function(obj) {
+        var data = obj.data,
+            layEvent = obj.event,
+            url = $(this).data('url');
+            if (layEvent === 'zcontract-tuizu-btn') { //退租
+                if(data.Status!=1&&data.Status!=5){
+                    layer.msg("合同状态不为待签约和在租中不能进行退租操作");
+                    return;
+                }
+                var editid="layuizcontracttuizubtn";
+                var view = layui.view;
+                layer.open({
+                    id: editid,
+                    type: 1,
+                    title: '退租',
+                    skin: 'two-layer',
+    
+                    //anim: 4,
+                    shadeClose: true, //开启遮罩关闭
+    
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['1000px', '90%'],
+                    success: function(layero, index) {
+                        view(this.id).render(url, {
+                            id: data.Id,
+                            tableid: "bill-main-table",
+                            layerindex: index
+                        });
+                    }
+                });
+            }
+            if (layEvent === 'zcontract-xuzu-btn') { //续租
+                if(data.Status!=1&&data.Status!=5){
+                    layer.msg("合同状态不为待签约和在租中不能进行续租操作");
+                    return;
+                }
+                var editid="layuizcontracttuizubtn";
+                var view = layui.view;
+                layer.open({
+                    id: editid,
+                    type: 1,
+                    title: '续租',
+                    skin: 'two-layer',
+    
+                    //anim: 4,
+                    shadeClose: true, //开启遮罩关闭
+    
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['1000px', '90%'],
+                    success: function(layero, index) {
+                        view(this.id).render(url, {
+                            id: data.Id,
+                            tableid: "bill-main-table",
+                            layerindex: index
+                        });
+                    }
+                });
+            }
+            doc.bindCommonEvents(BtnOption, data, layEvent, url);
+     });  
+
+            function formatterstatus(value) {
+        //0 不限 1预订 4待搬入 5在租 6已到期 7 已退租 8以作废 9 财务审核中 
+       if (value.Status == 4) {
+           return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">待搬入</span></div>'
+       }
+       if (value.Status == 5) {
+           return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
+       }
+       if (value.Status == 6) {
+           return '<div><span style="padding:10px;background-color:#FF5722;color:#ffffff;border-radius:5px;">已到期</span></div>'
+       }
+       if (value.Status == 7) {
+           return '<div><span style="padding:10px;background-color:#c2c2c2;color:#ffffff;border-radius:5px;">已退租</span></div>'
+       }
+       if (value.Status == 8) {
+           return '<div><span style="padding:10px;background-color:#c2c2c2;color:#ffffff;border-radius:5px;">已作废</span></div>'
+       }
+       if (value.Status == 9) {
+           return '<div><span style="padding:10px;background-color:#FFB800;color:#ffffff;border-radius:5px;">财务审核中</span></div>'
+       }
+}
+
+   function formattertime(value) {
+    
+       return '<div>' +util.toDateString(value.BeginTime,'yyyy年MM月dd日')   + "→" + util.toDateString(value.EndTime,'yyyy年MM月dd日') + '</div>';
+}
+function formatterpinlv(value) {
+    return '<div>' +value.Pinlv + '月一付</div>';
+}
+});
+}
+</script>
+</head>
+
+<body>
+    <script id="zcontractbtnscribt" type="text/html">
+    </script>
+    <script type="text/html" id="zbtnintable">
+        <ul class="layui-nav toolbar-nav">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" class="show-more">操作</a>
+                        <dl class="layui-nav-child"></dl>
+                    </li>
+                </ul>
+            </script>
+    <div id="toolbar">
+        <div class="layui-btn-group">
+            <div id="zcontract-button-view" style="overflow:hidden;"></div>
+        </div>
+    </div>
+    <script type="text/html" template>
+        {{#  LoadData(d.params.id,d.params.ParentRoomid,d.params.layerindex)}}
+  </script>
+    <div class="layui-tab layui-tab-brief" lay-filter="ztabletab">
+        <ul class="layui-tab-title" style="margin-bottom:0;">
+            <li value="0" class="layui-this" lay-id="0">全部合同</li>
+            <li value="5" class="" lay-id="5">在租合同</li>
+            <li value="7" class="" lay-id="7">历史合同</li>
+        </ul>
+        <div class="layui-tab-content" style="padding:0px;margin:0px;">
+            <table id="zcontract-index-table" lay-filter="zdemoEvent"></table>
+        </div>
+    </div>
+</body>
+
+</html>

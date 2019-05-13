@@ -390,6 +390,35 @@ function ViewEvent() {
            }
        });
     });
+
+    //合同列表
+    $('.listdepent').click(function(){
+        var id = $(this).attr("id").replace("listdepent-", "");
+       var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+       var view = layui.view;
+       layer.open({
+            type: 1,
+            id:"listView",
+            title: '租客合同',
+            skin: 'two-layer',
+            anim: -1,
+            offset: 'r',
+            shade: .1,
+            shadeClose: true,
+            maxmin: true,
+            area: ['70%', '100%'],
+            skin: "layui-anim layui-anim-rl layui-layer-adminRight",
+            success: function (layero, index) {
+                view("listView").render('house/d-house/contractList', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+        return false;
+    });
+    
     //删除房源
    $(".deletedepent").click(function(){
     $('.drop-menu').hide();

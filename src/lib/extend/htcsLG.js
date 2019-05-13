@@ -195,7 +195,6 @@
             })
         },
         reflash: function(tableid,options) {
-            debugger;
             searchpara.access_token = layui.data('layuiAdmin').access_token;
             table.reload(tableid, { where: searchpara });
             // 单击行变色并选中
@@ -285,7 +284,6 @@
                 if(options.isloadmenu==true){
                     var i = btnhtml.indexOf('</dl>');
                     layui.each(result.numberData, function(index, item) {
-                        debugger;
                     if (item.Multiple === 0) {
                         if(options.formatterbtn.length==0){
                             seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' +item.BtnName + '</a></dd>';
@@ -295,11 +293,8 @@
                         
                             $.each(options.formatterbtn,function(index,value){
                                 formatter="{{ "+value+"(d,'"+item.BtnNo+"','"+item.BtnName+"')}}";
-                            })
-                            debugger;
+                            });
                             seg += '<dd><a lay-event="' + item.BtnNo + '" data-url="' + item.ButtonUrl + '">' + formatter+ '</a></dd>';
-                              
-                            
                         }
                     }
                    });

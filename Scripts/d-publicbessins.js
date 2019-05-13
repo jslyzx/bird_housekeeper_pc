@@ -407,6 +407,33 @@ function ViewEvent(pId) {
         });
         return false;
     });
+    //合同列表
+    $('.listdepent').click(function(){
+        var id = $(this).attr("id").replace("listdepent-", "");
+       var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+       var view = layui.view;
+       layer.open({
+            type: 1,
+            id:"listView",
+            title: '租客合同',
+            skin: 'two-layer',
+            anim: -1,
+            offset: 'r',
+            shade: .1,
+            shadeClose: true,
+            maxmin: true,
+            area: ['70%', '100%'],
+            skin: "layui-anim layui-anim-rl layui-layer-adminRight",
+            success: function (layero, index) {
+                view("listView").render('house/d-house/contractList', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+        return false;
+    });
     //登记租客
     $(".addcontract").click(function (index,value) {
         debugger;
@@ -584,6 +611,14 @@ $(".addhouse").click(function () {
         ViewEvent();
     });
 });
+var tipIndex;
+        $('[data-tip]').mouseenter(function(event) {
+            tipIndex = layer.tips($(this).data('tip'),$(this),{
+              tips: 1
+            });
+        }).mouseleave(function(event) {
+            layer.close(tipIndex);
+        });
 }
 });
 function formatter(value,cont){
