@@ -614,13 +614,12 @@ $(".addhouse").click(function () {
 var tipIndex;
         $('[data-tip]').mouseenter(function(event) {
             tipIndex = layer.tips($(this).data('tip'),$(this),{
-              tips: 1
+              tips: 3
             });
         }).mouseleave(function(event) {
             layer.close(tipIndex);
         });
         $('.m-top').mouseenter(function(event) {
-            debugger
             $(this).find('.drop-menu').hide();
         });
 }
