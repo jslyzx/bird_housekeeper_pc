@@ -153,6 +153,7 @@
             });
             var domtab='tab('+options.tabletab+')';
             element.on(domtab, function(data) {
+                debugger
                 statussearch[options.tabfield] = $(this).attr("value");
                 obj.getsearch(options.formid);
                 obj.queryPara({}, options.domid,btnOption);
@@ -190,7 +191,7 @@
         },
         getsearch: function(formid) {
             var arrserize = $(formid).serializeArray();
-            $.each(arrserize, function(item, index) {
+            $.each(arrserize, function(index,item) {
                 search[item.name] = item.value;
             })
         },

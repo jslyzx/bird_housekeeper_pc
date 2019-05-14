@@ -66,7 +66,7 @@
                     }); 
                     laydate.render({
                     elem: '#CreateTime' //指定元素
-                    ,value:new Date()
+                 
                     }); 
                     });
                     form.render('');
@@ -418,7 +418,7 @@
             yajin.push(cyajin);
         var tjdata = {
             "Id":id, "Deposit":datafield.Deposit,
-        "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
+        "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime,"CreateTime":datafield.CreateTime,"CreatePerson":datafield.CreatePerson, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
         "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,"payee": datafield.payee,"bank": datafield.bank,"accounts": datafield.accounts,
         "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Social": datafield.Social, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType,"Document": datafield.Document,"Zidcard":datafield.zjImage  },
         "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image
@@ -665,7 +665,7 @@
                             </div>
                             <label class="layui-form-label">签约时间</label>
                             <div class="layui-input-inline">
-                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" >
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" value="{{d[1].CreateTime}}" >
                             </div>
                     </div>
                     <div class="layui-form-item">

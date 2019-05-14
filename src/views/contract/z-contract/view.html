@@ -9,6 +9,7 @@
          @media screen and (max-width: 1366px) {
             .form-wrapper{height: 540px;}
          }
+         .tabtool{padding:5px;}
      </style>
  
 
@@ -20,8 +21,7 @@
     <link href="../../../../Content/codemirror.css" rel="stylesheet" />
     <script src="{{layui.setter.base }}/Scripts/contractview.js"></script>
   </script>
-  <script id="billbtnscribt1" type="text/html">
-  </script>
+
   <script type="text/html" id="billbtnintable1">
           <ul class="layui-nav toolbar-nav">
               <li class="layui-nav-item">
@@ -30,11 +30,16 @@
               </li>
           </ul>
   </script>
-  <div id="toolbar1">
-      <div class="layui-btn-group">
-          <div id="bill-button-view" style="overflow:hidden;"></div>
-      </div>
-  </div>
+  <script id="billbtnscribt1" type="text/html">
+    {{#  layui.each(d, function(index, item){}}
+    {{# if(item.Multiple === 1){}}
+    <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+        <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+    </button>
+    {{# }}}
+    {{#   });   }}
+  </script>
+ 
     <div class="layui-tab layui-tab-card" style="margin:0px;" lay-filter="test1">
         <ul class="layui-tab-title">
             <li class="layui-this" lay-id="111">合同信息</li>
@@ -47,6 +52,11 @@
                 </div>
             </div>
             <div class="layui-tab-item">
+                    <div id="toolbar1" class="tabtool">
+                            <div class="layui-btn-group">
+                                <div id="bill-button-view" style="overflow:hidden;"></div>
+                            </div>
+                    </div>
                 <div class="layui-tab layui-tab-brief" lay-filter="billtabletab">
                     <ul class="layui-tab-title" style="margin-bottom:0;">
                          
@@ -55,6 +65,8 @@
                             <li value="2" >所有</li>
                     </ul>
                     <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                        
+                          
                         <table id="bill-main-table-cont" lay-filter="demoEvent3"></table>
                     </div>
                 </div>
@@ -174,11 +186,14 @@
                         </div>
                         <div class="layui-input-inline" style="width: 100px;">
                             <select lay-verify="required" id="viewDepositType" name="DepositType" disabled>
-                                    <option value="">押几</option>
                                     <option value="1">押一</option>
                                     <option value="2">押二</option>
                                     <option value="3">押三</option>
-                                    <option value="4">押四</option>                                    
+                                    <option value="4">押四</option>  
+                                    <option value="5">押五</option> 
+                                    <option value="6">押六</option> 
+                                    <option value="0">不设押金</option>
+                                    <option value="99">自定义押金</option>                                    
                             </select>
                         </div>
                         

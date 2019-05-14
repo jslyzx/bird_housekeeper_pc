@@ -37,7 +37,7 @@ function LoadData(id,tableid,layerindex){
   ismuilti: true,
   "tabfield": "PayStatus",
   tablebtnid: '#billbtnintable1',
-  "search":{"BillType":2,"PayStatus":0,"ContractId":id,"Object":1}
+  "search":{"BillType":2,"PayStatus":0,"ContractId":id,"Object":1,"OrderbyTime":1}
 };
   var BtnOption = {
   area: ['900px', '90%'],

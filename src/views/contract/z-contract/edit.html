@@ -35,6 +35,7 @@
                      enumdata=data.numberData;
                      alldata.push(data.numberData);
                      doc.objectQuery(xqurl, {"Id":id }, function (data) {
+                        debugger;
                         alldata.push(data.numberData);
                         houseid=alldata[1].HouseId;
                         var Teant={};
@@ -49,6 +50,7 @@
                         Teant.Weinxin=alldata[1].Teant.Weinxin;        
                     }
                     alldata.push(Teant);
+                   
                     //加载签约人
                     mymod.editinitfgy("CreatePerson",alldata[1].CreatePerson);
                     laytpl(getTpl).render(alldata, function (html) {
@@ -65,7 +67,7 @@
                     }); 
                     laydate.render({
                     elem: '#CreateTime' //指定元素
-                    ,value:new Date()
+                 
                     });    
                     });
                     form.render('');
@@ -105,17 +107,7 @@
                     EventOther();
                 }); 
                 });
-                  //计算常规押金
-                  $(document).on('change','.Recent',function(){
-                    var zujin=$(".Recent").val();
-                    var yaji=$("#DepositType").val();
-                    $("#cyajin").val(zujin*yaji);
-                });
-                form.on('select(DepositType)', function(data){
-                    var zujin=$(".Recent").val();
-                    var yaji=$("#DepositType").val();
-                    $("#cyajin").val(zujin*yaji);
-                });
+                 
                 function initzafei(){
                         debugger;
                         var name ="";
@@ -281,8 +273,14 @@
                     $("#PinLv").attr("lay-verify","required");
                     $("#yType").val(2);
                     //常规押金不可编辑
-                    $("#cyajin").addClass("gray");
-                    $("#cyajin").attr("disabled",true);
+                    var yaji=$("#DepositType").val();
+                    if(yaji!=99){
+                        $("#cyajin").addClass("gray");
+                        $("#cyajin").attr("disabled",true);
+                    }else{
+                        $("#cyajin").removeClass("gray");
+                       $("#cyajin").attr("disabled",false);
+                    }
                 }
                 form.render('');
                 }
@@ -308,17 +306,30 @@
                 return false;
                 });
                
-                     //计算押金
-                     $(document).on('change','.Recent',function(){
+                //计算押金
+                $(document).on('change','.Recent',function(){
+                    var yaji=$("#DepositType").val();
+                    if(yaji!=99){
                         var zujin=$(".Recent").val();
-                        var yaji=$("#DepositType").val();
                         $("#cyajin").val(zujin*yaji);
-                    });
-                    form.on('select(DepositType)', function(data){
-                        var zujin=$(".Recent").val();
-                        var yaji=$("#DepositType").val();
+                    }
+                 
+                });
+                form.on('select(DepositType)', function(data){
+                    debugger;
+                    var zujin=$(".Recent").val();
+                    var yaji=$("#DepositType").val();
+                    if(yaji==99){
+                        $("#cyajin").attr("disabled",false);
+                        $("#cyajin").removeClass("gray");
+                        $("#cyajin").val(0);
+                    }else{
+                        $("#cyajin").attr("disabled",true);
+                        $("#cyajin").addClass("gray");
                         $("#cyajin").val(zujin*yaji);
-                    });
+                    }
+                 
+                });
                 form.on('select(timeType)', function(data){
                 //日租
                 rizutype(data.value);
@@ -496,7 +507,7 @@
             "issendmessage":datafield.issendmessage,
                 "onlinesign":datafield.onlinesign,
             "Id":id,"HouseId":houseid, "Deposit":datafield.Deposit,
-        "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,
+        "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "CreateTime":datafield.CreateTime,"CreatePerson":datafield.CreatePerson,  "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,
         "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,
         "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Social": datafield.Social, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType,"Document": datafield.Document,"Zidcard":datafield.zjImage, "Weinxin": datafield.Weinxin },
         "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType,
@@ -676,7 +687,11 @@
                                     <option value="1">押一</option>
                                     <option value="2">押二</option>
                                     <option value="3">押三</option>
-                                    <option value="4">押四</option>                                    
+                                    <option value="4">押四</option>  
+                                    <option value="5">押五</option> 
+                                    <option value="6">押六</option> 
+                                    <option value="0">不设押金</option>
+                                    <option value="99">自定义押金</option>                                 
                             </select>
                         </div>
                         <label class="layui-form-label">月租金</label>
@@ -801,7 +816,7 @@
                             </div>
                             <label class="layui-form-label">签约时间</label>
                             <div class="layui-input-inline">
-                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" >
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" value="{{d[1].CreateTime}}" >
                             </div>
                     </div>
                     <div class="layui-form-item">

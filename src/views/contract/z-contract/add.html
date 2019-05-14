@@ -98,14 +98,26 @@
                 });
                 //计算押金
                 $(document).on('change','.Recent',function(){
-                    var zujin=$(".Recent").val();
                     var yaji=$("#DepositType").val();
-                    $("#cyajin").val(zujin*yaji);
+                    if(yaji!=99){
+                        var zujin=$(".Recent").val();
+                        $("#cyajin").val(zujin*yaji);
+                    }
+                 
                 });
                 form.on('select(DepositType)', function(data){
                     var zujin=$(".Recent").val();
                     var yaji=$("#DepositType").val();
-                    $("#cyajin").val(zujin*yaji);
+                    if(yaji==99){
+                        $("#cyajin").attr("disabled",false);
+                        $("#cyajin").removeClass("gray");
+                        $("#cyajin").val(0);
+                    }else{
+                        $("#cyajin").attr("disabled",true);
+                        $("#cyajin").addClass("gray");
+                        $("#cyajin").val(zujin*yaji);
+                    }
+                 
                 });
                 form.on('checkbox(yajin)', function (data) {
                     var dom = data.elem;
@@ -416,7 +428,7 @@
                 "onlinesign":datafield.onlinesign,
                 "Recent":datafield.Recent,
                 "Recent":datafield.Recent, "Deposit":datafield.Deposit,
-            "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
+            "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "CreateTime":datafield.CreateTime,"CreatePerson":datafield.CreatePerson, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
             "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,
             "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Weinxin": datafield.Weinxin, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType, "Document": datafield.Document,"Zidcard":datafield.zjImage },
             "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"Recent":datafield.Recent,"DepositType":datafield.DepositType,
@@ -608,7 +620,10 @@
                                     <option value="2">押二</option>
                                     <option value="3">押三</option>
                                     <option value="4">押四</option>  
-                                    <option value="0">不设押金</option>                                  
+                                    <option value="5">押五</option> 
+                                    <option value="6">押六</option> 
+                                    <option value="0">不设押金</option>
+                                    <option value="99">自定义押金</option>                                   
                             </select>
                         </div>
                         <label class="layui-form-label">月租金</label>

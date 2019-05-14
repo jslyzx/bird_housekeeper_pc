@@ -201,7 +201,7 @@
               , { field: 'TeantName', width: 100, title: '租客姓名' }
               , { field: 'Amount', width: 120, title: '金额' }
         ]], height: 580, url: 'api/Bill/Querylist',
-            ismuilti: true, "search":{"BillType":0,"PayStatus":2,"Object":2},tablebtnid: '#btnintable',
+            ismuilti: true, "search":{"BillType":0,"PayStatus":0,"Object":2,"OrderbyTime":1},tablebtnid: '#btnintable',
         };
         var BtnOption = {
             area: ['900px', '90%'],
@@ -217,7 +217,7 @@
             "realtable": "T_BILL",
             formatterbtn:['formatterbtn']
         };
-        doc.InitButton(BtnOption, guestbtnscribt, tableoption);
+        doc.InitButton(BtnOption, billbtnscribt, tableoption);
         //监听工具栏按钮
         table.on('tool(demoEvent)', function(obj) {
         var data = obj.data,
@@ -242,7 +242,7 @@
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,
-                        tableid: "bill-main-table",
+                        tableid: table1,
                         layerindex: index
                     });
                 }
@@ -297,7 +297,7 @@
                 success: function(layero, index) {
                     view(this.id).render(lurl, {
                         id: data.Id,
-                        tableid: "bill-main-table",
+                        tableid: table1,
                         layerindex: index
                     });
                 }
@@ -305,6 +305,38 @@
         }
         doc.bindCommonEvents(BtnOption, data, layEvent, url);
        });
+       $("#bill-sendmessage-btn").click(function(){
+        debugger;
+            var checkStatus = table.checkStatus('index-daishou-table')
+                    , getselect = checkStatus.data;
+            if (getselect.length == 0) {
+                layer.msg("请选择要处理的数据");
+                return;
+            }  
+            var arrphone=[];
+            $.each(getselect,function(index,value){
+               var phone={};
+               phone.Phone=value.Phone;
+               arrphone.push(phone);
+            });
+            //调用发送短信接口
+            var duanxinurl="api/Bill/pcuizu";
+            doc.objectQuery(duanxinurl, arrphone, function (data) {
+                debugger;
+                if(data.Code==0){
+                
+                    layer.msg(data.Message, {
+                        icon: 1,
+                        time: 800 //2秒关闭（如果不配置，默认是3秒）
+                    });
+                }else{
+                    layer.open({
+                        title: '温馨提示'
+                        , content: data.Message
+                    });
+                }
+            });
+    })
         function formatterhouse(value) {
             var adress = "";
             if (value.HouseName != "" && value.HouseName != null) {
@@ -328,7 +360,7 @@
             ismuilti: true,
             "tabfield": "PayStatus",
             tablebtnid: '#billbtnintable',
-            "search":{"BillType":1,"PayStatus":0,"Object":2}
+            "search":{"BillType":1,"PayStatus":0,"Object":2,"OrderbyTime":1}
         };
         var BtnOption = {
             area: ['900px', '90%'],
@@ -369,7 +401,7 @@
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,
-                        tableid: "bill-main-table",
+                        tableid: "index-daifu-table",
                         layerindex: index
                     });
                 }
@@ -424,7 +456,7 @@
                 success: function(layero, index) {
                     view(this.id).render(lurl, {
                         id: data.Id,
-                        tableid: "bill-main-table",
+                        tableid: "index-daifu-table",
                         layerindex: index
                     });
                 }
@@ -625,7 +657,7 @@
                     success: function(layero, index) {
                         view(this.id).render(url, {
                             id: data.Id,
-                            tableid: "bill-main-table",
+                            tableid: "index-tuifang-table",
                             layerindex: index
                         });
                     }
@@ -652,7 +684,7 @@
                     success: function(layero, index) {
                         view(this.id).render(url, {
                             id: data.Id,
-                            tableid: "bill-main-table",
+                            tableid: "index-tuifang-table",
                             layerindex: index
                         });
                     }

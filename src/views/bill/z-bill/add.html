@@ -14,7 +14,7 @@
 </style>
 <script>
     var selectdata=[];
-    function LoadData(id,tableid,layerindex){
+    function LoadData(ContractId,tableid,layerindex){
     layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form'], function () {
     var laytpl = layui.laytpl;
     var doc = layui.htcsLG;
@@ -23,17 +23,22 @@
     var form = layui.form;
     var table=layui.table;
     var deletebilllist=[];
-        var laydate = layui.laydate;
+    debugger;
+    if(ContractId!=0){
+       $("#ContractId").val(ContractId);
+       $("#ContractId").attr("disabled",true);
+       $("#ContractId").addClass("gray");
+    }
+    var laydate = layui.laydate;
         laydate.render({
          elem: '#ShouldReceive1' //指定元素
         });
         laydate.render({
-         elem: '#BeginTime1' //指定元素
+         elem: '#BeginTime2' //指定元素
          });
         laydate.render({
-         elem: '#EndTime1' //指定元素
+         elem: '#EndTime2' //指定元素
         }); 
-        
     doc.objectQuery("api/Zafei/Zafeilist",{},function(data1){ 
     selectdata=data1.numberData;
     var clos=[[ //表头
@@ -148,7 +153,7 @@ function formattertime(value) {
 </script>
 <!--结束-->
 <script type="text/html" template >
-    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+    {{#  LoadData(d.params.ContractId,d.params.tableid,d.params.layerindex)}}
 </script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -180,25 +185,20 @@ function formattertime(value) {
                                             <div class="layui-inline">
                                                 <label class="layui-form-label" style="text-align:left;width:auto;">合同编号</label>
                                                 <div class="layui-input-inline" style="width:270px;">
-                                                    <input type="tel" lay-verify="required" name="ContractId"  autocomplete="off" class="layui-input"  >
+                                                    <input type="tel" lay-verify="required" name="ContractId" id="ContractId"  autocomplete="off" class="layui-input"  >
                                                 </div>
                                             </div>
-                                            <div class="layui-inline">
-                                                <label class="layui-form-label">租客姓名</label>
-                                                <div class="layui-input-inline">
-                                                    <input type="text"  name="TeantName"  autocomplete="off" class="layui-input">
-                                                </div>
-                                            </div>
+                                           
                                         </div>
                                         <div class="layui-form-item">
                                             <div class="layui-inline">
                                                 <label class="layui-form-label" style="text-align:left;width:auto;">账单周期</label>
                                                 <div class="layui-input-inline" style="width: 122px;">
-                                                    <input type="text" lay-verify="required" name="BeginTime" id="BeginTime1" autocomplete="off" class="layui-input" >
+                                                    <input type="text" lay-verify="required" name="BeginTime" id="BeginTime2" autocomplete="off" class="layui-input" >
                                                 </div>
                                                 <div class="layui-form-mid">到</div>
                                                 <div class="layui-input-inline" style="width:122px;">
-                                                    <input type="text" lay-verify="required" name="EndTime" id="EndTime1" autocomplete="off" class="layui-input" >
+                                                    <input type="text" lay-verify="required" name="EndTime" id="EndTime2" autocomplete="off" class="layui-input" >
                                                 </div>
                                             </div>
                                             <div class="layui-inline">

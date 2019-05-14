@@ -142,7 +142,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         ismuilti: true,
         "tabfield": "PayStatus",
         tablebtnid: '#billbtnintable',
-        "search":{"BillType":0,"PayStatus":0,"Object":2}
+        "search":{"BillType":0,"PayStatus":0,"Object":2,"OrderbyTime":1}
     };
     //查询条件
     form.on('select(Type)', function(data){
