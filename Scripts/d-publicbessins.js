@@ -552,7 +552,7 @@ function ViewEvent(pId) {
     });
    });
    //更多操作
-   $('.more-opes').click(function(){
+   $('.more-opes').unbind().click(function(){
     $(this).parent().find('.drop-menu').toggle();
    });
    function deletehouse(id){
@@ -597,7 +597,7 @@ $(".addhouse").click(function () {
     var paradata = { "FloorId": floorid,"ParentRoomid":parentid };
     doc.objectQuery(url, paradata, function (data) {
         //debugger;
-        var html = "<div class='m-panel-body' id='panel-body-" + data.numberData.ID+ "' ><div class='m-top m-zt-k' id='m-top'><ul><li><span>" + data.numberData.ID + "</span>-<span>" + data.numberData.Name + "</span><span class='caidan-icon'  id='caidan-icon-" + data.numberData.ID + "' ><i class='layui-icon' id='lay-ic-" + data.numberData.ID + "' style='font-size:22px;'  >&#xe65f;</i></span></li><ul class='project-span-box span-box' id='span-box-" + data.numberData.ID + "'><li style='line-height: 30px;height: 30px;' class='deletedepent'  id='deletedepent-"+data.numberData.ID+"' onclick='deleteevent(" +data.numberData+ ");'><a data='18220' class='editApartment' >删除房源</a></li><li style='line-height: 30px;height: 30px;' class='editdepent' id='editdepent-"+data.numberData.ID+"'><a class='view-del-project'>编辑房源</a></li></ul></li></li><li><span>暂未定价</span></li><li><span>房型</span><span>面积</span><span>朝向</span></li><li><span>空置</span><span class='m-red'>1天</span></li></ul></div></div>";
+        var html = "<div class='m-panel-body' id='panel-body-" + data.numberData.ID + "' ><div class='m-top m-zt-k' id='m-top'><ul><li><span>" + data.numberData.ID + "</span>-<span>" + data.numberData.Name + "</span></li></li></li><li><span>暂未定价</span></li><li><span>房型</span><span>面积</span><span>朝向</span></li><li><span>空置</span><span class='m-red'>1天</span></li></ul><div class='hover-menu'><div class='layui-btn-group'><button class='layui-btn layui-btn-primary layui-btn-sm viewdepent' id='viewdepent-" + data.numberData.ID + "' data-tip='预览'><i class='layui-icon'>&#xe615;</i></button><button class='layui-btn layui-btn-primary layui-btn-sm listdepent' id='listdepent-" + data.numberData.ID + "' data-tip='合同列表'><i class='layui-icon'>&#xe63c;</i></button><button class='layui-btn layui-btn-primary layui-btn-sm addcontract' id='addcontract-" + data.numberData.ID + "' data-tip='添加合同'><i class='layui-icon'>&#xe770;</i></button><button class='layui-btn layui-btn-primary layui-btn-sm more-opes' data-tip='更多操作'><i class='layui-icon'>&#xe65f;</i></button><ul class='drop-menu'><li class='editdepent' id='editdepent-'" + data.numberData.ID + "''><a href='javascript:;'>编辑房间</a></li><li class='deletedepent' id='deletedepent-'" + data.numberData.ID + "''><a href='javascript:;'>删除房间</a></li></ul></div></div></div></div>";
         $id.after(html);
         $(".caidan-icon").mouseover(function () {
             //debugger;
