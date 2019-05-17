@@ -44,7 +44,7 @@
 <body style="background-color:#ffffff;">
     <script id="demo" type="text/html">
         <div class="m-comtent">
-            {{# var index=0;layui.each(d, function(index, item){index++; }}
+            {{#   var util = layui.util; var index=0;layui.each(d, function(index, item){index++; }}
             <div class="m-wrap" id="m-wrap-{{item.house.Id}}">
                 <div class="m-panel-title" id="m-panel-title-{{item.house.Id}}">
                     <div class="panel-name">
@@ -80,7 +80,7 @@
                                 </li>
                                 <li><span>{{formatter(itemtop.Price,"暂未定价")}}</span></li>
                                 <li><span>{{formatter(itemtop.Huxing,"户型")}}</span><span>{{formatter(itemtop.Measure,"面积")}}</span><span>{{formatter(itemtop.Orientation,"朝向")}}</span></li>
-                                <li><span>已租</span></li>
+                                <li><span>已租</span><span>{{itemtop.recent}}元/月</span><span>({{itemtop.teantname}})</span>  <span> 退:{{util.toDateString(itemtop.endtime.replace(/-/g, '/'), 'yyyy/MM/dd')}}</span></li>
                             </ul>
                             <div class="hover-menu">
                                 <div class="layui-btn-group">

@@ -6,9 +6,19 @@
 </script>
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 </style>
+<script id="billbtnscribt" type="text/html">
+    {{#  layui.each(d, function(index, item){}}
+    {{# if(item.Multiple === 1){}}
+    <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+    <i class="layui-icon"></i>{{item.BtnName}}
+    </button>
+    {{# }}}
+    {{#   });   }}
+</script>
 <script id="zcontractbtnscribt" type="text/html">
   
 </script>
+
 <script type="text/html" id="conbtnintable">
     <ul class="layui-nav toolbar-nav">
         <li class="layui-nav-item">
@@ -35,12 +45,7 @@
         </li>
     </ul>
 </script>
-<!--待收账单-->
-<div id="toolbar">
-    <div class="layui-btn-group">
-        <div id="bill-button-view" style="overflow:hidden;"></div>
-    </div>
-</div>
+
 <!--待退租-->
 <div id="toolbar">
     <div class="layui-btn-group">
@@ -74,26 +79,26 @@
                                         <div carousel-item>
                                             <ul class="layui-row layui-col-space10">
                                                 <li class="layui-col-xs3">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>累计应付</h3>
                                                         <p><cite>{{d.CopeWith}}</cite></p>
                                                     </a>
                                                 </li>
                                                 <li class="layui-col-xs3">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>累计待付</h3>
                                                         
                                                         <p><cite>{{d.Paid}}</cite></p>
                                                     </a>
                                                 </li>
                                                 <li class="layui-col-xs3">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>累计应收</h3>
                                                         <p><cite>{{d.Receivable}}</cite></p>
                                                     </a>
                                                 </li>
                                                 <li class="layui-col-xs3">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>累计待收</h3>
                                                         <p><cite>{{d.Receivableed}}</cite></p>
                                                     </a>
@@ -108,10 +113,18 @@
                     <div id="index-caiwu-view"></div>     
                         <div class="layui-col-md12">
                             <div class="layui-card">
-                                <div class="layui-card-header">
+                                <div class="layui-card-header">  
+                                    
                                     <div class="layui-form-item">
+                                         <!--待收账单-->
+                                         <div class="layui-inline">
+                                         <div id="toolbar">
+                                                <div class="layui-btn-group">
+                                                <div id="bill-button-view" style="overflow:hidden;"></div>
+                                                </div>
+                                         </div>
+                                        </div>
                                         <div class="layui-inline">
-
                                             <div class="layui-input-inline" style="width: 200px;">
                                                 <input type="text" name="" autocomplete="off" class="layui-input" placeholder="小区">
                                             </div>
@@ -161,19 +174,19 @@
                                         <div carousel-item>
                                             <ul class="layui-row layui-col-space10">
                                                 <li class="layui-col-xs4">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>预约</h3>
                                                         <p><cite>{{d.Appointment}}</cite></p>
                                                     </a>
                                                 </li>
                                                 <li class="layui-col-xs4">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>报修</h3>
                                                         <p><cite>{{d.Repair}}</cite></p>
                                                     </a>
                                                 </li>
                                                 <li class="layui-col-xs4">
-                                                    <a lay-href="" class="layadmin-backlog-body">
+                                                    <a  class="layadmin-backlog-body">
                                                         <h3>预订</h3>
                                                         <p><cite>{{d.Book}}</cite></p>
                                                     </a>

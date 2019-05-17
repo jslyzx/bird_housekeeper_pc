@@ -12,28 +12,69 @@
 <div class="layui-fluid" style="background-color:#ffffff;">
     <div class="m-search">
         <form class="layui-form hcs-form" action="" lay-filter="search" id="guest-search-form">
+               
+             <div class="m-search-item">
+                    <input type="text" name="BeginTime" autocomplete="off" class="layui-input" placeholder="开始时间" id="BeginTime">
+                </div>
+                <div class="m-search-item">
+                        <input type="text" name="EndTime" autocomplete="off" class="layui-input" placeholder="结束时间" id="EndTime">
+                    </div>
             <div class="m-search-item">
-                <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="编号" id="Id" style="width:auto;">
+                <input type="text" name="Trader" autocomplete="off" placeholder="房源，房间号，租客姓名" class="layui-input" id="Content" style="width:auto;">
             </div>
-            <div class="m-search-item">
-                <input type="text" name="Trader" autocomplete="off" placeholder="交易对象" class="layui-input" id="Name" style="width:auto;">
-            </div>
-            <div class="m-search-item">
-                <input type="text" name="PayMentNumber" autocomplete="off" placeholder="支付流水号" class="layui-input" id="ddd" style="width:auto;">
-            </div>
-            <div class="m-search-item">
-                    <input type="text" name="CostName" autocomplete="off" placeholder="费用名称" class="layui-input" id="ddd" style="width:auto;">
-            </div>
-            <div class="m-search-item">
-                <select name="Source" lay-verify="" id="Source">
+            <div class="m-search-item" style="width: 90px;">
+                <select name="Source" lay-verify="" id="Source"  lay-filter="Source">
                    <option value="">收支类型</option>                           
                    <option value="收入">收入</option>
                    <option value="支出" >支出</option>
             </select>  
             </div>
-            <div class="m-search-item">
-                <input type="text" name="CreateTime" placeholder="创建时间" autocomplete="off" class="layui-input" id="CreateTime">
+            <div class="m-search-item"  style="width: 90px;">
+                    <select name="CostName" lay-verify="" id="CostName" lay-filter="CostName">
+                       <option value="">费用项</option>                           
+                       <option value="租客账单">租客账单</option>
+                       <option value="业主账单" >业主账单</option>
+                      
+                </select>  
             </div>
+            <div class="m-search-item" style="width: 90px;">
+                    <select name="PayType" lay-verify="" id="PayType" lay-filter="PayType" >
+                       <option value="">交易方式</option> 
+                       <option value="现金">支付宝</option>
+                       <option value="转账">支付宝</option>
+                       <option value="支付宝">支付宝</option>
+                       <option value="微信" >微信</option>
+                       <option value="刷卡">刷卡</option>                          
+                       <option value="在线支付">在线支付</option>
+                       <option value="其他">其他</option>
+                </select>  
+            </div>
+            <div class="m-search-item">
+                    <label class="layui-form-label" style="width: auto;">市</label>
+                    <div class="layui-input-inline" style="width: 90px;">
+                        <select lay-filter="CityName" name="CityName">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="m-search-item">
+                    <label class="layui-form-label" style="width: auto;">区</label>
+                    <div class="layui-input-inline" style="width: 90px;">
+                        <select lay-filter="AreaName" name="AreaName">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="m-search-item">
+                    <label class="layui-form-label" style="width: auto;">小区</label>
+                    <div class="layui-input-inline" style="width: 90px;">
+                        <select lay-filter="CellName" name="CellName2" multiple="multiple">
+                            <option value="">请选择</option>
+                        </select>
+                        <input type="hidden" name="CellNames" id="CellName">
+                    </div>
+                </div>
+            
             <div class="m-search-item">
                 <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
             </div>
