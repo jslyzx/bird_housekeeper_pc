@@ -169,12 +169,14 @@
 
                 }
                 function changeswitch(value){
+                    debugger;
                 if(value==1){
                    $("#issendmessage").prop('checked', 'checked');  //改变开关为 开
                 }
                 if(value==0){
                    $("#issendmessage").removeAttr('checked');  //改变开关为 开
                 }
+                form.render('');
                }
                 function Create(enumdata) {
                     debugger;
@@ -189,9 +191,10 @@
                 form.on('radio(onlinesign)', function(data){
                 debugger;
                 changeswitch(data.value);
-                form.render('checkbox');
+                form.render('');
                 });  
                     form.on('checkbox(zafei)', function (data) {
+                        debugger;
                         var dom = data.elem;
                         var name = dom.name;
                         var type = dom.attributes.ztype.nodeValue;
@@ -496,13 +499,16 @@
         zafei.IsYajin= 1;
         yajin.push(zafei);
         });
-       
+        debugger;
         //开关
-        if(datafield.issendmessage=="on"){
-                datafield.issendmessage=1;
-             }else{
-                datafield.issendmessage=0;
-             }
+        if(datafield.issendmessage=="on")
+        {
+           datafield.issendmessage=1;
+        }
+        else
+        {
+          datafield.issendmessage=0;
+        }
         var tjdata = {
             "issendmessage":datafield.issendmessage,
                 "onlinesign":datafield.onlinesign,

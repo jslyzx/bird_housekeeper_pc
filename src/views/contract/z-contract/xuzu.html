@@ -167,6 +167,7 @@
                 if(value==0){
                    $("#issendmessage").removeAttr('checked');  //改变开关为 开
                 }
+                form.render('');
                }
                 function Create(enumdata) {
                     debugger;
@@ -749,12 +750,11 @@
                 <div class="layui-form-item">
                      <label class="layui-form-label">杂费</label>
                      <div class="layui-input-block">
-                         {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==0){ }}
-                         
-                             <input type="checkbox"  name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
-                         {{# } });   }}
-                     </div>
-                </div>
+                            {{#  layui.each(d[0].zafei, function(index, item1){ if(item1.IsYajin==0){ }}
+                            
+                                <input type="checkbox"  name="{{item1.Name}}" title="{{item1.Name}}" lay-filter="zafei" ztype="{{item1.Type}}" zyajin="{{item1.IsYajin}}">
+                            {{# } });   }}
+                        </div>
                 
                  <div class="zafeicontent">
         

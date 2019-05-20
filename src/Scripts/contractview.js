@@ -36,7 +36,7 @@ function LoadData(id,tableid,layerindex){
   'tabletab':'billtabletab',
   "tabfield": "PayStatus",
   tablebtnid: '#billbtnintable1',
-  "search":{"BillType":2,"PayStatus":0,"Object":0,"ContractId":id}
+  "search":{"BillType":2,"PayStatus":0,"Object":0,"ContractId":id,"OrderbyTime":1}
 };
   var BtnOption = {
   area: ['900px', '90%'],
@@ -44,7 +44,7 @@ function LoadData(id,tableid,layerindex){
   btnview: "bill-button-view",
   tableView: "bill-table-btn",
   toolview: 'bill-view-btn',
-  tooladd: "bill-add-btn",
+  tooladd: "",
   tooledit: "bill-edit-btn",
   tooldelete: "bill-delete-btn",
   menuid: 108,
@@ -142,9 +142,64 @@ table.on('tool(demoEvent3)', function(obj) {
  
   doc.bindCommonEvents(BtnOption, data, layEvent, url);
 });
-         }
+//发送催租短信
 
+$("#bill-sendmessage-btn").click(function(){
+    debugger;
+        var checkStatus = table.checkStatus('bill-main-table-cont')
+                , getselect = checkStatus.data;
+        if (getselect.length == 0) {
+            layer.msg("请选择要处理的数据");
+            return;
+        }  
+        var arrphone=[];
+        $.each(getselect,function(index,value){
+           var phone={};
+           phone.Phone=value.Phone;
+           arrphone.push(phone);
+        });
+        //调用发送短信接口
+        var duanxinurl="api/Bill/pcuizu";
+        doc.objectQuery(duanxinurl, arrphone, function (data) {
+            debugger;
+            if(data.Code==0){
+            
+                layer.msg(data.Message, {
+                    icon: 1,
+                    time: 800 //2秒关闭（如果不配置，默认是3秒）
+                });
+            }else{
+                layer.open({
+                    title: '温馨提示'
+                    , content: data.Message
+                });
+            }
+        });
+        })
+        //新增账单
+        $("#bill-add-btn").click(function(){
+            debugger;
+            var editid = "layuibilladdbtn";
+            var view = layui.view;
+            layer.open({
+                id: editid,
+                type: 1,
+                title: '新增账单',
+                skin: 'two-layer',
+                shadeClose: true, //开启遮罩关闭
+                maxmin: true, //开启最大化最小化按钮
+                area: ['1000px', '90%'],
+                success: function(layero, index) {
+                    view(this.id).render('bill/z-bill/add', {
+                        ContractId:id,
+                        tableid: "bill-main-table-cont",
+                        layerindex: index
+                    });
+                }
+            });
          })
+        }
+        })
           doc.objectQuery(url, { }, function (data) {
                alldata.push(data.numberData);
                doc.objectQuery(xqurl, {"Id":id }, function (data) {
@@ -254,6 +309,7 @@ table.on('tool(demoEvent3)', function(obj) {
             var BtnviewOption = {
                 menuid:165,
                 tablebtnid: '#btnintableview',
+                url:'contract/z-contract/view',//查看界面路径
                 area: ['1200px', '90%'],
                 editarea: ['1200px', '90%'],
                 tableid: "zcontract-index-table",

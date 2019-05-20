@@ -314,6 +314,7 @@ if (layEvent=== 'fukuan') { //处理账单
                 tooledit: "ycontract-edit-btn",
                 tooldelete:"ycontract-delete-btn",
                 deletespname:"sp_plyzdeletecontract",
+                url:'contract/y-contract/view',//查看界面路径
                 layindex:layerindex,
        
             };

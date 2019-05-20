@@ -51,7 +51,7 @@ ul.hcs-menu  li a{
             margin-right: 10px;
             /* float: left; */
             border: 1px solid #d2d2d2;
-             margin-bottom:5px;
+             margin-bottom:15px;
             width: 250px;
         }
         .m-panel-body1 {
@@ -60,14 +60,14 @@ ul.hcs-menu  li a{
             margin-right: 10px;
             /* float: left; */
             border: 1px solid #d2d2d2;
-             margin-bottom:5px;
+             margin-bottom:15px;
             width: 280px;
         }
         .m-zt-k{ border-left: 4px solid #ff4b5e;}
         .m-zt-y{ border-left: 4px solid  #1bb974;}
         .m-top {
             /*height: 150px;*/
-            padding-bottom:5px;
+            padding-bottom:10px;
         }
             .m-top ul li {
              
