@@ -66,8 +66,8 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
       'marked',
       'multiSelect',
       'formSelects',
-      'ckplayer'
-    
+      'ckplayer',
+      'treeSelect'
     ]
     
     //主题配置
