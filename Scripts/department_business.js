@@ -45,13 +45,13 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG',
         var data = obj.data,
         layEvent = obj.event,
         url = $(this).data('url');
-        if(layEvent=="zsysuser-zhuanyi-bt"){
-            var editid = "layuibillreceivebtn";
+        if(layEvent === 'distribution'){
+            var editid = "layuidepartdistributionbtn";
             var view = layui.view;
             layer.open({
                 id: editid,
                 type: 1,
-                title: '转移房源',
+                title: '分配房源',
                 skin: 'two-layer',
                 shadeClose: true, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
