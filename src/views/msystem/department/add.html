@@ -28,7 +28,8 @@
                         </div>
                         <label class="layui-form-label">所属部门</label>
                         <div class="layui-input-inline" style="width: 200px;">
-                            <input type="text" name="parentid"  autocomplete="off" class="layui-input" id="tree" lay-filter="tree">
+                            <input type="text" autocomplete="off" class="layui-input" id="tree" lay-filter="tree">
+                            <input type="hidden" name="parentid">
                         </div>
                     </div>
                 </div>
@@ -68,45 +69,45 @@
             var $ = layui.jquery,
                 form = layui.form;
             treeSelect.render({
-            elem: '#tree',
-            url:setter.baseurl+'api/Sysrole/Querydepartment',
-            data:  {Id: -1},
-            headers: {"access_token": layui.data('layuiAdmin').access_token},
-            type: 'post',
-            placeholder: '请选择',
-            search: true,
-            style: {
-                folder: {
-                    enable: true
+                elem: '#tree',
+                url: setter.baseurl + 'api/Sysrole/Querydepartment',
+                data: { Id: -1 },
+                headers: { "access_token": layui.data('layuiAdmin').access_token },
+                type: 'post',
+                placeholder: '请选择',
+                search: true,
+                style: {
+                    folder: {
+                        enable: true
+                    },
+                    line: {
+                        enable: true
+                    }
                 },
-                line: {
-                    enable: true
+                click: function(d) {
+                    $('[name="parentid"]').val(d.current.Id);
+                },
+                success: function(d) {
+                    treeSelect.checkNode('tree', 3);
+                    var treeObj = treeSelect.zTree('tree');
+                    treeSelect.refresh('tree');
                 }
-            },
-            click: function(d){
-            },
-            success: function (d) {
-               treeSelect.checkNode('tree', 3);
-               var treeObj = treeSelect.zTree('tree');
-               treeSelect.refresh('tree');
-            }
             });
-            form.on('submit(save)', function (data) {
-            var saveoption={
-            url:'api/Sysrole/adddepartment',
-            data:data.field,
-            tableid:tableid,
-            callBack:function(result){
-             debugger;
-             if(result.Code==0){
-                layer.close(layerindex);
-            }
-        }
-     }
-     doc.Submit(saveoption);
-     return false;
-     });
+            form.on('submit(save)', function(data) {
+                var saveoption = {
+                    url: 'api/Sysrole/adddepartment',
+                    data: data.field,
+                    tableid: tableid,
+                    callBack: function(result) {
+                        if (result.Code == 0) {
+                            layer.close(layerindex);
+                        }
+                    }
+                }
+                doc.Submit(saveoption);
+                return false;
             });
+        });
     }
     </script>
 </body>
