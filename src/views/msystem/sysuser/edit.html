@@ -38,9 +38,11 @@
                ,templet: '#checkboxTplxx',unresize:true} 
             ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } ]];
              //加载详情
-             doc.objectQuery(url, data, function (result) {   
-                 debugger;
+             doc.objectQuery(url, data, function (result) {
+                debugger;
                 var realdata = result.numberData;
+                initdepart(realdata.storeid);
+			    initroles(realdata.roleid);   
                 registrationId=realdata.registrationId;
                 Password=realdata.Password;
                 var getTpl = sysuereditscript.innerHTML,
@@ -51,88 +53,26 @@
                 //初始化赋值
                 form.val("formuser", {
                 "range": String(realdata.range)
-               })
+                })
                 form.render('');
-                
-                 //角色列表
-               doc.objectQuery("api/Sysrole/Querylistrolenopage", {}, function (data) {
-               debugger;
-               tuizulist = data.numberData;
-               var roledata=[];
-               if(realdata.listrole1!=undefined){
-                  roledata=realdata.listrole1
-               }
-               var options={"data":roledata,"tableid":"#sysuserchildedittable","clos":clos,"height":500};
-               doc.childtable(options);  
-               
-               //转换成数组
-               var stroarr=[];
-               if(realdata.storeid!=null&&realdata.storeid!=undefined){
-                stroarr=realdata.storeid.split(',')
-               }
-               EventBtn(stroarr);
-            }); 
             });
-           
-            function getarr(){
-                var list=[];
-                var tkTable = $('[lay-id="sysuserchildedittable"] .layui-table-body .layui-table tr');
-                $.each(tkTable,function(index, item){
-                  list.push({
-                    type: 0,
-                    SysRoleId: $(item).find('[data-field="SysRoleId"] select option:selected').val()
-                  })
-                });
-                return list;
-            }
-            function EventBtn(storeid)
-            {
-            doc.objectQuery("api/cellname/Querylist", {"PageSize":100000,"PageIndex":1,"regtype":4}, function (result) {  
-                debugger; 
-                var realdata = result.numberData;
-                var getTpl = storescript.innerHTML,
-                view = document.getElementById('viewstoreid');
-                laytpl(getTpl).render(realdata, function (html) {
-                    view.innerHTML = html;
-                });  
-                formSelects.render();
-                
-                formSelects.value('id', storeid);
-            });
-            var tabbleid="sysuserchildedittable";
-             //类别
-             form.on('select(billlay)', function (obj) {
-                debugger;
-                var oldData = table.cache["sysuserchildedittable"];
-                var id = $(obj.elem).attr("Idvalue") - 1;
-                var _obj = {
-                    "numbers": id,
-                    "rolename": $(obj.elem).find("option:selected").text(),
-                    "SysRoleId":$(obj.elem).find("option:selected").val()
-                };
-                //重载更新后数据
-                doc.updateobj(oldData, _obj, ["rolename","SysRoleId"]);
-            })
-            $("#cancelbtn").click(function(){
-                    debugger;
-                layer.close(layerindex);
-                return false;
-            });
-         //监听提交
+           //监听提交
           form.on('submit(save)', function (data) {
-        debugger;
-        if(data.field.range==null){
+           debugger;
+           if(data.field.range==null){
             layer.msg('请选择查看权限');
             return false;
-        }
-        data.field.Id=id;
-        var datafield=data.field;
-        datafield.registrationId=registrationId;
-        datafield.Password=Password;
-        datafield.listrole=getarr(); ; 
-        datafield.deletebilllist=deletebilllist;
-        var tjdata =datafield;
-        var saveoption={
+          }
+        
+          data.field.Id=id;
+          var datafield=data.field;
+          var arr=[{"SysRoleId":datafield.roleid}];
+          datafield.registrationId=registrationId;
+          datafield.Password=Password;
+          datafield.listrole=arr; 
+          datafield.deletebilllist=deletebilllist;
+          var tjdata =datafield;
+          var saveoption={
           url:'api/Sysuser/addUser',
           data:tjdata,
           tableid:tableid,
@@ -143,67 +83,46 @@
             }
         }
        }
-      doc.Submit(saveoption);
-      return false;
-});
-  //监听删除按钮
-  table.on('tool(demoEvent1)', function(obj){ 
-  debugger;
-  var data = obj.data; //获得当前行数据
-  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-  var tr = obj.tr; //获得当前行 tr 的DOM对象
-  if(layEvent === 'del'){ //删除
-     obj.del();
-    if(data.Id!=0){
-        deletebilllist.push(data);
-    }
-  }
-});
-//添加新行事件
-$("#sysuser-childedit-edit").click(function(){
-         debugger;
-         var oldData =table.cache[tabbleid];  
-         var data1={"Id":0,"SysUserId":12,"SysRoleId":0,"edtype":1,"rolename":""};
-          oldData.push(data1);  
-          table.reload(tabbleid,{  
-              data : oldData  ,
-              limit: oldData.length
-         });
-});
-}
+       doc.Submit(saveoption);
+       return false;
+      });
+      function initdepart(value){
+			var url="api/Sysrole/Querydepartlist";
+            var dom="storeid";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {Id:-1}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].name +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                $(vdom).val(value);
+                form.render('select');
+            });
+	 }
+	 function initroles(value){
+			var url="api/Sysrole/Querylistrolenopage";
+            var dom="roleid";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {"PageSize":100000,"PageIndex":1}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].RoleName +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                $(vdom).val(value);
+                form.render('select');
+            });
+	 }
         });
-      }
+}
 </script>
- <script id="storescript" type="text/html">
-    <div class="layui-inline"> 
-            <label class="layui-form-label">门店选择</label> 
-            <div class="layui-input-inline"> 
-                
-                   <select name="storeid" id="storeid" xm-select="id" lay-search>
-                           <option value="">请选择</option>
-                           {{#  layui.each(d, function(index, item1){ }}
-                           <option value="{{item1.Id}}">{{item1.Name}}</option>
-                           {{# });   }}   
-                   </select>
-            </div> 
-      </div> 
-</script>
-        <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-        </script>
-         <script type="text/html" id="checkboxTplxx">
-            <!-- 这里的 select 的状态只是演示 -->
-            <select lay-filter="billlay" Idvalue="{{d.LAY_INDEX}}" lay-verify="required">
-                  <option value="{{d.SysRoleId}}">{{d.rolename}}</option>
-                  {{# layui.each(tuizulist,function(index, item1){ }}
-                  <option value="{{item1.Id}}">{{item1.RoleName}}</option>
-                  {{# }); }}
-            </select>
-        </script>
         <script type="text/html" template >
             {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
         </script>
-    <script id="sysuereditscript" type="text/html">
+        <script id="sysuereditscript" type="text/html">  
         {{# var doc = layui.htcsLG;}}
         <form class="layui-form  layui-form-pane hcs-form form-panel" lay-filter="formuser">                
             <div class="form-content">
@@ -241,26 +160,21 @@ $("#sysuser-childedit-edit").click(function(){
                             </div>
                             <label style="color:red;">本人只可查看本人管理已租房源,本店可查看所属门店所有已租房源，依次类推</label>
                     </div>
-                <div class="layui-tab layui-tab-card" style="margin-top:0;">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">角色</li>
-                    </ul>
-                    <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show">
-                            <div id="toolbar" class="child-toolbar">
-                                <div class="layui-btn-group">
-                                    <a class="layui-btn layui-btn-primary" id="sysuser-childedit-edit" >
-                                        <i class="layui-icon">&#xe654;</i>添加
-                                    </a>
-                                </div>
-                            </div>
-                            <table id="sysuserchildedittable" lay-filter="demoEvent1"></table>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >所属部门</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                                <select lay-verify="required" id="storeid" name="storeid" lay-search >
+                                        <option value="">请选择</option>
+                                </select>
                         </div>
-                        
-                    </div>
-                </div>      
+                        <label class="layui-form-label" >角色</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                                <select lay-verify="required" id="roleid" name="roleid" lay-search >
+                                        <option value="">请选择</option>
+                                </select>
+                        </div>
+                </div>
             </div>
-        </div>
             <div class="form-bottom">
                     <div class="form-wrap">
                         <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-submit="">取消</button>
@@ -268,6 +182,6 @@ $("#sysuser-childedit-edit").click(function(){
                     </div>
           </div>
         </form>    
-</script>
-<div id="sysuer-edit-view"></div>
+    </script>
+   <div id="sysuer-edit-view" class="form-wrapper"></div>
   

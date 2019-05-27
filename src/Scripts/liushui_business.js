@@ -58,6 +58,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util','multiSelect'], func
         $('#guest-search-form button[lay-filter="search"]').click();
     })
 
+    
     form.on('select(AreaName)', function (data) {
         leftFilter.currentCity = data.value;
         for (let i in leftFilter.cityList) {

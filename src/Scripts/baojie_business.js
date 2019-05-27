@@ -1,5 +1,5 @@
 debugger;
-layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
+layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util','multiSelect'], function () {
     var util = layui.util;
     var $ = layui.$;
     var mymod = layui.htcsradio;
@@ -7,18 +7,130 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
     var doc = layui.htcsLG;
     var laydate = layui.laydate;
     var table = layui.table;
-    laydate.render({
-        elem: '#BeginTime'
-    });
-    laydate.render({
-        elem: '#EndTime'
-    });
-    var option1 = { data: [{ "value": 0, "text": "全部" }, { "value": 2, "text": "逾期" }, { "value": 3, "text": "今天" }, { "value": 4, "text": "1-7天" }], rdefault: 0 };
-    mymod.CreateInput($("#yuqitype"), option1, function (result) {
+    var form = layui.form;
+    var multiSelect = layui.multiSelect;
+    // 三级联动数据
+    var leftFilter = {
+        currentProvince: '',
+        currentCity: '',
+        currentArea: '',
+        provinceOptions: [],
+        cityOptions: [],
+        areaOptions: [],
+        provinceList: [],
+        cityList: [],
+        areaList: []
+    }
+    var filterUrl = 'api/Formatter/QueryPCCell1';
+    initFilter();
+
+    function initFilter(){
+      doc.objectQuery(filterUrl, {"Type": '0'}, function (data) {
+          var provinceList = data.numberData;
+          var cityList = [];
+          var provinceOptions = [];
+          var currentProvince = leftFilter.currentProvince;
+          for (var i in provinceList) {
+              cityList = provinceList[i].mallCityList; 
+              provinceOptions.push('<option value="'+ provinceList[i].provinceName +'">'+ provinceList[i].provinceName +'</option>');
+          }
+          leftFilter.provinceOptions  = provinceOptions;
+          leftFilter.cityList = cityList;
+          leftFilter.provinceList = provinceList;
+          selectProvince();
+          $('select[name="cityname"]').append(leftFilter.provinceOptions.join(''));
+          $('select[name="areaname"]').append(leftFilter.cityOptions.join(''));
+          // $('.area-list').append(leftFilter.areaOptions.join(''))
+          form.render();
+      })
+    }
+
+    form.on('select(cityname)', function (data) {
+        leftFilter.currentProvince = data.value;
+        for (let i in leftFilter.provinceList) {
+            if (leftFilter.currentProvince === leftFilter.provinceList[i].provinceName) {
+                leftFilter.cityList = leftFilter.provinceList[i].mallCityList;
+            }
+        }
+        selectProvince();
+        $('select[name="areaname"]').html(leftFilter.cityOptions.join(''));
+        form.render();
+        $('#guest-search-form button[lay-filter="search"]').click();
+    })
+    function selectProvince () {
+        var provinceList = leftFilter.provinceList;
+        var currentProvince =  leftFilter.currentProvince;
+        var cityList = leftFilter.cityList;
+        var cityOptions = [];
+        var currentCity = '';
+        var areaList = [];
+        areaList = getAreaList();
+        cityOptions.push('<option value="">请选择</option>');
+        for (var i in cityList) {
+            cityOptions.push('<option value="'+ cityList[i].cityName +'">'+ cityList[i].cityName +'</option>')
+        }
         
-    });
+        leftFilter.areaList = areaList;
+        leftFilter.cityOptions = cityOptions;
+
+        selectCity();
+    }
+
+    function getAreaList () {
+        var cityList = leftFilter.cityList;
+        var areaList = [];
+        for (var i in cityList) {
+            areaList = [].concat(areaList, cityList[i].mallAreaList || []);
+        }
+        return areaList;
+    }
+
+    function selectCity () {
+        var areaList = leftFilter.areaList;
+        var cityList = leftFilter.cityList;
+        var areaOptions = [];
+        var currentArea = '';
+        areaOptions.push('<option value="">请选择</option>');
+        for (var i in areaList) {
+            areaOptions.push('<option value="'+ areaList[i].areaName +'">'+ areaList[i].areaName +'</option>')
+        }
+        
+        leftFilter.areaOptions = areaOptions;
+    }
+    form.on('select(areaname)', function (data) {
+        leftFilter.currentCity = data.value;
+        for (let i in leftFilter.cityList) {
+            if (leftFilter.currentCity === leftFilter.cityList[i].cityName) {
+                leftFilter.areaList = leftFilter.cityList[i].mallAreaList;
+            }
+        }
+        selectCity();
+        $('select[name="cellname"]').html(leftFilter.areaOptions.join(''));
+        form.render();
+        multiSelect.init();
+        $('#guest-search-form button[lay-filter="search"]').click();
+    })
+
+    form.on('select(cellname)', function (data) {
+      var vals = []
+      $('.layui-form-checked span').each(function() {
+        vals.push($(this).text());
+      })
+      $('#cellname').val(vals.join(','));
+      $('#guest-search-form button[lay-filter="search"]').click();
+    })
+
+
+    form.on('select(ugent)', function (data) {
+      $('#guest-search-form button[lay-filter="search"]').click();
+    })
+    form.on('select(RecentType)', function (data) {
+        $('#guest-search-form button[lay-filter="search"]').click();
+    })
+   
+
     var config={tableid:"#guest-main-table",table:"guest-main-table",formid:"#guest-search-form",url:"api/clean/Querylist"
-,btnview:"guest-button-view",toolview:"editbaojie",tooladd:"addbaojie",tooledit:"editbaojie",tooldelete:"addbaojie",tabfield:"Status"};
+,btnview:"guest-button-view",toolview:"editbaojie",tooladd:"addbaojie",tooledit:"editbaojie",tooldelete:"addbaojie",tabfield:"status"};
     var tableoption = {
         tabfield:config.tabfield,
         domid: config.tableid, formid:config.formid, arr: [[ //表头

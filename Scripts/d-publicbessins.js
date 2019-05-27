@@ -380,6 +380,60 @@ function ViewEvent(pId) {
             }
         });
     });
+    //预览
+    $('.viewdepent').click(function(){
+        var id = $(this).attr("id").replace("viewdepent-", "");
+       var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+       var view = layui.view;
+       layer.open({
+            type: 1,
+            id:"domInterView",
+            title: '房源详情',
+            skin: 'two-layer',
+            anim: -1,
+            offset: 'r',
+            shade: .1,
+            shadeClose: true,
+            maxmin: true,
+            area: ['70%', '100%'],
+            skin: "layui-anim layui-anim-rl layui-layer-adminRight",
+            success: function (layero, index) {
+                view("domInterView").render('house/d-house/InterView', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+        return false;
+    });
+    //合同列表
+    $('.listdepent').click(function(){
+        var id = $(this).attr("id").replace("listdepent-", "");
+       var parentid = $(this).parent(".m-wrap-body").attr("parentid");
+       var view = layui.view;
+       layer.open({
+            type: 1,
+            id:"listView",
+            title: '租客合同',
+            skin: 'two-layer',
+            anim: -1,
+            offset: 'r',
+            shade: .1,
+            shadeClose: true,
+            maxmin: true,
+            area: ['70%', '100%'],
+            skin: "layui-anim layui-anim-rl layui-layer-adminRight",
+            success: function (layero, index) {
+                view("listView").render('house/d-house/contractList', {
+                    id: id,
+                    ParentRoomid:parentid,
+                    layerindex:index
+                });
+            }
+        });
+        return false;
+    });
     //登记租客
     $(".addcontract").click(function (index,value) {
         debugger;
@@ -409,7 +463,7 @@ function ViewEvent(pId) {
      });
     //修改
     $(".editdepent").click(function (index,value) {
-       debugger;
+       $('.drop-menu').hide();
        var id = $(this).attr("id").replace("editdepent-", "");
        var parentid = $(this).parent(".m-wrap-body").attr("parentid");
        var view = layui.view;
@@ -454,7 +508,7 @@ function ViewEvent(pId) {
     });
     //删除房源
    $(".deletedepent").click(function(){
-       debugger;
+    $('.drop-menu').hide();
     var id = $(this).attr("id");
     id=id.replace("deletedepent-", "");
     layer.open({
@@ -557,6 +611,17 @@ $(".addhouse").click(function () {
         ViewEvent();
     });
 });
+var tipIndex;
+        $('[data-tip]').mouseenter(function(event) {
+            tipIndex = layer.tips($(this).data('tip'),$(this),{
+              tips: 3
+            });
+        }).mouseleave(function(event) {
+            layer.close(tipIndex);
+        });
+        $('.m-top').mouseenter(function(event) {
+            $(this).find('.drop-menu').hide();
+        });
 }
 });
 function formatter(value,cont){

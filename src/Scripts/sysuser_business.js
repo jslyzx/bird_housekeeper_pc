@@ -15,6 +15,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
      
 ]];
         var tableoption = {
+            tabfield:'isquit',
             domid: "#sysuser-table", formid: "#zsysuser-search-form", arr: namearr, url: 'api/Sysuser/Querylist',
             ismuilti: true
           
@@ -57,6 +58,20 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
                     });
                 }
             });
+        }
+        if (layEvent === 'quit') { //离职
+            var datafield={};
+            datafield.Id=data.Id;
+            var saveoption={
+                url:'api/Sysuser/isquit',
+                data:datafield,
+                callBack:function(resultData){
+                  if (resultData.Code == 0) {
+                    table.reload("bill-main-table");
+                  }
+              }
+             }
+            doc.Submit(saveoption);
         }
         doc.bindCommonEvents(BtnOption, data, layEvent, url);
        });

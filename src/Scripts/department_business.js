@@ -26,7 +26,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
             btnview: "department-button-view",
             toolview: "zdepartment-edit-bt",
             tooladd: "zdepartment-add-bt",
-            tooledit: "zdepartment-edit-bt",
+            tooledit: "editdepart",
             tooldelete: "zdepartment-delete-bt",
             menuid: 247,
             "realtable": "T_DEPARTMENT"
