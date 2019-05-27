@@ -26,18 +26,16 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG',
             toolview: "zdepartment-edit-bt",
             tooladd: "adddepart",
             tooledit: "editdepart",
-            tooldelete: "zdepartment-delete-bt",
+            tooldelete: "deletedepart",
             menuid: 247,
             "realtable": "T_DEPARTMENT"
         };
         doc.InitButton(BtnOption, deparmentbtnscribt, tableoption);
         doc.objectQuery(url, {}, function (data) {
-            debugger;
             layui.tree({
             elem: '#demo' //传入元素选择器
             ,nodes:  data.numberData,
             click: function(node){
-                debugger;
                 doc.queryPara({"Id":node.Id}, tableoption.domid,BtnOption); 
            }  
           });
