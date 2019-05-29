@@ -59,7 +59,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG',
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,
-                        tableid: "bill-main-table",
+                        tableid: "department-table",
                         layerindex: index
                     });
                 }

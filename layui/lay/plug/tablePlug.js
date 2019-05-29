@@ -9,16 +9,14 @@
 layui.define(['table'], function (exports) {
   "use strict";
 
-  var version = '0.1.4';
-
-  var filePath = layui.cache.modules.tablePlug.substr(0, layui.cache.modules.tablePlug.lastIndexOf('/'));
+  var version = '1.0.0-beta5';
+  var modelName = 'tablePlug'; // 插件名称，支持自己定义，但是不建议
+  var pathTemp = layui.cache.modules[modelName] || ''; // 正常情况下不会出现未定义的情况
+  var filePath = pathTemp.substr(0, pathTemp.lastIndexOf('/'));
   // 引入tablePlug.css
   layui.link(filePath + '/tablePlug.css?v' + version);
   // 引入图标文件
   layui.link(filePath + '/icon/iconfont.css?v' + version);
-
-  // 异步地将独立功能《优化layui的select的选项设置》引入
-  layui.extend({optimizeSelectOption: '{/}' + filePath + '/optimizeSelectOption/optimizeSelectOption'}).use('optimizeSelectOption');
 
   var $ = layui.$
     , laytpl = layui.laytpl
@@ -28,8 +26,42 @@ layui.define(['table'], function (exports) {
     , util = layui.util
     , table = layui.table
     , hint = layui.hint()
-    , device = layui.device()
-    , layuiVersion = '2.4.5' // 基于2.4.5开发的
+    , device = layui.device();
+
+  if (!form.render.plugFlag) {
+    // 只要未改造过的才需要改造一下
+    // 保留一下原始的form.render
+    var formRender = form.render;
+    form.render = function (type, filter, jqObj) {
+      var that = this;
+      var retObj;
+      if (jqObj) {
+        layui.each(jqObj, function (index, elem) {
+          elem = $(elem);
+          var elemP = elem.parent();
+          var formFlag = elemP.hasClass('layui-form');
+          var filterTemp = elemP.attr('lay-filter');
+          // mark一下当前的
+          formFlag ? '' : elemP.addClass('layui-form');
+          filterTemp ? '' : elemP.attr('lay-filter', 'tablePlug_form_filter_temp_' + new Date().getTime() + '_' + Math.floor(Math.random() * 100000));
+          // 将焦点集中到要渲染的这个的容器上
+          retObj = formRender.call(that, type, elemP.attr('lay-filter'));
+          // 恢复现场
+          formFlag ? '' : elemP.removeClass('layui-form');
+          filterTemp ? '' : elemP.attr('lay-filter', null);
+        });
+      } else {
+        retObj = formRender.call(that, type, filter);
+      }
+      return retObj;
+    };
+    form.render.plugFlag = true;
+  }
+
+  // 异步地将独立功能《优化layui的select的选项设置》引入
+  layui.extend({optimizeSelectOption: '{/}' + filePath + '/optimizeSelectOption/optimizeSelectOption'}).use('optimizeSelectOption');
+
+  var layuiVersion = '2.4.5' // 基于2.4.5开发的
     // 检测是否满足智能重载的条件 检测是否修改了源码将构造出还有thisTable透漏出来
     , checkSmartReloadCodition = (function () {
       if (layui.device().ie && parseInt(layui.device().ie) < 9) {
@@ -51,12 +83,17 @@ layui.define(['table'], function (exports) {
     , CHECK_TYPE_REMOVED = 'removed'  // 删除的
     , CHECK_TYPE_ORIGINAL = 'original' // 原有的
     , CHECK_TYPE_DISABLED = 'disabled' // 不可选的
-    , ELEM_BODY = '.layui-table-body'
     , FIXED_SCROLL = 'layui-table-fixed-scroll'
+
+    , ELEM_VIEW = 'layui-table-view', ELEM_TOOL = '.layui-table-tool', ELEM_BOX = '.layui-table-box',
+    ELEM_INIT = '.layui-table-init', ELEM_HEADER = '.layui-table-header', ELEM_BODY = '.layui-table-body',
+    ELEM_MAIN = '.layui-table-main', ELEM_FIXED = '.layui-table-fixed', ELEM_FIXL = '.layui-table-fixed-l',
+    ELEM_FIXR = '.layui-table-fixed-r', ELEM_TOTAL = '.layui-table-total', ELEM_PAGE = '.layui-table-page',
+    ELEM_SORT = '.layui-table-sort', ELEM_EDIT = 'layui-table-edit', ELEM_HOVER = 'layui-table-hover'
     , NONE = 'layui-none'
     , HIDE = 'layui-hide'
     , LOADING = 'layui-tablePlug-loading-p'
-    , ELEM_HEADER = '.layui-table-header'
+    , ELEM_CLICK = 'layui-table-click'
     , COLGROUP = 'colGroup' // 定义一个变量，方便后面如果table内部有变化可以对应的修改一下即可
     , tableSpacialColType = ['numbers', 'checkbox', 'radio'] // 表格的特殊类型字段
     , LayuiTableColFilter = [
@@ -261,24 +298,18 @@ layui.define(['table'], function (exports) {
   // 获得某个节点的位置 offsetTop: 是否获得相对top window的位移
   function getPosition(elem, _window, offsetTop) {
     _window = _window || window;
-    var $ = _window.$ || _window.layui.$;
-    if (!$) {
-      console.log('该功能必须依赖jquery,请先为', _window, '窗口引入jquery先');
-    }
+    elem = elem.length ? elem.get(0) : elem;
     var offsetTemp = {};
     if (offsetTop && _window.top !== _window.self) {
-      // if (!parent.layui.tablePlug) {
-      //   console.log('该功能必须依赖tablePlug请先引入');
-      // } else {
-      //   offsetTemp = parent.layui.tablePlug.getPosition($(window.frames.frameElement), _window.parent, offsetTop);
-      // }
-      offsetTemp = getPosition($(_window.frames.frameElement), _window.parent, offsetTop);
+      var frameElem = _window.frames.frameElement;
+      offsetTemp = getPosition(frameElem, _window.parent, offsetTop);
     }
-    var bodyOffset = $('body').hasClass('layui-container') ? $('body').offset() : {top: 0, left: 0};
+    var offset = elem.getBoundingClientRect();
+
     return {
-      top: (offsetTemp.top || 0) + elem.offset().top - bodyOffset.top - $(_window.document).scrollTop(),
-      left: (offsetTemp.left || 0) + elem.offset().left - bodyOffset.left - $(_window.document).scrollLeft()
-    }
+      top: offset.top + (offsetTemp.top || 0),
+      left: offset.left + (offsetTemp.left || 0)
+    };
   }
 
   // 修改原始table的loading的逻辑
@@ -299,31 +330,60 @@ layui.define(['table'], function (exports) {
         // 如果出现滚动条，要减去滚动条的宽度
         offsetHeight = that.getScrollWidth();
       }
-      that.layInit.height(that.layBox.height() - that.layHeader.height() - offsetHeight).css('marginTop', that.layHeader.height() + 'px');
+      var thHeightTemp = that.elem.hasClass('vertical') ? 0 : that.layHeader.height();
+      that.layInit.height(that.layBox.height() - thHeightTemp - offsetHeight).css('marginTop', thHeightTemp + 'px');
       that.layBox.append(that.layInit);
     }
   };
 
   // 初始化表格的内容
-  table.Class.prototype.initTable = function () {
+  table.Class.prototype.initTable = function (empty) {
     var that = this;
+    var options = that.config;
 
-    that.layFixed.find('tbody').html('');
+    empty && that.layFixed.find('tbody').html('');
     that.layFixed.addClass(HIDE);
     that.layTotal.addClass(HIDE);
     that.layPage.addClass(HIDE);
 
-    that.layMain.find('tbody').html('');
+    empty && that.layMain.find('tbody').html('');
     that.layMain.find('.' + NONE).remove();
 
     that.layHeader.find('input[name="layTableCheckbox"]').prop('checked', false);
-
     that.renderForm('checkbox');
   };
 
+  // 内部使用，如果没有传reversal, 默认就是按照当前的状态取反更新一下，如果有传入，则以传入的为准
+  var reverseTable = function (tableId, reversal) {
+    if (!tableId) {
+      layui.each(table.thisTable.that, function (key, obj) {
+        reverseTable(key, reversal);
+      });
+    } else {
+      var insTemp = getIns(tableId);
+      var config = insTemp.config;
+
+      if (typeof reversal !== 'boolean') {
+        // 如果不是true/false; 默认就是将当前的状态给重新渲染一下
+        reversal = !config.reversal;
+      }
+
+      // 设置状态
+      config.reversal = reversal;
+      // 调用反转方法
+      insTemp.reverse();
+      // 处理360急速模式下出现的异常问题(临时处理方式)
+      insTemp.resize();
+    }
+  };
+
+  var cacheData = {};
+
   // 渲染完成之后的回调
-  var renderDone = function () {
+  var renderDone = function (scroll) {
     var that = this;
+    var options = that.config;
+    scroll && (that.layBody.scrollTop(0), that.layBody.scrollLeft(0));
     // 同步不可选的状态
     disabledCheck(that);
     // 添加筛选的功能
@@ -333,10 +393,37 @@ layui.define(['table'], function (exports) {
       that.layTotal.removeClass(HIDE);
       that.layFixLeft.removeClass(HIDE);
     }
+
+    // 初始化临时数据区
+    layui.each(that.tempData, function (index, data) {
+      that.addTemp(index + 1, data, null, true);
+    });
+
+    // 同步反转状态
+    // reverseTable(that.key, !!that.config.reversal);
+    options.reversal === true && that.reverse();
+
+    // 动态给checkbox添加lay-filter方便加form的监听处理
+    that.layBody.find('input[type="checkbox"][name="layTableCheckbox"]').attr('lay-filter', 'layTableCheckbox');
+    // 更新统计行的数据
+    // renderTotal(that.config.id);
+    renderTotal(that);
+
+    // 打滚动条补丁
+    that.scrollPatch();
+
+    // 如果是url模式并且设置了复选框跨页状态存储就把当前的data给缓存起来
+    var primaryKey = getPrimaryKey(options);
+    if (options.checkStatus && primaryKey) {
+      cacheData[options.id] = cacheData[options.id] || {};
+      layui.each(table.cache[options.id], function (index, data) {
+        cacheData[options.id][data[primaryKey]] = data;
+      });
+    }
   };
 
   //获得数据
-  table.Class.prototype.pullData = function (curr) {
+  table.Class.prototype.pullData = function (curr, refresh) {
     var that = this
       , options = that.config
       , request = options.request
@@ -347,18 +434,12 @@ layui.define(['table'], function (exports) {
       }
     };
 
-    var dataTemp = table.getTemp(that.key);
-    if (dataTemp.data.length) {
-      // 有临时数据
-      layer.alert('有未保存的临时数据，不可刷新表格！');
-      that.elem.addClass('has-data-temp-warn');
-      that.loading(true);
-      return;
-    }
-
     that.startTime = new Date().getTime(); //渲染开始时间
 
     if (options.url) { //Ajax请求
+      // 初始化宽度，避免一开始拧成一团
+      refresh || that.setColsWidth();
+      that.loading();
       var params = {};
       params[request.pageName] = curr;
       params[request.limitName] = options.limit;
@@ -391,12 +472,11 @@ layui.define(['table'], function (exports) {
               ('返回的数据不符合规范，正确的成功状态码 (' + response.statusName + ') 应为：' + response.statusCode)
             ) + '</div>');
           } else {
-            that.renderData(res, curr, res[response.countName]), sort();
+            that.renderData(res, curr, res[response.countName], false, refresh && (options.page ? options.page.count === res[response.countName] : true)), sort();
             options.time = (new Date().getTime() - that.startTime) + ' ms'; //耗时（接口请求+视图渲染）
           }
-          that.setColsWidth();
+          refresh ? that.loading(true) : that.setColsWidth();
           typeof options.done === 'function' && options.done(res, curr, res[response.countName]);
-          // renderDone.call(that);
         }
         , error: function (e, m) {
           // #### 源码修改 #### 直接在源头处理掉一些不太合理的地方避免智能重载后面还需要打补丁
@@ -404,8 +484,7 @@ layui.define(['table'], function (exports) {
           // that.layMain.html('<div class="'+ NONE +'">数据接口请求异常：'+ m +'</div>');
           that.layMain.append('<div class="' + NONE + '">数据接口请求异常：' + m + '</div>');
           that.renderForm();
-          that.setColsWidth();
-          // renderDone.call(that);
+          refresh ? that.loading(true) : that.setColsWidth();
         }
       });
     } else if (options.data && options.data.constructor === Array) { //已知数据
@@ -416,14 +495,14 @@ layui.define(['table'], function (exports) {
       res[response.countName] = options.data.length;
 
       that.initTable();
-      that.renderData(res, curr, options.data.length), sort();
-      that.setColsWidth();
+      that.renderData(res, curr, options.data.length, false, refresh && (options.page ? options.page.count === options.data.length : true)), sort();
+      refresh ? that.loading(true) : that.setColsWidth();
       typeof options.done === 'function' && options.done(res, curr, res[response.countName]);
     }
   };
 
   // 数据渲染
-  table.Class.prototype.renderData = function (res, curr, count, sort) {
+  table.Class.prototype.renderData = function (res, curr, count, sort, refresh) {
     var that = this
       , options = that.config
       , data = res[options.response.dataName] || []
@@ -433,10 +512,11 @@ layui.define(['table'], function (exports) {
 
       //渲染视图
       , render = function () { //后续性能提升的重点
-        var thisCheckedRowIndex;
         if (!sort && that.sortKey) {
           return that.sort(that.sortKey.field, that.sortKey.sort, true);
         }
+
+        var thisCheckedRowIndex;
         layui.each(data, function (i1, item1) {
           var tds = [], tds_fixed = [], tds_fixed_r = []
             , numbers = i1 + options.limit * (curr - 1) + 1; //序号
@@ -527,7 +607,7 @@ layui.define(['table'], function (exports) {
           trs_fixed_r.push('<tr data-index="' + i1 + '">' + tds_fixed_r.join('') + '</tr>');
         });
 
-        that.layBody.scrollTop(0);
+        refresh || that.layBody.scrollTop(0);
         // 如果没有数据才需要删除NONE
         !data.length || that.layMain.find('.' + NONE).remove();
         that.layMain.find('tbody').html(trs.join(''));
@@ -549,15 +629,20 @@ layui.define(['table'], function (exports) {
         //同步表头父列的相关值
         options.HAS_SET_COLS_PATCH || that.setColsPatch();
         options.HAS_SET_COLS_PATCH = true;
-
-        // 渲染完毕做一些处理
-        renderDone.call(that);
       };
 
     // 只有在之前出现异常后面才需要先初始化table的内容
-    that.layMain.find('.' + NONE).length && that.initTable();
+    that.layMain.find('.' + NONE).length && that.initTable(true);
 
     that.key = options.id || options.index;
+
+    // 初始化选中的数据
+    dataRenderChecked(data, options.id, options);
+
+    var dataTemp = table.getTemp(that.key);
+    // 存储临时数据
+    that.tempData = dataTemp.data;
+
     table.cache[that.key] = data; //记录数据
 
     //显示隐藏分页栏
@@ -565,7 +650,7 @@ layui.define(['table'], function (exports) {
 
     //排序
     if (sort) {
-      return render();
+      return render(), renderDone.call(that);
     }
 
     if (data.length === 0) {
@@ -573,13 +658,17 @@ layui.define(['table'], function (exports) {
       // #### 源码修改 01 #### 处理没有数据的时候fixed模块被删除只能重载没办法重复利用的问题
       // that.layFixed.remove(); 智能reload的话不应该直接remove掉，直接hide掉就可以了
       // that.layFixed.addClass(HIDE);
-      that.initTable();
+      that.initTable(true);
       // that.layMain.find('tbody').html('');
       // that.layMain.find('.' + NONE).remove();
-      return that.layMain.append('<div class="' + NONE + '">' + options.text.none + '</div>');
+      return that.layMain.append('<div class="' + NONE + '">' + options.text.none + '</div>'), renderDone.call(that, true);
     }
 
     render(); //渲染数据
+
+    if (refresh) {
+      return renderDone.call(that);
+    }
     that.renderTotal(data); //数据合计
 
     //同步分页状态
@@ -653,6 +742,9 @@ layui.define(['table'], function (exports) {
       options.page.count = count; //更新总条数
       laypage.render(options.page);
     }
+
+    // 渲染完毕做一些处理
+    renderDone.call(that, true);
   };
 
   var setColsWidth = table.Class.prototype.setColsWidth;
@@ -673,20 +765,35 @@ layui.define(['table'], function (exports) {
     //如果多级表头，重新填补填补表头高度
     if (options.cols.length > 1) {
       //补全高度
-      var th = that.layFixed.find(ELEM_HEADER).find('th');
+      // var th = that.layFixed.find(ELEM_HEADER).find('th');
       // 只有有头部的高度的时候计算才有意义
-      var heightTemp = that.layHeader.height();
-      heightTemp = heightTemp / options.cols.length; // 每一个原子tr的高度
-      th.each(function (index, thCurr) {
+      // var heightTemp = that.layHeader.height();
+      // heightTemp = heightTemp / options.cols.length; // 每一个原子tr的高度
+      var colsNum = options.cols.length;
+      var thBox = that.layBox.find(ELEM_HEADER);
+      var thElem = that.layFixed.find(ELEM_HEADER + ' th');
+      var matchFlag = false;
+      thElem.each(function (index, thCurr) {
         thCurr = $(thCurr);
-        thCurr.height(heightTemp * (parseInt(thCurr.attr('rowspan') || 1))
-          - 1 - parseFloat(thCurr.css('padding-top')) - parseFloat(thCurr.css('padding-bottom')));
+        var rowspan = parseInt(thCurr.attr('rowspan') || '1');
+        // var _thH = heightTemp * (parseInt(thCurr.attr('rowspan') || 1))
+        //   - 1 - parseFloat(thCurr.css('padding-top')) - parseFloat(thCurr.css('padding-bottom'));
+        // 找到原始的box里面的th的高度,只有行合并小于最大合并数的才需要设置高度
+        if (rowspan < colsNum) {
+          thCurr.height(thBox.find('th[data-key="' + thCurr.attr('data-key') + '"]').height());
+          matchFlag = true;
+        }
+        // thCurr.height(_thH);
       });
+      if (matchFlag) {
+        // 修复ie浏览器下因为全行合并的高度导致后面的一些高度异常的问题
+        that.layFixed.find('>' + ELEM_HEADER + ' th[rowspan="' + colsNum + '"]').height('auto');
+      }
     }
 
-    that.layBody.scrollTop(0);
-    that.layBody.scrollLeft(0);
-    that.layHeader.scrollLeft(0);
+    // that.layBody.scrollTop(0);
+    // that.layBody.scrollLeft(0);
+    // that.layHeader.scrollLeft(0);
   };
 
   $(window).resize(function () {
@@ -697,6 +804,7 @@ layui.define(['table'], function (exports) {
   table.Class.prototype.setInit = function (type) {
     var that = this
       , options = that.config;
+    var tableId = options.id;
 
     options.clientWidth = options.width || function () { //获取容器宽度
       //如果父元素宽度为0（一般为隐藏元素），则继续查找上层元素，直到找到真实宽度为止
@@ -716,38 +824,92 @@ layui.define(['table'], function (exports) {
 
     if (type === 'width') return options.clientWidth;
 
+    if (!tableCheck.check(tableId)) {
+      // 如果render的时候设置了checkStatus或者全局设置了默认跨页保存那么重置选中状态
+      tableCheck.init(tableId, options.checkStatus ? (options.checkStatus['default'] || []) : []);
+    }
+
+    if (options.checkDisabled && isArray(options.checkDisabled.data) && options.checkDisabled.data.length) {
+      tableCheck.disabled(tableId, isArray(options.checkDisabled.data) ? options.checkDisabled.data : []);
+    }
+
+    var record;
+    // 如果配置了字段筛选的记忆需要更新字段的hide设置
+    if (options.colFilterRecord) {
+      record = colFilterRecord.get(tableId, options.colFilterRecord);
+      // 把修改hide的逻辑挪到下面做减少遍历
+      // var record = colFilterRecord.get(tableId, options.colFilterRecord);
+      // $.each(options.cols, function (i, item1) {
+      //   $.each(item1, function (j, item2) {
+      //
+      //     item2.hide = !!record[item2.field];
+      //   });
+      // });
+    } else {
+      colFilterRecord.clear(tableId);
+    }
+
+    // 封装对col的配置处理
+    var initCols = function (i1, item1, i2, item2) {
+      //如果列参数为空，则移除
+      if (!item2) {
+        item1.splice(i2, 1);
+        return;
+      }
+
+      item2.key = i1 + '-' + i2;
+      item2.hide = item2.hide || false;
+      item2.colspan = item2.colspan || 1;
+      item2.rowspan = item2.rowspan || 1;
+
+      //根据列类型，定制化参数
+      that.initOpts(item2);
+
+      // 如果配置了字段筛选的记忆需要更新字段的hide设置
+      item2.hide = (record && item2.type === "normal" && item2.field && typeof record[item2.field] === 'boolean') ? record[item2.field] : item2.hide;
+
+
+      // plug修改，根据配置信息确定是否合并列
+      if (!item2.field && !item2.toolbar && (!item2.colspan || item2.colspan === 1) && (tableSpacialColType.indexOf(item2.type) === -1)) {
+        item2[COLGROUP] = true;
+      } else if (item2[COLGROUP] && !(item2.colspan > 1)) {
+        // 如果有乱用colGroup的，明明是一个字段列还给它添加上这个属性的会在这里KO掉，
+        item2[COLGROUP] = false;
+      }
+
+      //设置列的父列索引
+      //如果是组合列，则捕获对应的子列
+      if (item2.colGroup || item2.colspan > 1) {
+        var childIndex = 0;
+        // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
+        var indexChild = i1 + (parseInt(item2.rowspan) || 1);
+        layui.each(options.cols[indexChild], function (i22, item22) {
+          //如果子列已经被标注为{HAS_PARENT}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
+          if (item22.HAS_PARENT || (childIndex >= 1 && childIndex == (item2.colspan || 1))) return;
+
+          item22.HAS_PARENT = true;
+          item22.parentKey = i1 + '-' + i2;
+
+          initCols(indexChild, options.cols[indexChild], i22, item22);
+
+          childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
+        });
+        item2.colGroup = true; //标注是组合列
+      }
+
+      // //根据列类型，定制化参数
+      // that.initOpts(item2);
+    };
+
+
     //初始化列参数
     layui.each(options.cols, function (i1, item1) {
+      if (i1 > 0) {
+        return true
+      }
       layui.each(item1, function (i2, item2) {
-
-        //如果列参数为空，则移除
-        if (!item2) {
-          item1.splice(i2, 1);
-          return;
-        }
-
-        item2.key = i1 + '-' + i2;
-        item2.hide = item2.hide || false;
-
-        //设置列的父列索引
-        //如果是组合列，则捕获对应的子列
-        if (item2.colGroup || item2.colspan > 1) {
-          var childIndex = 0;
-          // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
-          layui.each(options.cols[i1 + (parseInt(item2.rowspan) || 1)], function (i22, item22) {
-            //如果子列已经被标注为{HAS_PARENT}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
-            if (item22.HAS_PARENT || (childIndex > 1 && childIndex == item2.colspan)) return;
-
-            item22.HAS_PARENT = true;
-            item22.parentKey = i1 + '-' + i2;
-
-            childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
-          });
-          item2.colGroup = true; //标注是组合列
-        }
-
-        //根据列类型，定制化参数
-        that.initOpts(item2);
+        // 调用解析cols
+        initCols(i1, item1, i2, item2);
       });
     });
   };
@@ -760,12 +922,16 @@ layui.define(['table'], function (exports) {
   };
 
   // 添加一条临时数据
-  table.Class.prototype.addTemp = function (numbers, callback) {
+  table.Class.prototype.addTemp = function (numbers, data, callback, notScroll) {
     var that = this;
     var tds_fixed = [], tds_fixed_r = [], tds = [];
-    var options = that.config, item1 = {};
+    var options = that.config, item1 = data || {};
     numbers = -numbers;
-    table.cache[that.key][numbers] = {};
+    if (that.layBody.find('tr[data-index="' + numbers + '"]').length) {
+      // 已经存在
+      return;
+    }
+    table.cache[that.key][numbers] = item1;
     that.eachCols(function (i3, item3) {
       var field = item3.field || i3
         , key = options.index + '-' + item3.key
@@ -829,12 +995,12 @@ layui.define(['table'], function (exports) {
     that.elem.removeClass('layui-table-none-overflow');
     // 追加到最后
     that.layMain.find('tbody').append('<tr class="layui-tablePlug-data-temp" data-index="' + numbers + '">' + tds.join('') + '</tr>');
-    that.layFixLeft.find('tbody').append('<tr class="layui-tablePlug-data-temp" data-index="' + numbers + '">' + tds_fixed.join('') + '</tr>');
+    that.layFixLeft.removeClass(HIDE).find('tbody').append('<tr class="layui-tablePlug-data-temp" data-index="' + numbers + '">' + tds_fixed.join('') + '</tr>');
     that.layFixRight.find('tbody').append('<tr class="layui-tablePlug-data-temp" data-index="' + numbers + '">' + tds_fixed_r.join('') + '</tr>');
     that.renderForm();
     that.resize();
     // 滚动到底部
-    that.layBody.scrollTop(that.layBody[0].scrollHeight);
+    notScroll || that.layBody.scrollTop(that.layBody[0].scrollHeight);
 
     that.layBody.find('tr.layui-tablePlug-data-temp[data-index="' + numbers + '"]')
       .find('td:first-child')
@@ -847,9 +1013,13 @@ layui.define(['table'], function (exports) {
   };
 
   // 对外提供添加临时数据的接口
-  table.addTemp = function (id, callback) {
+  table.addTemp = function (id, data, callback) {
     var ins = getIns(id);
-    ins && ins.addTemp(table.getTemp(id).numbers, callback);
+    if (typeof data === 'function') {
+      callback = data;
+      data = {};
+    }
+    ins && ins.addTemp(table.getTemp(id).numbers, (data && typeof data === 'object') ? data : {}, callback);
   };
 
   // 获得临时数据
@@ -904,6 +1074,28 @@ layui.define(['table'], function (exports) {
     table.cleanTemp(tableId, trElem.data('index'));
   });
 
+  var asyncChild = function (index, cols, i1, item2) {
+    //如果是组合列，则捕获对应的子列
+    // if (!item2.CHILD_COLS && item2.colGroup) {
+    if (item2.colGroup) {
+      var childIndex = 0;
+      index++
+      item2.CHILD_COLS = [];
+      // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
+      // 找到它的子列所在cols的下标
+      var i2 = i1 + (parseInt(item2.rowspan) || 1);
+      layui.each(cols[i2], function (i22, item22) {
+        //如果子列已经被标注为{PARENT_COL_INDEX}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
+        if (item22.PARENT_COL_INDEX || (childIndex >= 1 && childIndex == (item2.colspan || 1))) return;
+        item22.PARENT_COL_INDEX = index;
+
+        item2.CHILD_COLS.push(item22);
+        childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
+        asyncChild(index, cols, i2, item22);
+      });
+    }
+  };
+
   //遍历表头
   table.eachCols = function (id, callback, cols) {
     var that = this;
@@ -914,26 +1106,30 @@ layui.define(['table'], function (exports) {
 
     //重新整理表头结构
     layui.each(cols, function (i1, item1) {
+      if (i1 > 0) {
+        return true;
+      }
       layui.each(item1, function (i2, item2) {
 
-        //如果是组合列，则捕获对应的子列
-        if (item2.colGroup) {
-          var childIndex = 0;
-          index++
-          item2.CHILD_COLS = [];
-          // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
-          // 找到它的子列
-          // layui.each(cols[i1 + 1], function(i22, item22){
-          layui.each(cols[i1 + (parseInt(item2.rowspan) || 1)], function (i22, item22) {
-            //如果子列已经被标注为{PARENT_COL_INDEX}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
-            if (item22.PARENT_COL_INDEX || (childIndex > 1 && childIndex == item2.colspan)) return;
+        // //如果是组合列，则捕获对应的子列
+        // if (item2.colGroup) {
+        //   var childIndex = 0;
+        //   index++
+        //   item2.CHILD_COLS = [];
+        //   // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
+        //   // 找到它的子列
+        //   // layui.each(cols[i1 + 1], function(i22, item22){
+        //   layui.each(cols[i1 + (parseInt(item2.rowspan) || 1)], function (i22, item22) {
+        //     //如果子列已经被标注为{PARENT_COL_INDEX}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
+        //     if (item22.PARENT_COL_INDEX || (childIndex >= 1 && childIndex == (item2.colspan || 1))) return;
+        //     item22.PARENT_COL_INDEX = index;
+        //
+        //     item2.CHILD_COLS.push(item22);
+        //     childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
+        //   });
+        // }
 
-            item22.PARENT_COL_INDEX = index;
-
-            item2.CHILD_COLS.push(item22);
-            childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
-          });
-        }
+        asyncChild(index, cols, i1, item2);
 
         if (item2.PARENT_COL_INDEX) return; //如果是子列，则不进行追加，因为已经存储在父列中
         arrs.push(item2)
@@ -1023,7 +1219,7 @@ layui.define(['table'], function (exports) {
                     }),
                     page: false,
                     skin: 'nob',
-                    id: 'layui-tablePlug-col-filter-layer',
+                    // id: 'layui-tablePlug-col-filter-layer',
                     even: false,
                     height: nodes.length > 8 ? layerHeight : null,
                     size: 'sm',
@@ -1069,160 +1265,119 @@ layui.define(['table'], function (exports) {
     }, that.config.cols);
   };
 
+  // 表格反转
+  table.Class.prototype.reverse = function () {
+    var that = this;
+    var config = that.config;
+    var isVertical = config.reversal;
+
+    that.elem[isVertical ? 'addClass' : 'removeClass']('vertical');
+    setTimeout(function () {
+      that.layTotal.css({top: isVertical ? that.layTool.outerHeight() - 1 + 'px' : 0});
+      that.layMain.css({
+        marginLeft: isVertical ? that.layHeader.width() + 'px' : 0,
+        marginRight: (isVertical && config.totalRow) ? that.layTotal.width() + 'px' : 0
+      });
+      isVertical || that.layHeader.scrollLeft(that.layMain.scrollLeft());
+    }, 0);
+    return that;
+  };
+
+  // 调整表格实例resize的逻辑如果表格是反转了需要重新更新一下反转的效果
+  var tableResize = table.Class.prototype.resize;
+  if (!tableResize.modifiedByTablePlug) {
+    table.Class.prototype.resize = function () {
+      var that = this;
+      var ret = tableResize.call(that);
+      that.config.reversal === true && that.reverse();
+      return ret;
+    };
+    table.Class.prototype.resize.modifiedByTablePlug = true;
+  }
+
   // 改造table.render和reload记录返回的对象
   var tableRender = table.render;
   table.render = function (config) {
     var that = this;
-    var settingTemp = $.extend(true, {}, table.config, config);
-    // table一般要给定id而且这个id就是当前table的实例的id
-    var tableId = config.id || $(config.elem).attr('id');
-
-    if (!tableCheck.check(tableId)) {
-      // 如果render的时候设置了checkStatus或者全局设置了默认跨页保存那么重置选中状态
-      tableCheck.init(tableId, settingTemp.checkStatus ? (settingTemp.checkStatus['default'] || []) : []);
-    }
-
-    if (settingTemp.checkDisabled && isArray(settingTemp.checkDisabled.data) && settingTemp.checkDisabled.data.length) {
-      tableCheck.disabled(tableId, isArray(settingTemp.checkDisabled.data) ? settingTemp.checkDisabled.data : []);
-    }
-
-    // 改造parseData
-    var parseData = settingTemp.parseData;
-    if (!parseData || !parseData.plugFlag) {
-      config.parseData = function (ret) {
-        var parseDataThat = this;
-        ret = typeof parseData === 'function' ? (parseData.call(parseDataThat, ret) || ret) : ret;
-        var dataName = settingTemp.response ? (settingTemp.response.dataName || 'data') : 'data';
-        dataRenderChecked(ret[dataName], parseDataThat.id);
-        return ret;
-      };
-      config.parseData.plugFlag = true;
-    }
-
-    // 如果是data模式
-    if (!config.url && isArray(config.data)) {
-      dataRenderChecked(config.data, tableId, settingTemp);
-    }
-
-    // 如果配置了字段筛选的记忆需要更新字段的hide设置
-    if (settingTemp.colFilterRecord) {
-      var record = colFilterRecord.get(tableId, config.colFilterRecord);
-      $.each(config.cols, function (i, item1) {
-        $.each(item1, function (j, item2) {
-          // item2.hide = !!record[i + '-' + j]
-          item2.hide = !!record[item2.field];
-        });
-      });
-    } else {
-      colFilterRecord.clear(tableId);
-    }
-
-    // 处理复杂表头的单列和并列的问题
-    if (config.cols.length > 1) {
-      layui.each(config.cols, function (i1, item1) {
-        layui.each(item1, function (i2, item2) {
-          if (!item2.field && !item2.toolbar && (!item2.colspan || item2.colspan === 1) && (tableSpacialColType.indexOf(item2.type) === -1)) {
-            item2[COLGROUP] = true;
-          } else if (item2[COLGROUP] && !(item2.colspan > 1)) {
-            // 如果有乱用colGroup的，明明是一个字段列还给它添加上这个属性的会在这里KO掉，叫我表格小卫士^_^
-            item2[COLGROUP] = false;
-          }
-        });
-      });
-    }
-
     var insTemp = tableRender.call(that, config);
-    var configTemp = insTemp.config;
-    var tableView = configTemp.elem.next();
-    // 如果table的视图上的lay-id不等于当前表格实例的id强制修改,这个是个非常实用的配置。
-    tableView.attr('lay-id') !== configTemp.id && tableView.attr('lay-id', configTemp.id);
-
-    var insObj = getIns(configTemp.id); // 获得当前的table的实例，对实例内部的方法进行改造
-    // 在render的时候就调整一下宽度，不要不显示或者拧成一团
-    insTemp.setColsWidth();
-
-    // 补充被初始化的时候设置宽度时候被关掉的loading，如果是data模式的实际不会走异步的，所以不需要重新显示loading
-    insObj.config.url && insObj.loading();
-
-    // 同步滚动条
-    insObj.layMain.off('scroll') // 去掉layMain原始的事件
+    var insObj = getIns(insTemp.config.id); // 获得当前的table的实例，对实例内部的方法进行改造
+    // 同步滚动条 如果render的节点不存在，就不处理事件
+    insObj.layMain && insObj.layMain.off('scroll') // 去掉layMain原始的事件
       .on('scroll', function () {
-      var othis = $(this)
-        , scrollLeft = othis.scrollLeft()
-        , scrollTop = othis.scrollTop();
 
-      insObj.layHeader.scrollLeft(scrollLeft);
-      insObj.layTotal.scrollLeft(scrollLeft);
-      // 过滤掉鼠标滚动fixed区域而联动滚动main的情况
-      insObj.layFixed.find(ELEM_BODY + ':not(.' + FIXED_SCROLL + ')').scrollTop(scrollTop);
+        var othis = $(this)
+          , scrollLeft = othis.scrollLeft()
+          , scrollTop = othis.scrollTop();
 
-      layer.close(insObj.tipsIndex);
-    });
+        insObj.layHeader.scrollLeft(scrollLeft);
+        insObj.layTotal.scrollLeft(scrollLeft);
+        // 过滤掉鼠标滚动fixed区域而联动滚动main的情况
+        // insObj.layFixed.find(ELEM_BODY + ':not(.' + FIXED_SCROLL + ')').scrollTop(scrollTop);
+        insObj.layFixed.find(ELEM_BODY + ':not(:hover)').scrollTop(scrollTop);
+
+        layer.close(insObj.tipsIndex);
+      });
 
     // 监听ELEM_BODY的滚动
-    insObj.layFixed.find(ELEM_BODY).on('scroll', function () {
+    insObj.layFixed && insObj.layFixed.find(ELEM_BODY).on('scroll', function () {
       var elemBody = $(this);
-      if (elemBody.hasClass(FIXED_SCROLL)) {  // 只有当前鼠标的fixed区域才需要处理
+      if (elemBody.is(':hover')) {  // 只有当前鼠标的fixed区域才需要处理
         // 同步两个fixed的滚动
-        insObj.layFixed.find(ELEM_BODY).scrollTop(elemBody.scrollTop());
+        insObj.layFixed.find(ELEM_BODY + ':not(:hover)').scrollTop(elemBody.scrollTop());
         // 联动main的滚动
         insObj.layMain.scrollTop(elemBody.scrollTop());
       }
-    }).on('mouseenter', function () {
-      $(this).addClass(FIXED_SCROLL);
-    }).on('mouseleave', function () {
-      $(this).removeClass(FIXED_SCROLL);
-      insObj.layFixed.removeClass(FIXED_SCROLL);
     });
 
-    // 处理鼠标移入右侧
-    insObj.layFixRight.find(ELEM_BODY).on('mouseenter', function () {
-      var elemFixedR = insObj.layFixRight;
-      if (elemFixedR.css('right') !== '-1px') {
-        // 如果有滚动条的话
-        elemFixedR.addClass(FIXED_SCROLL);
-      } else {
-        setTimeout(function () {
-          if (elemFixedR.css('right') !== '-1px') {
-            console.log('出现了一开始还没有打滚动条补丁的时候就触发的情况');
-            elemFixedR.addClass(FIXED_SCROLL);
-          }
-        }, 50);
-      }
-    });
-
-    // 左侧鼠标移入目前会出现一个新的滚动条，这个目前认定是正常的效果，避免鼠标没有滚轮就无法滚动左侧固定的情况 和下面的两种情况哪种更好待定
-    // 下面的代码是为了处理掉左侧固定列的鼠标悬浮可以看不到滚动条，让它看着跟平时一样，但是如果需要用到鼠标拖动滚动条的情况就做不了，只能用滚轮滚动
-    insObj.layFixLeft.find(ELEM_BODY).on('mouseenter', function () {
-      var widthOut = insObj.layFixLeft.find(ELEM_HEADER).find('table').width();
-      var widthIn = insObj.layFixLeft.find(ELEM_HEADER).width() + 1;
-      insObj.layFixLeft.css({width: widthOut + 'px'}).find(ELEM_BODY).css({width: widthIn + 'px'});
-    }).on('mouseleave', function () {
-      insObj.layFixLeft.css({width: 'auto'}).find(ELEM_BODY).css({width: 'auto'});
-    });
-
-    return tableIns[configTemp.id] = insTemp;
+    if (refresh.timer[insTemp.config.id]) {
+      // 存在定时刷新
+      refresh.reset(insTemp.config.id);
+    }
+    return tableIns[insTemp.config.id] = insTemp;
   };
 
   // 改造table reload
   var tableReload = table.reload;
   var queryParams = (function () {
     // 查询模式的白名单
-    var params = ['url', 'method', 'where', 'contentType', 'headers', 'parseData', 'request', 'response', 'data', 'page', 'initSort', 'autoSort'];
+    var params = ['url', 'method', 'where', 'contentType', 'headers', 'parseData', 'request', 'response', 'data', 'page', 'initSort', 'autoSort', 'reversal'];
+    // 查询模式的黑名单
+    var params_blacklist = ['id', 'elem', 'elem', 'cols', 'width', 'height'];
     return {
       // 获得查询的属性
       getParams: function () {
-        return params;
+        return $.extend(true, [], params);
+      },
+      getParamsBlacklist: function () {
+        return $.extend(true, [], params_blacklist);
       },
       // 注册查询的属性，方便后面自己有扩展新的功能的时候，有一些配置可以注册成不重载的属性
       registParams: function () {
+        // 过渡期处理
+        // 智能重载
+        console.warn('智能重载相关的部分已经从查询模式白名单模式修改为查询模式参数的黑名单模式，所以该方法基本是启用状态，' +
+          '自定义的参数如果不是会修改整个table的框子的可以不用像之前一样要注册一下加入白名单了，使用起来会更加方便一些');
+        // var that = this;
+        // layui.each(arguments, function (i, value) {
+        //   if (isArray(value)) {
+        //     that.registParams.apply(that, value);
+        //   } else {
+        //     if (typeof value === 'string' && params.indexOf(value) === -1) {
+        //       params.push(value);
+        //     }
+        //   }
+        // });
+      },
+      registerBlacklist: function () {
+        // 将一些属性加入黑名单
+        console.warn('不建议自己调用改方法将参数加入查询参数的黑名单，除非是在非常了解该功能的前提下');
         var that = this;
         layui.each(arguments, function (i, value) {
           if (isArray(value)) {
-            that.registParams.apply(that, value);
+            that.registerBlacklist.apply(that, value);
           } else {
-            if (typeof value === 'string' && params.indexOf(value) === -1) {
-              params.push(value);
+            if (typeof value === 'string' && params_blacklist.indexOf(value) === -1) {
+              params_blacklist.push(value);
             }
           }
         });
@@ -1235,7 +1390,7 @@ layui.define(['table'], function (exports) {
 
   // 是否启用智能重载模式
   var smartReload = (function () {
-    var enable = false;
+    var enable = true; // v0.2.0之后默认开启智能重载
     return {
       enable: function () {
         if (arguments.length) {
@@ -1253,7 +1408,7 @@ layui.define(['table'], function (exports) {
   })();
 
   // 添加两个目前tablePlug扩展的属性到查询模式白名单中
-  queryParams.registParams('colFilterRecord', 'checkStatus', 'smartReloadModel', 'checkDisabled');
+  // queryParams.registParams('colFilterRecord', 'checkStatus', 'smartReloadModel', 'checkDisabled');
 
   table.reload = function (tableId, config, shallowCopy) {
     var that = this;
@@ -1274,16 +1429,28 @@ layui.define(['table'], function (exports) {
         // 如果是否分页发生了改变
         reloadModel = true;
       }
+      // if (!reloadModel) {
+      //   // 白名单的校验
+      //   var dataParamsTemp = $.extend(true, [], queryParams.getParams());
+      //
+      //   layui.each(config, function (_key, _value) {
+      //     var indexTemp = dataParamsTemp.indexOf(_key);
+      //     if (indexTemp === -1) {
+      //       return reloadModel = true;
+      //     } else {
+      //       // 如果匹配到去掉这个临时的属性，下次查找的时候减少一个属性
+      //       dataParamsTemp.splice(indexTemp, 1);
+      //     }
+      //   });
+      // }
       if (!reloadModel) {
-        var dataParamsTemp = $.extend(true, [], queryParams.getParams());
+        // 黑名单的校验
+        var dataParamsTemp = queryParams.getParamsBlacklist();
 
         layui.each(config, function (_key, _value) {
           var indexTemp = dataParamsTemp.indexOf(_key);
-          if (indexTemp === -1) {
+          if (indexTemp !== -1) {
             return reloadModel = true;
-          } else {
-            // 如果匹配到去掉这个临时的属性，下次查找的时候减少一个属性
-            dataParamsTemp.splice(indexTemp, 1);
           }
         });
       }
@@ -1326,13 +1493,20 @@ layui.define(['table'], function (exports) {
   // 原始的
   var checkStatus = table.checkStatus;
   // 重写table的checkStatus方法
-  table.checkStatus = function (tableId) {
+  table.checkStatus = function (tableId, getCacheData) {
     var that = this;
     var statusTemp = checkStatus.call(that, tableId);
     var config = getConfig(tableId);
     if (config && config.checkStatus) {
       // 状态记忆
       statusTemp.status = tableCheck.get(tableId);
+      if (getCacheData) {
+        statusTemp.dataCache = [];
+        var cacheDataTemp = cacheData[config.id];
+        layui.each(statusTemp.status[CHECK_TYPE_ADDITIONAL], function (index, id) {
+          cacheDataTemp[id] && statusTemp.dataCache.push(cacheDataTemp[id]);
+        });
+      }
     }
     if (config && config.checkDisabled) {
       var checkDisabledTemp = config.checkDisabled;
@@ -1543,6 +1717,478 @@ layui.define(['table'], function (exports) {
     layui.stope(event);
   });
 
+  // 是否让固定列支持鼠标滚动
+  var enableTableFixedScroll = function (enabled) {
+    enabled = !!enabled;
+
+    $(document).off('mouseenter', '.' + ELEM_VIEW + ' ' + ELEM_FIXR + ' ' + ELEM_BODY)
+      .off('mouseleave', '.' + ELEM_VIEW + ' ' + ELEM_FIXR + ' ' + ELEM_BODY)
+      .off('mouseenter', '.' + ELEM_VIEW + ' ' + ELEM_FIXL + ' ' + ELEM_BODY)
+      .off('mouseleave', '.' + ELEM_VIEW + ' ' + ELEM_FIXL + ' ' + ELEM_BODY)
+      .off('mouseenter', '.' + ELEM_VIEW + ' ' + ELEM_FIXED + ' ' + ELEM_HEADER);
+
+    if (enabled) {
+      // 给固定列添加一些鼠标的事件监听，用于支持固定列滚动
+      $(document).on('mouseenter', '.' + ELEM_VIEW + ' ' + ELEM_FIXR + ' ' + ELEM_BODY, function (event) {
+        // 处理鼠标移入右侧
+        var elem = $(this);
+        var elemFixedR = elem.closest(ELEM_FIXR);
+        if (elemFixedR.css('right') !== '-1px') {
+          // 如果有滚动条的话
+          elemFixedR.addClass(FIXED_SCROLL);
+        } else {
+          setTimeout(function () {
+            if (elemFixedR.css('right') !== '-1px') {
+              console.log('出现了一开始还没有打滚动条补丁的时候就触发的情况');
+              elemFixedR.addClass(FIXED_SCROLL);
+            }
+          }, 50);
+        }
+      }).on('mouseleave', '.' + ELEM_VIEW + ' ' + ELEM_FIXR + ' ' + ELEM_BODY, function (event) {
+        // 处理鼠标移出右侧
+        $(this).closest(ELEM_FIXR).removeClass(FIXED_SCROLL);
+      }).on('mouseenter', '.' + ELEM_VIEW + ' ' + ELEM_FIXL + ' ' + ELEM_BODY, function (event) {
+        // 处理鼠标移入左侧
+        var elem = $(this);
+        var elemFixedL = elem.closest(ELEM_FIXL);
+        elemFixedL.addClass(FIXED_SCROLL);
+        var widthOut = elemFixedL.find(ELEM_HEADER).find('table').width();
+        var widthIn = elemFixedL.find(ELEM_HEADER).width() + 1;
+        elemFixedL.css({width: widthOut + 'px'}).find(ELEM_BODY).css({width: widthIn + 'px'});
+      }).on('mouseleave', '.' + ELEM_VIEW + ' ' + ELEM_FIXL + ' ' + ELEM_BODY, function (event) {
+        // 处理鼠标移出左侧
+        $(this).css({width: 'auto'}).closest(ELEM_FIXL).css({width: 'auto'}).removeClass(FIXED_SCROLL);
+      }).on('mouseenter', '.' + ELEM_VIEW + ' ' + ELEM_FIXED + ' ' + ELEM_HEADER, function (event) {
+        var elem = $(this);
+        elem.closest(ELEM_FIXED).removeClass(FIXED_SCROLL);
+      });
+    }
+  };
+
+  // 默认开启固定列滚动监听的支持
+  enableTableFixedScroll(true);
+
+
+  // 同步表格中是否固定列上的的全选状态，
+  form.on('checkbox(layTableAllChoose)', function (obj) {
+    var elem = $(obj.elem);
+    var tableView = elem.closest('.' + ELEM_VIEW);
+    form.render('checkbox',
+      tableView.attr('lay-filter'),
+      tableView.find('[lay-filter="layTableAllChoose"]' + (obj.elem.checked ? ':not(:checked)' : ':checked')).prop('checked', obj.elem.checked)
+    );
+  });
+
+  // 同步表格中是否固定列上的的复选框状态，
+  form.on('checkbox(layTableCheckbox)', function (obj) {
+    var elem = $(obj.elem);
+    var tableView = elem.closest('.' + ELEM_VIEW);
+    var trElem = tableView.find('tr[data-index="' + elem.closest('tr').data('index') + '"]');
+    form.render('checkbox',
+      tableView.attr('lay-filter'),
+      trElem.find('[lay-filter="layTableCheckbox"]' + (obj.elem.checked ? ':not(:checked)' : ':checked')).prop('checked', obj.elem.checked)
+    );
+  });
+
+  // 将cache的数据重新渲染一下
+  var renderData = function (activeIndex, sort) {
+    var that = this;
+    var resTemp = {};
+    var options = that.config;
+    var scrollTop = that.layMain.scrollTop();
+    var scrollLeft = that.layMain.scrollLeft();
+
+    activeIndex = activeIndex >= 0 ? activeIndex : that.layBody.find('tr.' + ELEM_CLICK).data('index');
+    resTemp[options.response.statusName] = options.response.statusCode;
+    resTemp[options.response.msgName] = '数据更新';
+    resTemp[options.response.dataName] = table.cache[options.id];
+    resTemp[options.response.countName] = that.count || (options.page ? options.page.count : options.data.length);
+    if (sort) {
+      // 如果是移动了数据，会取消当前的排序规则，以当前的顺序为准进行调整，如果还需要排序
+      // delete that.sortKey;
+      that.layHeader.find('.layui-table-sort[lay-sort]').attr('lay-sort', '');
+    }
+    that.renderData(resTemp, that.page, resTemp[options.response.countName], sort);
+
+    // 滚动到之前的位置
+    that.layBody.scrollTop(scrollTop);
+    that.layMain.scrollLeft(scrollLeft);
+
+    // 执行done回调保证跟初始化一样
+    typeof options.done === 'function' && options.done(resTemp, that.page, resTemp[options.response.countName]);
+
+    activeIndex >= 0 && setTimeout(function () {
+      that.setThisRowChecked(activeIndex);
+    }, 0);
+
+    return that;
+  };
+
+  // 表格记录顺序调整
+  var move = function (tableId, from, to) {
+    var that = this;
+    if ((!from && from !== 0) || (!to && to !== 0) || from < 0 || to < 0 || from === to) {
+      return that;
+    }
+    var tableObj = getIns(tableId);
+    if (tableObj) {
+      var options = tableObj.config;
+      var dataTemp = table.cache[tableId];
+      if (!dataTemp || !dataTemp[from] || !dataTemp[to]) {
+        // 没有找到对应的数据
+        return that;
+      }
+      dataTemp.splice(to, 0, dataTemp.splice(from, 1)[0]);
+
+      renderData.call(tableObj, to, true);
+    }
+    return that;
+  };
+
+  // 更新表格的数据
+  var update = function (tableId, dataIndex, data) {
+    var that = this;
+
+    if (!tableId) {
+      console.warn('tableId不能为空');
+      return that;
+    }
+
+    if (dataIndex && (typeof dataIndex === 'object' || isArray(dataIndex))) {
+      // 第二个参数如果是要修改的数据的话
+      data = dataIndex;
+      dataIndex = '';
+    }
+    if (dataIndex === null || isNaN(dataIndex)) {
+      // 如果dataIndex不是数值就作废
+      dataIndex = '';
+    }
+
+    if (data && (typeof data !== 'object' && !isArray(data))) {
+      // 存在data，但是格式不对
+      console.warn('data格式必须是对象或者数组');
+      return that;
+    }
+
+    var tableObj = getIns(tableId);
+    if (tableObj) {
+      var dataTemp = table.cache[tableId];
+      var options = tableObj.config;
+      if (!data) {
+        // 没有传data默认为重新渲染一下cache里面的数据
+        renderData.call(tableObj);
+        return that;
+      }
+
+      if (isArray(data)) {
+        // 如果是一次性更新多条记录
+        dataIndex = '';
+      }
+      if (dataIndex !== '') {
+        // 更新指定的某一条记录
+        $.extend(true, dataTemp[dataIndex], data);
+      } else {
+        if (!isArray(data)) {
+          data = [data];
+        }
+        if (!options.primaryKey) {
+          // 没有设置主键的表格按照顺序update进去
+          $.extend(true, dataTemp, data);
+        } else {
+          // 如果设置了主键按照主键一致更新进去
+          // 遍历更新的数据
+          layui.each(data, function (index, obj) {
+            if (!obj[options.primaryKey]) {
+              // 等价 continue
+              return;
+            }
+            // 遍历缓存数据找到匹配的
+            layui.each(dataTemp, function (indexTemp, objTemp) {
+              if (objTemp[options.primaryKey] === obj[options.primaryKey]) {
+                $.extend(true, dataTemp[indexTemp], obj);
+                // 等价 break;
+                return true;
+              }
+            });
+          });
+        }
+      }
+      renderData.call(tableObj);
+    }
+    return that;
+  };
+
+  // 新增记录
+  var add = function (tableId, data) {
+    var that = this;
+
+    if (!tableId) {
+      console.warn('tableId不能为空');
+      return that;
+    }
+
+    if (!data) {
+      console.warn('data不能为空');
+      return that;
+    }
+
+    var tableObj = getIns(tableId);
+    if (tableObj) {
+      var options = tableObj.config;
+      if (options.url) {
+        // 如果是url模式的话直接reload会更加合理
+        table.reload(tableId);
+        return that;
+      } else {
+        if (isArray(options.data)) {
+          if (typeof data !== 'object' && !isArray(data)) {
+            console.warn('data必须是对象或者数组');
+            return that;
+          }
+          // data 模式
+          if (!isArray(data)) {
+            data = [data];
+          }
+          var primaryKey = getPrimaryKey(options);
+          layui.each(data, function (index, _data) {
+            if (primaryKey) {
+              // 如果有设置主键
+              if (!_data[primaryKey]) {
+                // 缺少主键的记录,临时生成一个，一般来说不建议缺少主键的值，这个add的功能常用在请求接口之后返回新增的数据了希望添加到data中
+                // 如果新增走的不是先请求接口的建议还是用addTemp添加临时数据的形式
+                _data[primaryKey] = 'idTemp_' + new Date().getTime() + '_' + Math.round(Math.random() * 1000000)
+              }
+            }
+            options.data.push(_data)
+          });
+          table.reload(tableId);
+        }
+        return that;
+      }
+    }
+  };
+
+  // 删除记录
+  var del = function (tableId, data) {
+    var that = this;
+    if (!tableId) {
+      console.warn('tableId不能为空');
+      return that;
+    }
+    if (!data && data !== 0) {
+      console.warn('data不能为空');
+      return that;
+    }
+
+    var tableObj = getIns(tableId);
+    if (tableObj) {
+      var options = tableObj.config;
+      var optionsTemp = {};
+      var countTemp = tableObj.count || (options.page ? options.page.count : options.data.length);
+      var primaryKey = getPrimaryKey(options);
+      if (options.url) {
+        if (options.page) {
+          if (isArray(data)) {
+            countTemp -= data.length;
+          } else {
+            countTemp -= 1;
+          }
+          optionsTemp.page = {};
+          var pagesTemp = Math.ceil(countTemp / options.page.limit);
+          optionsTemp.page.curr = countTemp === 0 ? 1 : (tableObj.page > pagesTemp ? (pagesTemp || 1) : tableObj.page);
+        }
+        layui.each(data, function (index, item) {
+          var idTemp = typeof item === 'object' ? item[primaryKey] : item;
+          // 将选中的记录给去掉如果有的话
+          tableCheck.update(tableId, idTemp, false);
+        });
+        // 如果是url模式的话直接reload会更加合理
+        table.reload(tableId, optionsTemp);
+        return that;
+      } else {
+        if (isArray(options.data)) {
+          // data 模式
+          if (typeof data !== 'object' && !isArray(data)) {
+            if (isNaN(data)) {
+              return that;
+            }
+            var nodeDel;
+            // 删除某个下标
+            if (options.page) {
+              // 分页的
+              if (data < options.page.limit) {
+                nodeDel = options.data.splice((tableObj.page - 1) * options.page.limit + data, 1);
+              }
+            } else {
+              nodeDel = options.data.splice(data, 1);
+            }
+            if (!nodeDel.length) {
+              // 传过来的下标有问题，没有删除到数据
+              return that;
+            }
+            countTemp -= 1;
+            tableCheck.update(tableId, nodeDel[0][primaryKey], false);
+          } else {
+            if (!isArray(data)) {
+              data = [data];
+            }
+            layui.each(data, function (index, _data) {
+              if (primaryKey) {
+                // 如果有设置主键
+                if (_data && typeof _data === 'object' && !_data[primaryKey]) {
+                  // 缺少主键的记录
+                  return;
+                }
+              }
+              layui.each(options.data, function (index, value) {
+                // 传过来的data支持id集合和数据对象集合
+                if (_data === value[primaryKey] || _data[primaryKey] === value[primaryKey]) {
+                  options.data.splice(index, 1);
+                  tableCheck.update(tableId, value[primaryKey], false);
+                  countTemp -= 1;
+                  return true;
+                }
+              });
+            });
+          }
+          if (options.page) {
+            optionsTemp.page = {};
+            var pagesTemp = Math.ceil(countTemp / options.page.limit);
+            optionsTemp.page.curr = countTemp === 0 ? 1 : (tableObj.page > pagesTemp ? (pagesTemp || 1) : tableObj.page);
+          }
+          table.reload(tableId, optionsTemp);
+        }
+        return that;
+      }
+    }
+  };
+
+  // 定时刷新某个表格
+  var refresh = function (tableId, time) {
+    var that = this;
+    var timer = refresh.timer;
+    if (tableId === false) {
+      // 取消所有的定时刷新
+      layui.each(timer, function (_id, _timer) {
+        // clearInterval(_timer);
+        refresh.clear(_id);
+      });
+      // refresh.timer = {};
+      return that;
+    }
+    if (!tableId) {
+      console.warn('tableId不能为空');
+      return that;
+    }
+    var tableObj = getIns(tableId);
+    if (!tableObj) {
+      console.warn('找不到id为', tableId, '的实例');
+      return that;
+    }
+    var options = tableObj.config;
+
+    if (time === false) {
+      // 清除当前表格的定时刷新
+      // clearInterval(timer[tableId]);
+      // delete timer[tableId];
+      refresh.clear(tableId);
+      return that;
+    }
+
+    if (!time && time !== 0) {
+      // 单次刷新
+      tableObj.pullData(tableObj.page, true);
+      return that;
+    }
+
+    if (time === true || time < 50) {
+      time = 50; // 默认最高频率为50毫秒一次
+    }
+
+    // clearInterval(timer[tableId]);
+    refresh.clear(tableId);
+    timer[tableId] = {
+      time: time,
+      index: setInterval(function () {
+        if (!$(document).find(options.elem).length) {
+          // 如果当前表格已经不存在
+          refresh.call(that, tableId, false);
+        } else {
+          // tableObj.pullData(tableObj.page, true)
+          refresh(tableId);
+        }
+      }, time)
+    };
+
+  };
+  refresh.timer = {};
+  refresh.clear = function (tableId) {
+    if (refresh.timer[tableId]) {
+      clearInterval(refresh.timer[tableId].index);
+      var time = refresh.timer[tableId].time;
+      delete refresh.timer[tableId];
+      return time;
+    }
+  };
+  refresh.reset = function (tableId) {
+    refresh(tableId, refresh.clear(tableId));
+  };
+
+
+  // 渲染统计行
+  var renderTotal = function (tableId, field, value) {
+    var that = this;
+    if (!tableId) {
+      console.warn('tableId不能为空');
+      return that;
+    }
+    var tableObj;
+    if (typeof tableId === 'string') {
+      tableObj = getIns(tableId);
+    } else {
+      tableObj = tableId;
+      tableId = tableObj.key || (tableObj.config ? tableObj.config.id : '');
+    }
+
+    if (!tableObj || !tableId) {
+      console.warn('找不到id为', tableId, '的实例');
+      return that;
+    }
+    var options = tableObj.config;
+    if (!options.totalRow) {
+      return that;
+    }
+
+    var totalElem = tableObj.layTotal;
+    if (field) {
+      totalElem.find('td[data-field="' + field + '"] div.layui-table-cell').html(value || '');
+      return that;
+    }
+    table.eachCols(tableId, function (index, item) {
+      if (item.totalRow && !item.totalRowText && item.field) {
+        var fieldTemp = item.field;
+        var totalFormat = item.totalFormat || 'sum';
+        var dataTemp = $.extend([], table.cache[tableId]);
+        var res;
+        if (typeof totalFormat === 'function') {
+          res = totalFormat.call(options, tableId, dataTemp, fieldTemp);
+        } else {
+          res = 0;
+          switch (totalFormat) {
+            case 'sum':
+              layui.each(dataTemp, function (index, data) {
+                res += parseFloat(data[fieldTemp]) || 0;
+              });
+              break;
+          }
+        }
+        res && totalElem.find('td[data-field="' + fieldTemp + '"] div.layui-table-cell').html(res || '');
+      }
+    });
+
+  };
+
+
   $.extend(tablePlug, {
     CHECK_TYPE_ADDITIONAL: CHECK_TYPE_ADDITIONAL
     , CHECK_TYPE_REMOVED: CHECK_TYPE_REMOVED
@@ -1586,10 +2232,24 @@ layui.define(['table'], function (exports) {
       }
     }
     , getPosition: getPosition
+    , reverseTable: reverseTable
+    , move: move
+    , moveUp: function (tableId, index) {
+      return move.call(this, tableId, index, index - 1);
+    }
+    , moveDown: function (tableId, index) {
+      return move.call(this, tableId, index, index + 1);
+    }
+    , update: update
+    , addData: add
+    , del: del
+    , refresh: refresh
+    , renderTotal: renderTotal
+    , enableTableFixedScroll: enableTableFixedScroll
   });
 
   //外部接口
-  exports('tablePlug', tablePlug);
+  exports(modelName, tablePlug);
 });
 
 

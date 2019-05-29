@@ -22,7 +22,7 @@
   display: none;
 }
 
-#layui-tablePlug-col-filter+ div {
+#layui-tablePlug-col-filter + div {
   margin: 0;
 }
 
@@ -87,13 +87,14 @@ tr.layui-tablePlug-data-temp {
   line-height: 38px;
   height: 38px;
 }
+
 .layui-table-view table[lay-size="sm"] tr.layui-table-hover.layui-tablePlug-data-temp .close_temp:before {
   line-height: 18px;
   height: 18px;
 }
 
-/* 让固定列区域在鼠标移入的时候支持滚动*/
-.layui-table-fixed .layui-table-body:hover {
+/* 让固定列区域在鼠标移入的时候支持滚动 - 开始 */
+.layui-table-fixed.layui-table-fixed-scroll .layui-table-body:hover {
   overflow-y: auto;
 }
 
@@ -101,6 +102,63 @@ tr.layui-tablePlug-data-temp {
   right: 0 !important;
 }
 
-.layui-table-fixed-l:hover {
-  overflow: hidden;
+.layui-table-fixed-l.layui-table-fixed-scroll:hover {
+  overflow-x: hidden;
 }
+
+/* 让固定列区域在鼠标移入的时候支持滚动 - 结束 */
+
+
+/* 表格翻转样式 - 开始 */
+.layui-table-view.vertical {
+  height: auto !important;
+  position: relative;
+}
+
+.layui-table-view.vertical table {
+  -webkit-writing-mode: vertical-lr;
+  -moz-writing-mode: vertical-lr;
+  -ms-writing-mode: tb-lr;
+  writing-mode: vertical-lr;
+}
+
+.layui-table-view.vertical table th > div.layui-table-cell,
+.layui-table-view.vertical table td > div.layui-table-cell {
+  -webkit-writing-mode: horizontal-tb;
+  -moz-writing-mode: horizontal-tb;
+  -ms-writing-mode: lr-tb;
+  writing-mode: horizontal-tb;
+}
+
+.layui-table-view.vertical table th > div.layui-table-cell {
+  /*margin-top: calc(50% - 20px);*/
+  width: 120px;
+}
+
+.layui-table-view.vertical table td > div.layui-table-cell {
+  width: 160px;
+}
+
+/*.layui-table-view.vertical .layui-table-total,*/
+.layui-table-view.vertical .layui-table-fixed {
+  display: none !important;
+}
+
+.layui-table-view.vertical .layui-table-box > .layui-table-main {
+  height: auto !important;
+  /*margin-right: 160px;*/
+}
+
+.layui-table-view.vertical .layui-table-box > .layui-table-header {
+  position: absolute;
+  display: grid;
+}
+
+.layui-table-view.vertical .layui-table-total {
+  position: absolute;
+  right: -1px;
+  border-left-width: 1px;
+  display: grid;
+}
+
+/* 表格翻转样式 - 结束 */

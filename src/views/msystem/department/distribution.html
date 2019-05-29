@@ -1,98 +1,135 @@
-
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
 <style>
-       .child-view  .layui-table-cell{
-    overflow:visible !important;
- }
- .child-view  thead tr{height: 45px;}
-.child-view tbody tr{height: 55px;}
- .layui-form-select ul{
-     z-index:999999
- }
+    .child-view{
+	padding: 20px 10px;
+}
 
     </style>
 <script>
-     var tuizulist = [];
+    var tuizulist = [];
       function LoadData(id,tableid,layerindex){
-        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+        layui.extend({
+        	tablePlug: '{/}layui/lay/plug/tablePlug'
+        }).use(['laypage', 'layer', 'laytpl', 'jquery', 'form', 'setter', 'tablePlug'], function () {
+        	var setter = layui.setter;
+    		var baseurl = setter.baseurl;
             var laytpl = layui.laytpl;
-            var doc = layui.htcsLG;
             var $ = layui.jquery;
             var form = layui.form;
             var deletebilllist=[];
             var table=layui.table;
-            var url1 =  "api/House/userQueryfgy";
-            var url =  "api/BaseData/Queryfgy";
+            var url =  "api/House/Queryhousedepart";
+            var submitUrl = "api/Procedure/distributiondepart";
             var doc = layui.htcsLG;
-            
-            var allresult = [];
-            var Password="";
-            var clos=[[ //表头
+            var tablePlug = layui.tablePlug;
+
+            var cols=[[ //表头
                  { type: 'checkbox'}
-                ,{ field: 'Id', width: 100, title: '编号' }
+                ,{ field: 'Id', width: 80, title: '编号' }
+              , { field: 'CityName', width: 180, title: '城市' }
               , { field: 'CellName', width: 180, title: '小区' }
               , { field: 'Name', width: 280, title: '地址'}
-             ,{ width: 100, title: '房源类型',templet: Ugenttemp  }
+              , {field: 'RecentType', width: 100, title: '房源类型', templet: houseType}
+              , {field: 'storename', width: 120, title: '分配状态', templet: disStatus}
             ]];
-             //加载详情
-            doc.objectQuery(url, {}, function (result) {   
-                var realdata = result.numberData;
-                var getTpl = sysuereditscript.innerHTML,
-                view = document.getElementById('sysuer-edit-view');
-                laytpl(getTpl).render(realdata, function (html) {
-                    view.innerHTML = html;
-                });  
-                form.render('');
-                //加载房源列表
-                doc.objectQuery(url1, {"HouseKeeper":id}, function (data) {
-                var options={"data": data.numberData,"tableid":"#sysuserchildedittable","clos":clos,"height":500};
-                doc.childtable(options);   
-                EventBtn();
-               }); 
-            });
-          
-            
-         //监听提交
-          form.on('submit(save)', function (data) {
-          debugger;
-          var str='';
-          var checkStatus = table.checkStatus('sysuserchildedittable')
-                    , getselect = checkStatus.data;
-                    if (getselect.length == 0) {
-                layer.msg("请选择要处理的数据");
-                return false;
-          }  
-          var arr=[];
-            $.each(getselect,function(index,value){
-                str+=value.Id+",";
-          });
-          if(str.length>0){
-            str=str.substr(0, str.length - 1);  
-          }
-          data.field.Ids=str;
-          data.field.Other1=data.field.HouseKeeper;
-          data.field.Spname='sp_zhuanyi';
-          var datafield=data.field;
-          var tjdata =datafield;
-          var saveoption={
-          url:'api/Procedure/zhuanyifgy',
-          data:tjdata,
-          tableid:tableid,
-          callBack:function(resultData){
-            debugger;
-            if (resultData.Code == 0) {
-                layer.close(layerindex);
-            }
-        }
-       }
-      doc.Submit(saveoption);
-      return false;
-});
+            table.render({
+            	id: 'distribution-table',
+            	elem: '#distribution-table',
+            	url: baseurl + url,
+            	cols: cols,
+            	height: 'full-220',
+            	method: 'post',
+            	toolbar: '#toolbarDemo',
+            	where: {
+            		"access_token": layui.data('layuiAdmin').access_token
+            	},
+            	request: {
+            		pageName: 'pageindex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            	},
+            	responseHandler: function(data) {
 
+                    return {
+                        "total": data.numberCount, //总页数
+                        "rows": data.numberData //数据
+                    };
+                },
+            	response: {
+                    statusName: 'Code' //数据状态的字段名称，默认：code
+                        ,
+                    statusCode: 0 //成功的状态码，默认：0
+                        ,
+                    msgName: 'Message' //状态信息的字段名称，默认：msg
+                        ,
+                    countName: 'numberCount' //数据总数的字段名称，默认：count
+                        ,
+                    dataName: 'numberData' //数据列表的字段名称，默认：data
+                },
+                queryParams: function queryPara(param) {
+                    param.offset = param.offset / 10 + 1;
+                    var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        PageSize: param.limit, //页面大小
+                        PageIndex: param.offset, //页码
+                    };
+                    var object = $.extend({}, temp, options.search);
+                    return object;
+                },
+                page: true,
+               
+                checkStatus: {
+                	default: []
+                },
+                primaryKey: 'Id'
+            });
+            table.on('toolbar(distribution-table)', function(obj){
+            	var layEvent = obj.event;
+            	if(layEvent === 'distribute'){
+            		var arr = table.checkStatus('distribution-table', true).dataCache;
+            		var ids = arr.map(function(obj){return obj.Id}).join(',');
+            		var tjdata = {
+            			Ids: ids,
+            			Other1: id
+            		}
+            		
+      				$.ajax({
+      					url: baseurl + submitUrl,
+		                type: "POST",
+		                async: false,
+		                data: tjdata,
+		                headers: {
+		                    access_token: layui.data('layuiAdmin').access_token
+		                },
+		                dataType: 'json',
+		                success: function(resultData){
+		                	if (resultData.Code == 0) {
+				                
+				                layer.msg(resultData.Message, {
+						            icon: 1,
+						            time: 800//2秒关闭（如果不配置，默认是3秒）
+						        },function(){
+						        	layer.close(layerindex);
+						        	table.reload(tableid);
+						        });
+				            }
+		                }
+      				})
+         			return false; 
+            	}
+            });
         });
       }
-      function Ugenttemp(value) {
-        if (value.RecentType == 2) {
+
+      function disStatus(value){
+      	if (!value.storename) {
+            return '<div>' + "未分配" + '</div>'
+        }else{
+        	return '<div>' + value.storename + '</div>'
+        }
+      }
+
+      function houseType(value){
+      	if (value.RecentType == 2) {
             return '<div>' + "合租" + '</div>'
         } 
         if (value.RecentType == 1) {
@@ -100,55 +137,19 @@
         } 
         if (value.RecentType == 3) {
             return '<div>' + "独栋" + '</div>'
-        } 
-       
-    }
+        }
+      }
 </script>
-
- 
-        <script type="text/html" template >
-            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
-        </script>
-        <script id="sysuereditscript" type="text/html">
-        <form class="layui-form  layui-form-pane hcs-form form-panel" action="">                
-            <div class="form-content">
-                <div class="layui-form-item">
-                    <div class="layui-inline"> 
-                        <label class="layui-form-label">接收人</label> 
-                        <div class="layui-input-inline"> 
-                               <select name="HouseKeeper" id="HouseKeeper" lay-search lay-verify="required" >
-                                       <option value="">请选择</option>
-                                       {{#  layui.each(d, function(index, item1){ }}
-                                       <option value="{{item1.Id}}">{{item1.RealName}}</option>
-                                       {{# });   }}   
-                               </select>
-                        </div> 
-                  </div>
-                </div>
-                
-                <div class="layui-tab layui-tab-card" style="margin-top:0;">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">管理房源</li>
-                    </ul>
-                    <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show">
-                            <div id="toolbar" class="child-toolbar">
-                              
-                            </div>
-                            <table id="sysuserchildedittable" lay-filter="demoEvent1"></table>
-                        </div>
-                        
-                    </div>
-                </div>      
-            </div>
-        </div>
-            <div class="form-bottom">
-                    <div class="form-wrap">
-                        <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-submit="">取消</button>
-                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">转移房源</button>
-                    </div>
-          </div>
-        </form>    
+<script type="text/html" template>
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
 </script>
-    <div id="sysuer-edit-view" class="child-view form-wrapper">
-    </div>
+<script id="departdistributionscript" type="text/html">
+</script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container layui-inline">
+    <span class="layui-btn layui-btn-sm" lay-event="distribute">分配</span>
+  </div>
+</script>
+<div id="depart-distribution-view" class="child-view form-wrapper">
+    <table id="distribution-table" lay-filter="distribution-table"></table>
+</div>
