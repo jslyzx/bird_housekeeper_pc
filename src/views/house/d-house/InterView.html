@@ -136,6 +136,7 @@ Layout = null;
           , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
           , { field: 'Recent', width: 80, title: '租金' }
           , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
+          , { field: 'CreatePersonstr', width: 100, title: '签约人' }
        
     ]], height: 650, url: 'api/Contract/Query',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#zbtnintable',
@@ -508,6 +509,12 @@ function formatterzhouqi(value) {
                              <div class="layui-input-inline"> 
                               <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Measure}}" disabled="" /> 
                              </div> 
+                             <div class="layui-inline"> 
+                                    <label class="layui-form-label">所属部门</label> 
+                                    <div class="layui-input-inline"> 
+                                     <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{doc.ns(d[1].store)}}" disabled="" /> 
+                                    </div> 
+                             </div>
                             </div> 
                            </div> 
                            <div class="layui-form-item"> 
@@ -549,12 +556,7 @@ function formatterzhouqi(value) {
                                                 <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].CellName}}" disabled="" /> 
                                                </div> 
                                            </div> 
-                                           <div class="layui-inline"> 
-                                            <label class="layui-form-label">门店</label> 
-                                            <div class="layui-input-inline"> 
-                                             <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{doc.ns(d[2].store)}}" disabled="" /> 
-                                            </div> 
-                                        </div>
+                                           
                             </div>
                             <div class="layui-form-item"> 
                                     <div class="layui-inline"> 

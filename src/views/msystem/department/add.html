@@ -18,8 +18,11 @@
         {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
         </script>
     <div id="department-edit-view" class="child-view form-wrapper">
+        
         <form class="layui-form  layui-form-pane hcs-form form-panel" action="">
+            
             <div class="form-content">
+               
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">部门名称</label>
@@ -28,9 +31,9 @@
                         </div>
                         <label class="layui-form-label">所属部门</label>
                         <div class="layui-input-inline" style="width: 200px;">
-                            <input type="text" autocomplete="off" class="layui-input" id="tree" lay-filter="tree">
-                            <input type="hidden" name="parentid">
+                            <input type="text" id="tree" lay-filter="tree"  class="layui-input">
                         </div>
+                        <input type="hidden" name="parentid" id="parentid">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -88,12 +91,19 @@
                     $('[name="parentid"]').val(d.current.Id);
                 },
                 success: function(d) {
-                    treeSelect.checkNode('tree', 3);
+                    debugger;
+                    
                     var treeObj = treeSelect.zTree('tree');
                     treeSelect.refresh('tree');
                 }
             });
             form.on('submit(save)', function(data) {
+                debugger;
+                var parentid=$("#parentid").val();
+                if(parentid==undefined){
+                    layer.alert('请选择所属部门', {icon: 5});
+                    return;
+                }
                 var saveoption = {
                     url: 'api/Sysrole/adddepartment',
                     data: data.field,
@@ -101,6 +111,7 @@
                     callBack: function(result) {
                         if (result.Code == 0) {
                             layer.close(layerindex);
+                            loadtree(); 
                         }
                     }
                 }

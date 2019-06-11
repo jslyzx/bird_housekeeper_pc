@@ -16,7 +16,7 @@
             var laytpl = layui.laytpl;
             var $ = layui.jquery;
             var form = layui.form;
-            var deletebilllist=[];
+            var checkarr=[];
             var table=layui.table;
             var url =  "api/House/Queryhousedepart";
             var submitUrl = "api/Procedure/distributiondepart";
@@ -25,14 +25,17 @@
 
             var cols=[[ //表头
                  { type: 'checkbox'}
-                ,{ field: 'Id', width: 80, title: '编号' }
+                ,{ field: 'id', width: 80, title: '编号' }
               , { field: 'CityName', width: 180, title: '城市' }
               , { field: 'CellName', width: 180, title: '小区' }
               , { field: 'Name', width: 280, title: '地址'}
               , {field: 'RecentType', width: 100, title: '房源类型', templet: houseType}
               , {field: 'storename', width: 120, title: '分配状态', templet: disStatus}
             ]];
-            table.render({
+            doc.objectQuery('api/House/checkQueryhousedepart', {"storeid":id}, function (result) {  
+                debugger; 
+                tablePlug.tableCheck.init('distribution-table',result.numberData,'id');
+                table.render({
             	id: 'distribution-table',
             	elem: '#distribution-table',
             	url: baseurl + url,
@@ -75,23 +78,22 @@
                     var object = $.extend({}, temp, options.search);
                     return object;
                 },
+                
                 page: true,
-               
-                checkStatus: {
-                	default: []
-                },
-                primaryKey: 'Id'
+                checkStatus: {},
+                primaryKey: 'id'
             });
             table.on('toolbar(distribution-table)', function(obj){
-            	var layEvent = obj.event;
+                var layEvent = obj.event;
+                debugger;
             	if(layEvent === 'distribute'){
             		var arr = table.checkStatus('distribution-table', true).dataCache;
-            		var ids = arr.map(function(obj){return obj.Id}).join(',');
+            		var ids = arr.map(function(obj){return obj.id}).join(',');
             		var tjdata = {
             			Ids: ids,
-            			Other1: id
+                        Other1: id
+                     
             		}
-            		
       				$.ajax({
       					url: baseurl + submitUrl,
 		                type: "POST",
@@ -117,6 +119,8 @@
          			return false; 
             	}
             });
+            });
+            
         });
       }
 

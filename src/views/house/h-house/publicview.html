@@ -14,7 +14,7 @@ img {
 <script>
      var imageurl="";
      function LoadData(id,tableid,layerindex){
-      layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+      layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','treeSelect'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
             var $ = layui.jquery;
@@ -23,13 +23,14 @@ img {
             var table=layui.table;
             var url ="api/House/publicHousexq";
             var url1 ="api/BaseData/Queryfgy";
-            var storeurl="api/cellname/Querylist";
             var tsurl="api/BaseData/Query";
             var allresult = [];
             var para={"teseorpeibei":0,"type":2};
             var getTpl = billeditscript.innerHTML
              , view = document.getElementById('bill-edit-view');
             var alldata=[];
+            var treeSelect = layui.treeSelect;
+            var setter = layui.setter;
             //加载编辑数据
             doc.objectQuery(tsurl, para, function (result) {
                 alldata.push(result.numberData);
@@ -38,9 +39,32 @@ img {
                     debugger;
                     var image=alldata[1].PublicImg;
                     doc.objectQuery(url1, {  }, function (data) {
-                        alldata.push(data.numberData);
-                        doc.objectQuery(storeurl, {"PageSize":100000,"PageIndex":1,"regtype":4}, function (data) {
-                        alldata.push(data.numberData);
+                     alldata.push(data.numberData);
+                     treeSelect.render({
+                     elem: '#tree',
+                     url:setter.baseurl+'api/Sysrole/Querydepartment',
+                     data:  {Id: -1},
+                     headers: {"access_token": layui.data('layuiAdmin').access_token},
+                     type: 'post',
+                     placeholder: '请选择',
+                     search: true,
+                     style: {
+                folder: {
+                    enable: true
+                },
+                line: {
+                    enable: true
+                }
+            },
+            click: function(d){
+                $('[name="storeid"]').val(d.current.Id);
+            },
+            success: function (d) {
+               treeSelect.checkNode('tree', alldata[1].storeid);
+               var treeObj = treeSelect.zTree('tree');
+               treeSelect.refresh('tree');
+            }
+            })
                         var arr=new Array();
                         if(image!=null&&image!="undefined"){
                         image=image.substring(0,image.length-1);
@@ -142,7 +166,6 @@ img {
                 });  
                
                });  
-             });
             });
              });   
             });
@@ -279,16 +302,13 @@ img {
                                         {{# });   }}   
                                 </select>
                          </div> 
-                         <label class="layui-form-label">门店</label> 
-                         <div class="layui-input-inline"> 
-                                <select name="storeid" id="storeidd" lay-search>
-                                        <option value="">请选择</option>
-                                        {{#  layui.each(d[3], function(index, item1){ }}
-          
-                                        <option value="{{item1.Id}}">{{item1.Name}}</option>
-                                        {{# });   }}   
-                                </select>
-                         </div> 
+                         <div class="layui-inline"> 
+                                <label class="layui-form-label">所属部门</label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="text"  autocomplete="off"  class="layui-input" id="tree" lay-filter="tree">
+                                </div>
+                                <input type="hidden" name="storeid" id="storeid">
+                          </div>
                         </div> 
                      </div> 
                       

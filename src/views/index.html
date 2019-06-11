@@ -114,30 +114,48 @@
                         <div class="layui-col-md12">
                             <div class="layui-card">
                                 <div class="layui-card-header">  
-                                    
+                                    <!--待收显示栏目-->
+                                    <div  id="itemdaishou" >
+                                    <div style="float: left;" id="daishoubtn">
+                                            <div id="toolbar">
+                                                   <div class="layui-btn-group">
+                                                   <div id="bill-button-view" style="overflow:hidden;"></div>
+                                                   </div>
+                                            </div>
+                                    </div>
+                                    <form style="float: right;" class="layui-form hcs-form" action="" lay-filter="search" id="guest-search-form1">   
                                     <div class="layui-form-item">
-                                         <!--待收账单-->
-                                         <div class="layui-inline">
-                                         <div id="toolbar">
-                                                <div class="layui-btn-group">
-                                                <div id="bill-button-view" style="overflow:hidden;"></div>
-                                                </div>
-                                         </div>
-                                        </div>
+                                      
                                         <div class="layui-inline">
                                             <div class="layui-input-inline" style="width: 200px;">
-                                                <input type="text" name="" autocomplete="off" class="layui-input" placeholder="小区">
+                                                <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="小区，地址,姓名">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
-
-                                            <div class="layui-input-inline" style="width: 100px;">
-                                                <input type="text" name="price_min" placeholder="日期" autocomplete="off" class="layui-input" id="billdate">
-                                            </div>
+                                                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="search">搜索</button>
                                         </div>
                                         <label id="yuqitype" style="float:right;">
                                         </label>
                                     </div>
+                                    </form>
+                                   </div>
+                                    <!--待付显示栏目-->
+                                   <!--  <div class="layui-form-item" id="itemdaifu">
+                                          
+                                           <div class="layui-inline">
+                                               <div class="layui-input-inline" style="width: 200px;">
+                                                   <input type="text" name="" autocomplete="off" class="layui-input" placeholder="小区">
+                                               </div>
+                                           </div>
+                                           <div class="layui-inline">
+   
+                                               <div class="layui-input-inline" style="width: 100px;">
+                                                   <input type="text" name="price_min" placeholder="日期" autocomplete="off" class="layui-input" id="billdate">
+                                               </div>
+                                           </div>
+                                           <label id="yuqitype" style="float:right;">
+                                           </label>
+                                    </div> -->
                                 </div>
                                 <div class="layui-tab layui-tab-brief layadmin-latestData" lay-filter="test1">
                                     <ul class="layui-tab-title">

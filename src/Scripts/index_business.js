@@ -10,6 +10,8 @@
     var carousel = layui.carousel;
     var device = layui.device();
     var element = layui.element;
+    var form = layui.form;
+    var tableid="index-daishou-table";
     //库存选项
     var option = { data: null, rdefault: 1 };
     //逾期数据选项
@@ -44,12 +46,23 @@
     element.on('tab(test1)', function(){
         debugger;
         var layid=this.getAttribute('lay-id');
+        if(layid==111){ 
+            debugger;
+            isloadmenu=false;
+            tableid="index-daishou-table";
+            $("#daishoubtn").show();
+            Initybill();
+        }
         if(layid==222){ 
             debugger;
             isloadmenu=false;
+            tableid="index-daifu-table";
+            $("#daishoubtn").hide();
             Initybill();
         }
         if(layid=="333"){
+            tableid="index-tuifang-table";
+            $("#daishoubtn").hide();
             Inittuizu();
             
         }
@@ -65,7 +78,7 @@
     });
     mymod.CreateInput($("#yuqitype"), option1, function (result) {
         debugger;
-        table.reload("index-daishou-table", { where: {"Status":result} });
+        table.reload(tableid, { where: {"yuqitype":result} });
     });
     function initLoad(housetype,callback) {
         doc.objectQuery(url, { date: chosedate, housetype: housetype }, function (result) {
@@ -191,7 +204,7 @@
         var ddomid="#"+table1;
         var nowDate = mymod.getnowdate("yyyy-MM-dd");
         var tableoption = {
-            domid: ddomid, formid: "#zcontract-search-form", arr: [[ //表头
+            domid: ddomid, formid: "#guest-search-form1", arr: [[ //表头
                 { type: 'checkbox' }
               , { field: 'Id', width: 80, title: '编号' }
               , {  title: '到期时间', templet: formadaoqi,width: 120  }
@@ -353,7 +366,7 @@
             formid: "#bill-search-form",
             arr: [
                 [ //表头
-                    { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应收时间', templet: formadaoqi, width: 150 }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Amount', width: 100, title: '金额' }
+                    { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '到期时间', templet: formadaoqi, width: 150 }, { title: '收租时间',width: 120,templet:formatterreveice },{ width: 200, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Amount', width: 100, title: '金额' }
                 ]
             ],
             url: 'api/Bill/Querylist',
@@ -524,31 +537,7 @@
             return '<div>' + begintime + " - " + endtime + '</div>';
         }
     
-        function formadaoqi(value) {
-            // debugger;
-            var day = 0;
-            
-            if (value.ShouldReceive == null) {
-                return '<span>' + "未知" + '</span>';
-            }
-            if (value.PayStatus == 1) {
-                return '<span>' + util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd') + '</span>'
-            } 
-            var d1 = new Date(util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd'));
-            var d2 = new Date(nowDate);
-            var days = d1 - d2;
-            day = parseInt(days / (1000 * 60 * 60 * 24));
-            if (day == 0) {
-                return '<span>' + "今日付款" + '</span>';
-            }
-            if (day < 0) {
-                day=0-day;
-                return '<span style="color:#ff5153">' + "逾期" + day + "天" + '</span>';
-            }
-            if (day > 0) {
-                return '<span>' + day + "天后付款" + '</span>';
-            }
-        }
+        
         function formasign(value) {
             debugger;
             var result="";

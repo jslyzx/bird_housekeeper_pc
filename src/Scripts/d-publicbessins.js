@@ -426,7 +426,7 @@ function ViewEvent(pId) {
            
            success: function (layero, index) {
                //debugger;
-               view("domedit").render('house/h-house/edit', {
+               view("domedit").render('house/d-house/edithouse', {
                    id: id,
                    ParentRoomid:parentid,
                    layerindex:index

@@ -54,8 +54,10 @@
 						<div class="layui-form-item">
                                 <label class="layui-form-label" >所属部门</label>
                                 <div class="layui-input-inline" style="width: 200px;">
-										<select lay-verify="required" id="storeid" name="storeid" lay-search >
-												<option value="">请选择</option>
+										<select  id="storeid" name="storeid" lay-search >
+                                            
+                                                <option value="">请选择</option>
+                                              
 										</select>
 								</div>
 								<label class="layui-form-label" >角色</label>
@@ -77,11 +79,10 @@
     </div>
 	<script>
 		 function LoadData(id,tableid,layerindex){
-		   layui.use(['formSelects','laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+		   layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
 			   debugger;
 			   var laytpl = layui.laytpl;
 			   var doc = layui.htcsLG;
-			   var formSelects = layui.formSelects;
 			   var deletebilllist=[];
 			   var table=layui.table;
 			   var url =  "api/Sysuser/QueryUser";

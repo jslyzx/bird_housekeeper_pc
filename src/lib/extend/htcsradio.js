@@ -99,21 +99,28 @@
 
         var baseurl = setter.baseurl;
         //请求发送短信的接口
-        admin.req({
-            url: baseurl + 'api/SysUser/Sendyzm' //实际使用请改成服务端真实接口
-                ,
+        $.ajax({
+            url: baseurl + 'api/SysUser/Sendyzm',
             type: "POST",
-            dataType: 'json',
+            async: false,
             data: subdata,
-            done: function(res) {
-                layer.msg('验证码已成功发送至您的手机', {
-                    offset: '15px',
-                    icon: 1,
-                    time: 3000
-                }, function() {
-                    $('#LAY-user-getsmscode').hide().next().show();
-                    setTimeOut()
-                });
+            success: function(resultData) {
+                if (resultData.Code == 0) {
+                    layer.msg('验证码已成功发送至您的手机', {
+                        offset: '15px',
+                        icon: 1,
+                        time: 3000
+                    }, function() {
+                        $('#LAY-user-getsmscode').hide().next().show();
+                        setTimeOut()
+                    });
+                }else{
+                    layer.msg(resultData.Message, {
+                        offset: '15px',
+                        icon: 2,
+                        time: 3000
+                    })
+                }
             }
         });
     }

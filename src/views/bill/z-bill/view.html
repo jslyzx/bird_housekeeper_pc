@@ -45,7 +45,11 @@
                         $("#imgnumber").html(arr.length);
         }
                      $("#viewcontract").click(function(){
-                         var url="contract/z-contract/view"
+                         debugger;
+                        var url="contract/z-contract/view";
+                         if(data.numberData.Object==1){
+                           url="contract/y-contract/view";
+                         }
                          var editid = "layuibillreceivebtn";
                          var view = layui.view;
                          layer.open({
@@ -251,9 +255,9 @@ function ns(value){
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label">租客姓名</label>
+                                        <label class="layui-form-label">姓名</label>
                                         <div class="layui-input-inline">
-                                            <input type="text"  name="TeantName"   autocomplete="off" class="layui-input gray" value="{{ns(d.TeantName)}}" disabled>
+                                            <input type="text"  name="TeantName"   autocomplete="off" class="layui-input gray" value="{{ns(d.TeantName)}} ({{ns(d.Phone)}})" disabled>
                                         </div>
                                     </div>
                                 </div>

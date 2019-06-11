@@ -147,6 +147,7 @@
             });
 
             form.on('submit(search)', function(data) {
+                debugger;
                 search = JSON.parse(JSON.stringify(data.field));
                 obj.queryPara({}, options.domid,btnOption);
                 return false;

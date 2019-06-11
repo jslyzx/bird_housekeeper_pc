@@ -19,10 +19,15 @@
     }
 </style>
 <title>系统用户</title>
+<link href="../../../../zTree_v3/css/demo.css" rel="stylesheet" />
+<link href="../../../../zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="../../../../zTree_v3/js/jquery-1.4.4.min.js"></script>
+<script src="../../../../zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="../../../../zTree_v3/js/jquery.ztree.excheck.js"></script>
 <script type="text/html" template>
     <script src="{{layui.setter.base }}/Scripts/sysuser_business.js"></script>
-
 </script>
+
 <link href="../../../../Content/Home.css" rel="stylesheet" />
 <!--结束-->
 <div class="layui-fluid" style="background-color:#ffffff;">
@@ -64,23 +69,38 @@
             </li>
         </ul>
     </script>
-    <div id="toolbar">
-        <div class="layui-btn-group">
-            <div id="sysuser-button-view" style="overflow:hidden;"></div>
-          
-        </div>
+    <div class="layui-row">
+            <div class="layui-col-md10 layui-col-md-offset2">
+                    <div id="toolbar">
+                            <div class="layui-btn-group">
+                                <div id="sysuser-button-view" style="overflow:hidden;"></div>
+                              
+                            </div>
+                        </div>
+            </div>
     </div>
-    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+    
+    <div class="layui-row">
+            <div class="layui-col-md2">
+                    <div class="zTreeDemoBackground left">
+                            <ul id="treeDemo" class="ztree"></ul>
+                    </div>
+            </div>
+            <div class="layui-col-md10">
+                    <div class="layui-tab layui-tab-card" lay-filter="tabletab">
         
-        <ul class="layui-tab-title" style="margin-bottom:0;">
-            <li value="0" class="layui-this">在职</li>
-            <li value="1" >离职</li>
-            <li value="2" >所有</li>
-        </ul>
-        <div class="layui-tab-content" style="padding:0px;margin:0px;">
-            <table id="sysuser-table" lay-filter="demoEvent"></table>
-        </div>
+                            <ul class="layui-tab-title" style="margin-bottom:0;">
+                                <li value="0" class="layui-this">在职</li>
+                                <li value="1" >离职</li>
+                                <li value="2" >所有</li>
+                            </ul>
+                            <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                                <table id="sysuser-table" lay-filter="demoEvent"></table>
+                            </div>
+                        </div>
+            </div>
     </div>
+    
   
 
 </div>

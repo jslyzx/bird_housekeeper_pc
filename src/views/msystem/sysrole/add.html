@@ -22,10 +22,22 @@
             var doc = layui.htcsLG;
             var $ = layui.jquery;
             var form = layui.form;
-      
+            var ishouse=0;
             var table=layui.table;
+            form.render('');
+             //监听指定开关
+            form.on('switch(ishouse)', function(data){
+              debugger;
+              if(this.checked==true){
+                ishouse=1;
+              }else{
+                ishouse=0;
+              }
+            });
             form.on('submit(save)', function (data) {
             var datafield=data.field;
+            datafield.ishouse=ishouse;
+            
             var tjdata =datafield;
             var saveoption={
             url:'api/Role/save',
@@ -48,7 +60,7 @@
             {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
         </script>
         <div class="form-wrapper">
-                <form class="layui-form  layui-form-pane hcs-form form-panel" action="">            
+                <form class="layui-form  layui-form-pane hcs-form form-panel" action="" lay-filter="formuser">            
                         <div class="form-content">
                         <div class="layui-form-item">
                             <div class="layui-inline">
@@ -59,8 +71,27 @@
                                 <label class="layui-form-label">描述</label>
                                 <div class="layui-input-inline" style="width: 200px;">
                                         <input type="tel" lay-verify="required" name="RoleDesc" autocomplete="off" class="layui-input" id="RoleDesc">
-                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">权限范围</label>
+                                    <div class="layui-input-inline" style="width: 200px;">
+                                            <select name="range" lay-verify="required" id="range" lay-search="">
+                                                    <option value="0">请选择</option>
+                                                    <option value="1">所有房源</option>
+                                                    <option value="2">本部门及以下房源</option>
+                                                    <option value="3">本人所属房源</option>
+                                            </select>
+                                    </div>
+                                    <label class="layui-form-label">房源开关</label>
+                                    <div class="layui-input-inline" style="width:400px;">
+                                            <input type="checkbox" name="ishouse"  lay-filter="ishouse" lay-skin="switch" lay-text="开启|关闭"  >
+                                            <label style="margin-left: 10px;color: red;">开启后，房源数据不受权限限制全部可查</label>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                     <div class="form-bottom">

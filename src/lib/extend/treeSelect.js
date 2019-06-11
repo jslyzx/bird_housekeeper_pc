@@ -540,7 +540,7 @@ function(c,a,b,f){(!a||!d.isHidden(c,a))&&s.apply(e,arguments)};var t=e.repairPa
     var o = obj.filter(filter),
         treeInput = o.find('.layui-select-title input'),
         treeObj = obj.treeObj(filter),
-        node = treeObj.getNodeByParam("id", id, null),
+        node = treeObj.getNodeByParam("Id", id, null),
         name = node.name;
     treeInput.val(name);
     o.find('a[treenode_a]').removeClass('curSelectedNode');

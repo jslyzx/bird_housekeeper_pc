@@ -141,6 +141,7 @@
           , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
           , { field: 'Recent', width: 80, title: '租金' }
           , { field: 'Pinlv', width: 100, title: '付款频率',templet: formatterpinlv }
+          , { field: 'CreatePersonstr', width: 100, title: '签约人' }
        
     ]], height: 650, url: 'api/Contract/Query',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#zbtnintable',
@@ -553,7 +554,40 @@ function formatterzhouqi(value) {
                                   </div>
                                 </div>
                            </div> 
-                          </div> 
+                          </div>
+                         <!--  永昌 -->
+                        <!--  <div class="layui-form-item"> 
+                                <div class="layui-inline"> 
+                                 <label class="layui-form-label">第一年</label> 
+                                 <div class="layui-input-inline"> 
+                                  <input type="text" name="yeara"   value="{{d[1].yeara}}"  autocomplete="off" disabled class="layui-input gray"  /> 
+                                 </div> 
+                              </div> 
+                                 <div class="layui-inline"> 
+                                  <label class="layui-form-label">第二年</label> 
+                                  <div class="layui-input-inline"> 
+                                   <input type="text" name="yearb"  value="{{d[1].yearb}}" autocomplete="off" disabled class="layui-input gray" /> 
+                                  </div> 
+                                 </div> 
+                                 <div class="layui-inline"> 
+                                  <label class="layui-form-label">第三年</label> 
+                                  <div class="layui-input-inline"> 
+                                   <input type="text" name="yearc"  value="{{d[1].yearc}}" autocomplete="off" disabled  lay-verify="required"  class="layui-input gray"  /> 
+                                  </div> 
+                                 </div> 
+                                 <div class="layui-inline"> 
+                                        <label class="layui-form-label">第四年</label> 
+                                        <div class="layui-input-inline"> 
+                                         <input type="text" name="yeard"  value="{{d[1].yeard}}" autocomplete="off" disabled  lay-verify="required"  class="layui-input gray"  /> 
+                                        </div> 
+                                </div> 
+                                <div class="layui-inline"> 
+                                        <label class="layui-form-label">第五年</label> 
+                                        <div class="layui-input-inline"> 
+                                         <input type="text" name="yeare"  value="{{d[1].yeare}}" autocomplete="off" disabled  lay-verify="required"  class="layui-input gray"  /> 
+                                        </div> 
+                                </div>        
+                          </div>   -->
                           <div class="wrap"> 
                             <div class="title"> 
                              <h3 class="red"> 地址信息</h3> 
@@ -569,7 +603,7 @@ function formatterzhouqi(value) {
                                                <div class="layui-input-inline"> 
                                                 <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].CellName}}" disabled="" /> 
                                                </div> 
-                                               <label class="layui-form-label">门店</label> 
+                                               <label class="layui-form-label">所属部门</label> 
                                                <div class="layui-input-inline"> 
                                                 <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{doc.ns(d[1].store)}}" disabled="" /> 
                                                </div> 

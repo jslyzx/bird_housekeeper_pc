@@ -1,66 +1,159 @@
-<title>部门管理</title>
-<script type="text/html" template>
-    <script src="../../../../Scripts/department_business.js"></script>
+
+    <link href="../../../../zTree_v3/css/demo.css" rel="stylesheet" />
+    <link href="../../../../zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="../../../../zTree_v3/js/jquery-1.4.4.min.js"></script>
+    <script src="../../../../zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="../../../../zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <link href="../../../../Content/Home.css" rel="stylesheet" />
+    <SCRIPT LANGUAGE="JavaScript">
+        var doc;
+        var tableoption;
+        var BtnOption;
+        function LoadData(roleid,tableid,layerindex){
+            layui.use(['form', 'layer','htcsradio','laytpl', 'jquery', 'form', 'htcsLG'], function () {
+            var laypage = layui.laypage, layer = layui.layer;
+            var laytpl = layui.laytpl;
+            var table = layui.table;
+            doc = layui.htcsLG;
+            loadtree(); 
+            var namearr = [[ //表头
+        { type: 'checkbox'}
+      , { field: 'Id', width: 100, title: '编号' }
+      , { field: 'name', width: 180, title: '部门名称' }
+      , { field: 'phone', width: 180, title: '电话' }
+      , { field: 'adress', width: 180, title: '地址' }
+    ]];
+    tableoption = {
+        domid: "#department-table", formid: "#zdepartment-search-form", arr: namearr, url: 'api/Sysrole/Querydepartlist',
+            ismuilti: true,"search":{"Id":-1}
+    };
+    BtnOption = {
+            area: ['990px', '90%'],
+            tableid: "department-table",
+            ismuilti:true,
+            btnview: "department-button-view",
+            toolview: "zdepartment-edit-bt",
+            tooladd: "adddepart",
+            tooledit: "editdepart",
+            tooldelete: "deletedepart",
+            menuid: 247,
+            "realtable": "T_DEPARTMENT"
+     };
+     doc.InitButton(BtnOption, deparmentbtnscribt, tableoption);
+        //监听工具栏按钮
+        table.on('tool(demoEvent)', function(obj) {
+        var data = obj.data,
+        layEvent = obj.event,
+        url = $(this).data('url');
+        if(layEvent === 'distribution'){
+            var editid = "layuidepartdistributionbtn";
+            var view = layui.view;
+            layer.open({
+                id: editid,
+                type: 1,
+                title: '分配房源',
+                skin: 'two-layer',
+                shadeClose: true, //开启遮罩关闭
+                maxmin: true, //开启最大化最小化按钮
+                area: ['1000px', '90%'],
+                success: function(layero, index) {
+                    view(this.id).render(url, {
+                        id: data.Id,
+                        tableid: "department-table",
+                        layerindex: index
+                    });
+                }
+            });
+        }
+        doc.bindCommonEvents(BtnOption, data, layEvent, url);
+       });
+        $("#isnotactive").click(function () {
+            var url = "/api/Procedure/CmdProce";
+            doc.cmdpure(url, "sp_peibei_trante0");
+        });
+        $("#search").click(function () {
+            $('#table').bootstrapTable("refresh");
+        });
+       
+        	
+        });
+        function loadtree(){
+             var setting = {
+                callback: {
+				onClick: onClick
+			  }
+            };
+            var url = "api/Sysrole/Querydepartment";
+            doc.objectQuery(url, { RoleId: roleid }, function (data) {
+                    debugger;
+                    $.fn.zTree.init($("#treeDemo"), setting, data.numberData);
+                  
+            });
+           
+        }
+        function onClick(event, treeId, treeNode, clickFlag) {
+            debugger;
+            doc.queryPara({"Id":treeNode.Id}, tableoption.domid,BtnOption); 
+		}
+     }
+        
+    </SCRIPT>
+<script type="text/html" template >
+    {{#  LoadData(d.params.RoleId,d.params.tableid,d.params.layerindex)}}
 </script>
-<link href="../../../../Content/Home.css" rel="stylesheet" />
-<!--结束-->
-<div class="layui-fluid" style="background-color:#ffffff;">
-    <div class="m-search othersearch">
-        <form class="layui-form hcs-form" action="" lay-filter="search" id="zdepartment-search-form">
-            <div class="m-search-item">
-                <label class="layui-form-label" style="width:auto;">部门名称</label>
-                <input type="text" name="name" autocomplete="off" class="layui-input" placeholder="" id="Name" style="width:auto;">
-                
-            </div>
-            <div class="m-search-item">
-                <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
-            </div>
-            <div style="clear:both;"></div>
-        </form>
-    </div>
-    <script id="deparmentbtnscribt" type="text/html">
-        {{#  layui.each(d, function(index, item){}}
-        {{# if(item.Multiple === 1){}}
-        <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
-            <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
-        </button>
-        {{# }}}
-        {{#   });   }}
-    </script>
-    <script type="text/html" id="btnintable">
-        <ul class="layui-nav toolbar-nav">
-            <li class="layui-nav-item">
-                <a href="javascript:;" class="show-more">操作</a>
-                <dl class="layui-nav-child"></dl>
-            </li>
-        </ul>
-    </script>
- 
-            <div class="layui-row">
-              <div class="layui-col-md2">
-                    <ul id="demo"></ul>
-              </div>
-              <div class="layui-col-md10">
-                    <div id="toolbar">
-                            <div class="layui-btn-group">
-                                <div id="department-button-view" style="overflow:hidden;"></div>
-                              
-                            </div>
-                     </div>
-                     <div class="layui-tab layui-tab-card" lay-filter="tabletab">
-                            <ul class="layui-tab-title" style="margin-bottom:0;">
-                                <li value="999" class="layui-this">所有</li>
-                            </ul>
-                            <div class="layui-tab-content" style="padding:0px;margin:0px;">
-                                <table id="department-table" lay-filter="demoEvent"></table>
-                            </div>
-                      </div>
-              </div>
-    </div>
- 
-   
+<script id="deparmentbtnscribt" type="text/html">
+    {{#  layui.each(d, function(index, item){}}
+    {{# if(item.Multiple === 1){}}
+    <button class="layui-btn layui-btn-primary {{item.BtnNo}}" id="{{item.BtnNo}}" hturl="{{item.ButtonUrl}}">
+        <i class="layui-icon {{item.BtnIcon}}"></i>{{item.BtnName}}
+    </button>
+    {{# }}}
+    {{#   });   }}
+</script>
+<style>
+.treewrap{padding:20px;background-color:white;}
 
-   
-  
-
+</style>
+<script type="text/html" id="btnintable">
+    <ul class="layui-nav toolbar-nav">
+        <li class="layui-nav-item">
+            <a href="javascript:;" class="show-more">操作</a>
+            <dl class="layui-nav-child"></dl>
+        </li>
+    </ul>
+</script>
+<div class="treewrap">
+        <div class="layui-row">
+                <div class="layui-col-md10 layui-col-md-offset2">
+                        <div id="toolbar">
+                                <div class="layui-btn-group">
+                                    <div id="department-button-view" style="overflow:hidden;"></div>
+                                  
+                                </div>
+                         </div>
+                </div>
+        </div>
+        <div class="layui-row">
+                <div class="layui-col-md2">
+                        <div class="zTreeDemoBackground left">
+                                <ul id="treeDemo" class="ztree"></ul>
+                        </div>
+                </div>
+                <div class="layui-col-md10">
+                     
+                       <div class="layui-tab layui-tab-card" lay-filter="tabletab">
+                              <ul class="layui-tab-title" style="margin-bottom:0;">
+                                  <li value="999" class="layui-this">所有</li>
+                              </ul>
+                              <div class="layui-tab-content" style="padding:0px;margin:0px;">
+                                  <table id="department-table" lay-filter="demoEvent"></table>
+                              </div>
+                        </div>
+                </div>
+        </div>
 </div>
+
+    
+   
+    
+

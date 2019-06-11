@@ -9,7 +9,7 @@
 layui.define(['table'], function (exports) {
   "use strict";
 
-  var version = '1.0.0-beta5';
+  var version = '1.0.0-beta8';
   var modelName = 'tablePlug'; // 插件名称，支持自己定义，但是不建议
   var pathTemp = layui.cache.modules[modelName] || ''; // 正常情况下不会出现未定义的情况
   var filePath = pathTemp.substr(0, pathTemp.lastIndexOf('/'));
@@ -125,9 +125,16 @@ layui.define(['table'], function (exports) {
             this.set(tableId, CHECK_TYPE_REMOVED, []);       // 删除的
           }
         },
-        init: function (tableId, data) {
+        init: function (tableId, data, primaryKey) {
           this.reset(tableId);
-          this.set(tableId, CHECK_TYPE_ORIGINAL, data);
+          var ids = [];
+          if (data && data.length && typeof data[0] === 'object') {
+            // 如果data是对象数组
+            ids = addCacheData(tableId, data, primaryKey);
+          } else {
+            ids = data;
+          }
+          this.set(tableId, CHECK_TYPE_ORIGINAL, ids);
         },
         // 设置部分记录不可选
         disabled: function (tableId, data) {
@@ -378,6 +385,18 @@ layui.define(['table'], function (exports) {
   };
 
   var cacheData = {};
+  var addCacheData = function (tableId, data, primaryKey) {
+    var options = typeof tableId === 'string' ? getConfig(tableId) : tableId ;
+    // 如果是url模式并且设置了复选框跨页状态存储就把当前的data给缓存起来
+    primaryKey = primaryKey || getPrimaryKey(options);
+    if (options.checkStatus && primaryKey) {
+      cacheData[options.id] = cacheData[options.id] || {};
+      layui.each(data || table.cache[options.id] || [], function (index, data) {
+        cacheData[options.id][data[primaryKey]] = data;
+      });
+    }
+    return (data || table.cache[options.id] || []).map(function (value) { return value[primaryKey] });
+  };
 
   // 渲染完成之后的回调
   var renderDone = function (scroll) {
@@ -413,13 +432,14 @@ layui.define(['table'], function (exports) {
     that.scrollPatch();
 
     // 如果是url模式并且设置了复选框跨页状态存储就把当前的data给缓存起来
-    var primaryKey = getPrimaryKey(options);
-    if (options.checkStatus && primaryKey) {
-      cacheData[options.id] = cacheData[options.id] || {};
-      layui.each(table.cache[options.id], function (index, data) {
-        cacheData[options.id][data[primaryKey]] = data;
-      });
-    }
+    // var primaryKey = getPrimaryKey(options);
+    // if (options.checkStatus && primaryKey) {
+    //   cacheData[options.id] = cacheData[options.id] || {};
+    //   layui.each(table.cache[options.id], function (index, data) {
+    //     cacheData[options.id][data[primaryKey]] = data;
+    //   });
+    // }
+    addCacheData(options);
   };
 
   //获得数据
@@ -824,6 +844,9 @@ layui.define(['table'], function (exports) {
 
     if (type === 'width') return options.clientWidth;
 
+    // 去掉之前的记录
+    delete table.thisTable.arrs[tableId];
+
     if (!tableCheck.check(tableId)) {
       // 如果render的时候设置了checkStatus或者全局设置了默认跨页保存那么重置选中状态
       tableCheck.init(tableId, options.checkStatus ? (options.checkStatus['default'] || []) : []);
@@ -889,10 +912,8 @@ layui.define(['table'], function (exports) {
 
           item22.HAS_PARENT = true;
           item22.parentKey = i1 + '-' + i2;
-
-          initCols(indexChild, options.cols[indexChild], i22, item22);
-
           childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
+          initCols(indexChild, options.cols[indexChild], i22, item22);
         });
         item2.colGroup = true; //标注是组合列
       }
@@ -1100,45 +1121,63 @@ layui.define(['table'], function (exports) {
   table.eachCols = function (id, callback, cols) {
     var that = this;
     var config = that.thisTable.config[id] || {}
-      , arrs = [], index = 0;
-
+      // , arrs = [], index = 0;
+      , arrs = config.cols ? (that.thisTable.arrs[id] || []) : [], index = 0;
     cols = $.extend(true, [], cols || config.cols);
+    // arrs = ;
+    var cacheFlag;
 
-    //重新整理表头结构
-    layui.each(cols, function (i1, item1) {
-      if (i1 > 0) {
-        return true;
-      }
-      layui.each(item1, function (i2, item2) {
+    if (!arrs.length) {
+      //重新整理表头结构
+      layui.each(cols, function (i1, item1) {
+        if (i1 > 0) {
+          return true;
+        }
+        layui.each(item1, function (i2, item2) {
 
-        // //如果是组合列，则捕获对应的子列
-        // if (item2.colGroup) {
-        //   var childIndex = 0;
-        //   index++
-        //   item2.CHILD_COLS = [];
-        //   // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
-        //   // 找到它的子列
-        //   // layui.each(cols[i1 + 1], function(i22, item22){
-        //   layui.each(cols[i1 + (parseInt(item2.rowspan) || 1)], function (i22, item22) {
-        //     //如果子列已经被标注为{PARENT_COL_INDEX}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
-        //     if (item22.PARENT_COL_INDEX || (childIndex >= 1 && childIndex == (item2.colspan || 1))) return;
-        //     item22.PARENT_COL_INDEX = index;
-        //
-        //     item2.CHILD_COLS.push(item22);
-        //     childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
-        //   });
-        // }
+          // //如果是组合列，则捕获对应的子列
+          // if (item2.colGroup) {
+          //   var childIndex = 0;
+          //   index++
+          //   item2.CHILD_COLS = [];
+          //   // #### 源码修改 #### 修复复杂表头数据与表头错开的bug
+          //   // 找到它的子列
+          //   // layui.each(cols[i1 + 1], function(i22, item22){
+          //   layui.each(cols[i1 + (parseInt(item2.rowspan) || 1)], function (i22, item22) {
+          //     //如果子列已经被标注为{PARENT_COL_INDEX}，或者子列累计 colspan 数等于父列定义的 colspan，则跳出当前子列循环
+          //     if (item22.PARENT_COL_INDEX || (childIndex >= 1 && childIndex == (item2.colspan || 1))) return;
+          //     item22.PARENT_COL_INDEX = index;
+          //
+          //     item2.CHILD_COLS.push(item22);
+          //     childIndex = childIndex + parseInt(item22.colspan > 1 ? item22.colspan : 1);
+          //   });
+          // }
 
-        asyncChild(index, cols, i1, item2);
+          asyncChild(index, cols, i1, item2);
 
-        if (item2.PARENT_COL_INDEX) return; //如果是子列，则不进行追加，因为已经存储在父列中
-        arrs.push(item2)
+          if (item2.PARENT_COL_INDEX) return; //如果是子列，则不进行追加，因为已经存储在父列中
+          arrs.push(item2);
+
+          that.thisTable.arrs[id] = arrs;
+        });
       });
-    });
+    } else {
+      console.log('命中缓存!!');
+      cacheFlag = true;
+    }
 
     //重新遍历列，如果有子列，则进入递归
     var eachArrs = function (obj) {
       layui.each(obj || arrs, function (i, item) {
+        var key = item.key.split('-');
+
+        // 因为加了缓存需要同步他的hide信息
+        if (cacheFlag) {
+          // 将缓存中的hide跟cols的hide同步
+          item.hide = cols[key[0]][key[1]].hide;
+          // 将之前设置的选中状态去掉
+          item[table.config.checkName] = false;
+        }
         if (item.CHILD_COLS) return eachArrs(item.CHILD_COLS);
         typeof callback === 'function' && callback(i, item);
       });
@@ -1295,6 +1334,16 @@ layui.define(['table'], function (exports) {
     table.Class.prototype.resize.modifiedByTablePlug = true;
   }
 
+  //遍历表头
+  table.Class.prototype.eachCols = function (callback) {
+    var that = this;
+    // table.eachCols(null, callback, that.config.cols);
+    table.eachCols(that.config.id, callback, that.config.cols);
+    return that;
+  };
+
+  // 记录解析之后的cols arr
+  table.thisTable.arrs = {};
   // 改造table.render和reload记录返回的对象
   var tableRender = table.render;
   table.render = function (config) {
@@ -1487,7 +1536,7 @@ layui.define(['table'], function (exports) {
 
   // 获得table的config
   var getConfig = function (tableId) {
-    return tableIns[tableId] && tableIns[tableId].config;
+    return table.thisTable.config[tableId] || (tableIns[tableId] && tableIns[tableId].config) || {};
   };
 
   // 原始的
@@ -1503,8 +1552,8 @@ layui.define(['table'], function (exports) {
       if (getCacheData) {
         statusTemp.dataCache = [];
         var cacheDataTemp = cacheData[config.id];
-        layui.each(statusTemp.status[CHECK_TYPE_ADDITIONAL], function (index, id) {
-          cacheDataTemp[id] && statusTemp.dataCache.push(cacheDataTemp[id]);
+        layui.each(statusTemp.status[CHECK_TYPE_ADDITIONAL].concat(statusTemp.status[CHECK_TYPE_ORIGINAL]), function (index, id) {
+          cacheDataTemp[id] && statusTemp.dataCache.push(table.clearCacheKey(cacheDataTemp[id]));
         });
       }
     }

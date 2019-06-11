@@ -16,7 +16,7 @@
      var tuizulist = [];
       function LoadData(id,tableid,layerindex){
           debugger;
-        layui.use(['formSelects','laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
             var $ = layui.jquery;
@@ -50,20 +50,10 @@
                 laytpl(getTpl).render(realdata, function (html) {
                     view.innerHTML = html;
                 });  
-                //初始化赋值
-                form.val("formuser", {
-                "range": String(realdata.range)
-                })
                 form.render('');
             });
-           //监听提交
-          form.on('submit(save)', function (data) {
-           debugger;
-           if(data.field.range==null){
-            layer.msg('请选择查看权限');
-            return false;
-          }
-        
+            //监听提交
+           form.on('submit(save)', function (data) {
           data.field.Id=id;
           var datafield=data.field;
           var arr=[{"SysRoleId":datafield.roleid}];
@@ -149,22 +139,13 @@
                     <div class="layui-form-item">
                             <div id="viewstoreid"></div>
                     </div>
-                    <div class="layui-form-item">
-                            <label class="layui-form-label">查看权限</label>
-                            <div class="layui-input-inline" style="width: 400px;">
-                              <input type="radio" name="range" lay-verify="required" value="1" title="本人">
-                              <input type="radio" name="range"  lay-verify="required" value="2" title="本店" >
-                              <input type="radio" name="range" lay-verify="required" value="3" title="本区" >
-                              <input type="radio" name="range" lay-verify="required" value="4" title="本市" >
-                              <input type="radio" name="range"lay-verify="required"  value="5" title="所有" >
-                            </div>
-                            <label style="color:red;">本人只可查看本人管理已租房源,本店可查看所属门店所有已租房源，依次类推</label>
-                    </div>
+                    
                     <div class="layui-form-item">
                         <label class="layui-form-label" >所属部门</label>
                         <div class="layui-input-inline" style="width: 200px;">
-                                <select lay-verify="required" id="storeid" name="storeid" lay-search >
+                                <select  id="storeid" name="storeid" lay-search >
                                         <option value="">请选择</option>
+                                       
                                 </select>
                         </div>
                         <label class="layui-form-label" >角色</label>

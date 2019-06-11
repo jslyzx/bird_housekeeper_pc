@@ -260,24 +260,13 @@ img {
                            <input type="text" name="Adress" id="Adress" value="{{d.Adress}}" autocomplete="off" class="layui-input" lay-verify="required"  /> 
                           </div> 
                       </div> 
-                      <div class="layui-inline"> 
-                      <label class="layui-form-label">门店</label> 
-                       <div class="layui-input-inline"> 
-                          <select name="storeid" id="storeidd" lay-search>
-                                  <option value="">请选择</option>
-                                  {{#  layui.each(d[2], function(index, item1){ }}
-    
-                                  <option value="{{item1.Id}}">{{item1.Name}}</option>
-                                  {{# });   }}   
-                          </select>
-                     </div> 
-                    </div> 
+                       
                      </div> 
                      <div class="layui-form-item"> 
                       <div class="layui-inline"> 
                        <label class="layui-form-label">座/栋/号</label> 
                        <div class="layui-input-inline"> 
-                        <input type="text" name="BuildingNumber" autocomplete="off" value="{{d.BuildingNumber}}"  class="layui-input" lay-verify="required|number"   /> 
+                        <input type="text" name="BuildingNumber" autocomplete="off" value="{{d.BuildingNumber}}"  class="layui-input" lay-verify="required"   /> 
                        </div> 
                     </div> 
                        <div class="layui-inline"> 

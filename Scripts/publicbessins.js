@@ -338,6 +338,7 @@ function ViewEvent() {
 
     //预览
     $('.viewdepent').click(function(){
+        debugger;
         var id = $(this).attr("id").replace("viewdepent-", "");
        var parentid = $(this).parent(".m-wrap-body").attr("parentid");
        var view = layui.view;

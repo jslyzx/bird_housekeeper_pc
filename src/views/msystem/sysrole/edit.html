@@ -24,17 +24,39 @@
             var form = layui.form;
             var table=layui.table;
             var data = { "Id": id };
+            var ishouse=0,boolishouse=false;
             var url =  "api/rolr/Queryrole";
             doc.objectQuery(url, data, function (result) {   
                 var realdata = result.numberData;
+                ishouse=realdata.ishouse;
                 var getTpl = sysuereditscript.innerHTML,
                 view = document.getElementById('sysuer-edit-view');
                 laytpl(getTpl).render(realdata, function (html) {
                     view.innerHTML = html;
-                });  
-            form.on('submit(save)', function (data) {
+                }); 
+                debugger;
+                if(ishouse==1){
+                    boolishouse=true;
+                }
+                form.render('');
+               //监听指定开关
+               form.on('switch(ishouse)', function(data){
+               debugger;
+               if(this.checked==true){
+                ishouse=1;
+               }else{
+                ishouse=0;
+               }
+               });
+                $("#range").val(realdata.range);
+                //初始化赋值
+                form.val("formuser", {
+                "ishouse": realdata.ishouse
+             })
+            form.on('submit(editsave)', function (data) {
             var datafield=data.field;
             datafield.Id=id;
+            datafield.ishouse=ishouse;
             var tjdata =datafield;
             var saveoption={
             url:'api/Role/save',
@@ -46,9 +68,9 @@
             }
         }
        }
-      doc.Submit(saveoption);
+        doc.Submit(saveoption);
       return false;
-});
+       });
             })
            
 });
@@ -60,7 +82,7 @@
         </script>
         <script id="sysuereditscript" type="text/html">
         <div class="form-wrapper">
-                <form class="layui-form  layui-form-pane hcs-form form-panel" action="">            
+                <form class="layui-form  layui-form-pane hcs-form form-panel" action="" lay-filter="formuser">            
                         <div class="form-content">
                         <div class="layui-form-item">
                             <div class="layui-inline">
@@ -74,11 +96,29 @@
                                     </div>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">权限范围</label>
+                                    <div class="layui-input-inline" style="width: 200px;">
+                                            <select name="range" lay-verify="required" id="range" lay-search="">
+                                                    <option value="0">请选择</option>
+                                                    <option value="1">所有房源</option>
+                                                    <option value="2">本部门及以下房源</option>
+                                                    <option value="3">本人所属房源</option>
+                                            </select>
+                                    </div>
+                                    <label class="layui-form-label">房源开关</label>
+                                    <div class="layui-input-inline" style="width:400px;">
+                                            <input type="checkbox" name="ishouse"  lay-filter="ishouse" lay-skin="switch" lay-text="开启|关闭"  >
+                                            <label style="margin-left: 10px;color: red;">开启后，房源数据不受权限限制全部可查</label>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                     <div class="form-bottom">
                             <div class="form-wrap">
                                 <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-filter="cancel" lay-submit="">取消</button>
-                                <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                                <button class="layui-btn" id="save" lay-filter="editsave" lay-submit="">保存</button>
                     </div>
                   </div>
                 </form>

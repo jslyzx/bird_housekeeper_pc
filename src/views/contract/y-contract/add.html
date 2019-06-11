@@ -486,13 +486,13 @@
                                 <a class="layui-btn  layui-btn-primary btkj" idvalue="6">6月</a>
                                 <a class="layui-btn  layui-btn-primary btkj" idvalue="12">1年</a>
                                 <a class="layui-btn  layui-btn-primary btkj" idvalue="24">2年</a>
+                                <a class="layui-btn  layui-btn-primary btkj" idvalue="36">3年</a>
                                 <a class="layui-btn  layui-btn-primary btkj" idvalue="60">5年</a>
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item yuezu">
                     <div class="layui-inline ">
-                        <label class="layui-form-label">类型</label>
                         <label class="layui-form-label" >付款方式</label>
                         <div class="layui-input-inline" style="width: 100px;">
                             <select lay-verify="required" id="PinLv" name="PinLv" lay-filter="Type">
@@ -506,13 +506,16 @@
                         <div class="layui-input-inline" style="width: 100px;">
                             <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" class="layui-input Recent" id="Recent">
                         </div>
-                        <label class="layui-form-label" style="text-align:left;width:auto;">免租期</label> 
-                        <div class="layui-input-inline" style="width:auto;" >
-                            <input type="text" name="RentFree" autocomplete="off"  lay-verify="required|number"   class="layui-input"  /> 
-                        </div>
+                        
                     </div>
                 </div>
-               
+                <div class="layui-form-item">
+                        <label class="layui-form-label" style="text-align:left;width:auto;">免租期</label> 
+                        <div class="layui-input-inline" style="width:auto;" >
+                                <input type="text" name="RentFree" autocomplete="off"  lay-verify="required|number"   class="layui-input"  /> 
+                        </div>
+                        
+                </div>
                       <div class="layui-form-item">
                       <label class="layui-form-label">常规押金</label>
                       <div class="layui-input-inline" style="width: 100px;">
@@ -530,7 +533,7 @@
                      <div class="yajincontent">
         
                      </div>
-                <div class="layui-form-item">
+                    <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">支付时间</label>
                         <div class="layui-input-inline" style="width:200px;">
@@ -553,7 +556,6 @@
                                     <option value="8">8天</option>
                                     <option value="9">9天</option>
                                     <option value="10">10天</option>
-
                                     <option value="11">11天</option>
                                     <option value="12">12天</option>
                                     <option value="13">13天</option>
@@ -566,7 +568,6 @@
                                     <option value="20">20天</option>
                                     <option value="21">21天</option>
                                     <option value="22">22天</option>
-
                                     <option value="23">23天</option>
                                     <option value="24">24天</option>
                                     <option value="25">25天</option>
@@ -578,7 +579,6 @@
                                     <option value="31">31天</option>
                                 </select>
                             </div>                          
-                        
                     </div>
                 </div>
                 
@@ -627,10 +627,6 @@
                                 </div>
                         </div>
                     </div>
-        
-              
-        
-            
             <div class="form-bottom">
                 <div class="form-wrap">
                     <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancelbtn">取消</button>

@@ -48,7 +48,7 @@ img {
 <script>
      var imageurl="";
      function LoadData(id,tableid,layerindex){
-        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','treeSelect'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
             var $ = layui.jquery;
@@ -56,6 +56,34 @@ img {
             var deletebilllist=[];
             var table=layui.table;
             var doc = layui.htcsLG;
+            var setter = layui.setter;
+            var treeSelect = layui.treeSelect;
+            treeSelect.render({
+                    elem: '#tree',
+             
+                    url:setter.baseurl+'api/Sysrole/Querydepartment',
+             data:  {Id: -1},
+             headers: {"access_token": layui.data('layuiAdmin').access_token},
+             type: 'post',
+             placeholder: '请选择',
+             search: true,
+             style: {
+                folder: {
+                    enable: true
+                },
+                line: {
+                    enable: true
+                }
+            },
+            click: function(d){
+                $('[name="storeid"]').val(d.current.Id);
+            },
+            success: function (d) {
+               treeSelect.checkNode('tree', data.numberData.parentid);
+               var treeObj = treeSelect.zTree('tree');
+               treeSelect.refresh('tree');
+            }
+            })
             //监听提交
             form.on('submit(save)', function (data) {
                 debugger;
@@ -257,8 +285,15 @@ img {
                                </div> 
                      
                      </div> 
-                    
-                         
+                     <div class="layui-form-item"> 
+                     <div class="layui-inline"> 
+                            <label class="layui-form-label">所属部门</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="text"  autocomplete="off"  class="layui-input" id="tree" lay-filter="tree">
+                            </div>
+                            <input type="hidden" name="storeid" id="storeid">
+                      </div>
+                    </div>
                         </div>
                     
                         <div class="form-bottom">
