@@ -221,8 +221,9 @@
                 $("#Amount").val(amount);
             }
 
-//监听提交
+            //监听提交
             form.on('submit(save)', function (data) {
+                debugger;
                 var datafield = data.field;
                 var tkTable = $('[lay-id="billlisttuittable"] .layui-table-body .layui-table tr');
                 var skTable = $('[lay-id="billlisttuzustable"] .layui-table-body .layui-table tr');

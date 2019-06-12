@@ -57,23 +57,16 @@
                                 </div>
                             </div>
                         </div>
+                      
                         
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label" style="text-align:left;width:auto;">费用类型</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="email"  autocomplete="off" class="layui-input gray" value="租金2期" disabled>
-                                </div>
-                            </div>
-                        </div>
                         <div class="layui-collapse" lay-accordion="">
                             <div class="layui-colla-item">
                               <h2 class="layui-colla-title">银行卡信息</h2>
                               <div class="layui-colla-content layui-show">
-                                <span class="yspan">收款人:{{doc.ns(d.payee)}}</span>
-                                <span class="yspan">银行：{{doc.ns(d.accounts)}}</span>
-                                <span class="yspan">支行{{doc.ns(d.accounts)}}</span>
-                                <span class="yspan">账号:{{doc.ns(d.bank)}}</span>
+                                <span class="yspan">收款人:{{doc.ns(d[1].payee)}}</span>
+                                <span class="yspan">银行：{{doc.ns(d[1].bank)}}</span>
+                                <span class="yspan">支行{{doc.ns(d[1].subbranch)}}</span>
+                                <span class="yspan">账号:{{doc.ns(d[1].accounts)}}</span>
                               </div>
                             </div>
                         </div>

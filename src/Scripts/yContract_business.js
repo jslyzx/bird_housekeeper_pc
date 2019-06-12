@@ -132,7 +132,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
                     success: function(layero, index) {
                         view(this.id).render(url, {
                             id: data.Id,
-                            tableid: "bill-main-table",
+                            tableid: "ycontract-index-table",
                             layerindex: index
                         });
                     }
@@ -159,7 +159,7 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
                     success: function(layero, index) {
                         view(this.id).render(url, {
                             id: data.Id,
-                            tableid: "bill-main-table",
+                            tableid: "ycontract-index-table",
                             layerindex: index
                         });
                     }
