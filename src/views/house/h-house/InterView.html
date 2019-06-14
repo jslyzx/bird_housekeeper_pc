@@ -581,6 +581,12 @@ function formatterzhouqi(value) {
                               <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[1].Measure}}" disabled="" /> 
                              </div> 
                             </div> 
+                           </div>
+                           <div class="layui-form-item"> 
+                                <label class="layui-form-label">备注</label> 
+                                <div class="layui-input-inline"> 
+                                        <textarea name="Remarks" style="width:380px;" disabled  placeholder="请输入内容" class="layui-textarea gray">{{d[1].Remarks}}</textarea>
+                                </div> 
                            </div> 
                            <div class="layui-form-item"> 
                             <div class="layui-inline"> 
@@ -648,7 +654,7 @@ function formatterzhouqi(value) {
                                              <input type="text" name="email" autocomplete="off" class="layui-input gray" value="{{d[2].Measure}}" disabled="" /> 
                                         </div>
                              </div>
-                            
+                             
                             <div class="layui-form-item"> 
                                 <div class="layui-inline"> 
                                  <label class="layui-form-label">地址</label> 

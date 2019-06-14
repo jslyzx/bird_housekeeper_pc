@@ -1,25 +1,134 @@
-﻿<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content=飞鸟管家，致力于通过技术手段提升公寓运营商(职业二房东)的运营效率，让用户在运营中享受科技的乐趣。目前用户已覆盖全国前80名品牌公寓的十余家及近千家中小公寓运营商，包括知名酒店集团旗下的长租公寓品牌、多个一二线城市的区域领导品牌等。><meta name=keywords content="飞鸟管家官网,公寓管理系统,出租屋管理系统,房屋租赁管理系统,公寓运营,公寓管家,分散式公寓管理,房屋租赁经营方案,酒店公寓管理方案 ,大房东出租屋管理软件,大房东房屋铺位租赁管理系统标准版,长租公寓管理,房屋租赁管理系统,免费的公寓管理,智能门锁管理软件,智能水表,智能电表,线上收租,长租公寓管理,深圳出租屋综合管理系统,上海出租屋综合管理系统,北京出租屋综合管理系统,北京出租屋综合管理系统,杭州出租屋综合管理系统"><link rel=icon href=/favicon.ico><title>飞鸟管家</title><link href=/js/about.916d4589.js rel=prefetch><link href=/js/about~index~m_index.51cd9e89.js rel=prefetch><link href=/js/index.74a0a9de.js rel=prefetch><link href=/js/m_index.b41625fe.js rel=prefetch><link href=/css/app.8dd8fd86.css rel=preload as=style><link href=/js/app.2dff30cf.js rel=preload as=script><link href=/js/chunk-vendors.baa05252.js rel=preload as=script><link href=/css/app.8dd8fd86.css rel=stylesheet></head><script>var _hmt = _hmt || [];
-        (function() {
-          var hm = document.createElement("script");
-          hm.src = "https://hm.baidu.com/hm.js?fb0af5f0e812e2cc50c77c67019ab239";
-          var s = document.getElementsByTagName("script")[0]; 
-          s.parentNode.insertBefore(hm, s);
-        })();</script><body><noscript><strong>We're sorry but app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=app></div><script>window.config = {
-            register_url: 'http://fn.fngygl.com/#/user/reg', // 注册跳转地址
-            login_url: 'http://fn.fngygl.com/#/user/login',  // 登陆跳转地址
-            andriod_download: 'https://fir.im/jt89', // andriod 下载链接
-            ios_download: '#', // ios app下载链接
-            qq_url: 'http://wpa.qq.com/msgrd?v=3&uin=2228998045&site=qq&menu=yes', //qq跳转链接
-            tel: '13761738669', // 电话号码
-            customer_url: 'http://www.baidu.com', // 扫客二维码信息
-            customer_title: '苹果扫这里', // 扫客二维码底部文字
-            admin_url: 'https://fir.im/jt89', //管理二维码信息
-            admin_title: '安卓扫这里', // 管理二维码底部文字
-            company_name: '上海破浪信息科技有限公司', // 页面底部公司名称
-            company_address: '上海市浦东新区新金桥路1122号方正大厦23楼', //页面底部公司地址
-            company_tel: '13761738669', // 页面底部公司电话
-            copyright: '沪ICP备18037820号', // 页面底部网站版权备案声明
-            title: '飞鸟管家', // 页面标签title,
-            keywords: '飞鸟管家', // 页面keywords
-            description: '飞鸟管家', // 页面description
-          }</script><script src=/js/chunk-vendors.baa05252.js></script><script src=/js/app.2dff30cf.js></script></body></html>
+﻿<script>
+    var indexclose;
+    function LoadData(id,tableid,layerindex,btnOption){
+      layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form','util'], function () {
+              var laytpl = layui.laytpl;
+              var form = layui.form;
+              var $ = layui.jquery;
+              var laydate = layui.laydate;
+              event();
+               var dom= '<div class="layui-form-item rentfreerow"><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel" lay-verify="required" autocomplete="off" class="layui-input Begin"  placeholder="开始时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel"   autocomplete="off"  class="layui-input End"  placeholder="结束时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:100px"><input type="tel"  lay-verify="required" autocomplete="off" class="layui-input Amount"  placeholder="减免金额"></div></div><div class="layui-inline"><button type="button" class="layui-btn layui-btn-primary layui-btn-sm delete" ><i class="layui-icon">&#xe640;</i></button></div></div>';
+               $("#add").click(function(){
+                 debugger;
+                 $(".wraprecent").append(dom);
+                 var len=$(".rentfreerow").length;
+                 $("#recentfree").val(len); 
+                 event();
+               });
+               $("#save").click(function(){
+                 debugger;
+                 var arr=[];
+                 $(".wraprecent").each(function(index,value){
+                  var field={};
+                  var domBegin=$(value).children().find('.Begin');
+                  var domEnd=$(value).children().find('.End');
+                  var domAmount=$(value).children().find('.Amount');
+                  field.Begin=domBegin.val();
+                  field.End=domEnd.val();
+                  field.Amount=domAmount.val();
+                  arr.push(field);
+                 });
+               });
+               form.on('select(recentfree)', function(data){
+                 debugger;
+                  var number=data.value;
+                  var len=$(".rentfreerow").length;
+                 
+                  if(number>len){
+                    var result=number-len;
+                   
+                    for (i = 0; i < result; i++) {
+                   
+                    $(".wraprecent").append(dom);
+                    
+                  }
+                  }
+                  if(number<len){
+                      var gtdom=':gt('+(number-1)+')';
+                       $(".rentfreerow").filter(gtdom).remove()
+                  }
+                  if(number==0){
+                       $(".rentfreerow").remove()
+                  }
+                  event();
+               });  
+               function event(){
+               
+                $('.Begin').each(function(){
+                  laydate.render({
+                 elem:this
+                });
+                }) 
+                $('.End').each(function(){
+                  laydate.render({
+                  elem:this
+                });
+                }) 
+                $(".delete").click(function(){
+                 debugger;
+                 var dom= $(this).parent().parent('.rentfreerow');
+                 dom.remove();
+                 var len=$(".rentfreerow").length;
+                 $("#recentfree").val(len); 
+                 form.render('');  
+                })
+                form.render('');  
+               }  
+      }) 
+    }
+</script>
+<body>
+    <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+        <button type="button" class="layui-btn" id="save">保存</button>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">免租期</label>
+                <div class="layui-input-inline" style="width:200px;">
+                    <select lay-verify="required" id="recentfree"   lay-filter="recentfree">
+                        <option value="0">无</option>
+                        <option value="1">1段免租期</option>
+                        <option value="2">2段免租期</option>
+                        <option value="3">3段免租期</option>
+                        <option value="4">4段免租期</option>
+                        <option value="5">5段免租期</option>
+                        <option value="6">6段免租期</option>
+                        <option value="7">7段免租期</option>
+                    </select>
+                </div>                       
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add">
+                    <i class="layui-icon">&#xe654;</i>
+                </button>
+            </div>
+        </div>
+        <div class="wraprecent">
+            <div class="layui-form-item rentfreerow">
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width:160px">
+                        <input type="tel" lay-verify="required" autocomplete="off" class="layui-input Begin"  placeholder="开始时间">
+                    </div>                       
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width:160px">
+                        <input type="tel"   autocomplete="off"  class="layui-input End"  placeholder="结束时间">
+                    </div>                       
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width:100px">
+                        <input type="tel"  lay-verify="required" autocomplete="off" class="layui-input Amount"  placeholder="减免金额">
+                    </div>                       
+                </div>
+                <div class="layui-inline">
+                  <button type="button" class="layui-btn layui-btn-primary layui-btn-sm delete" >
+                        <i class="layui-icon">&#xe640;</i>
+                  </button>                     
+                </div>
+            </div>
+        </div>
+        
+        </form>
+        <script type="text/html" template >
+          {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+        </script>
+</body>

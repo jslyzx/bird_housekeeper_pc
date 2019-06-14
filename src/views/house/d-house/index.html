@@ -70,7 +70,7 @@
                     </div>
                     <div style="clear:both"></div>
                 </div>
-                <div class="m-wrap-body" id="m-wrap-body-{{item.Id}}" parentid="{{item.Id}}">
+                <div class="m-wrap-body" id="m-wrap-body-{{index}}" parentid="{{item.Id}}">
                     {{# if(item.list.length > 0){layui.each(item.list, function(indextop,itemtop) {}}
                     {{# if(itemtop.Status==2){ }}
                     <div class="m-panel-body" id="panel-body-{{itemtop.ID}}">
@@ -202,7 +202,7 @@
                     </div>
                     <div class="layui-right-nav">
                         <div id="house-othersrarch"></div>
-                        <div id="0">
+                        <div id="0" class="m-row">
                             <i class="layui-icon" style="font-size:27px;">&#xe61a;</i>
                         </div>
                     </div>

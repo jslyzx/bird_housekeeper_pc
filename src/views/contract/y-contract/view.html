@@ -160,14 +160,38 @@
                         <div class="layui-input-inline" style="width: 100px;">
                             <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent gray" disabled id="Recent">
                         </div>
-                        <label class="layui-form-label" style="text-align:left;width:auto;">免租期</label> 
-                        <div class="layui-input-inline" style="width:auto;" >
-                            <input type="text" name="RentFree" autocomplete="off"  value="{{doc.ns(d[1].RentFree)}}" disabled   class="layui-input gray"  /> 
-                        </div>
+                        
                     </div>
                 </div>
                 
-                     
+                <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">免租期</label>
+                            <div class="layui-input-inline" style="width:200px;">
+                                <select lay-verify="required"  lay-filter="recentfree" id="recentfree">
+                                    <option value="0">无</option>
+                                    <option value="1">1段免租期</option>
+                                    <option value="2">2段免租期</option>
+                                    <option value="3">3段免租期</option>
+                                    <option value="4">4段免租期</option>
+                                    <option value="5">5段免租期</option>
+                                    <option value="6">6段免租期</option>
+                                    <option value="7">7段免租期</option>
+                                    <option value="8">8段免租期</option>
+                                    <option value="9">9段免租期</option>
+                                    <option value="10">10段免租期</option>
+                                    <option value="11">11段免租期</option>
+                                    <option value="12">12段免租期</option>
+                                    <option value="13">13段免租期</option>
+                                    <option value="14">14段免租期</option>
+                                </select>
+                            </div>                       
+                        </div>
+                        
+                    </div>
+                    <div class="wraprecent">
+                       
+                    </div>   
           
                 <div class="layui-form-item">
                     <div class="layui-inline">
