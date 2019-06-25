@@ -18,9 +18,10 @@
             laytpl(getTpl).render(alldata, function (html) {
                 view.innerHTML = html;
             });
+            //永昌
+            //var mymod = layui.htcsradio;
+            //mymod.initbank("PayType",alldata[1].CreatePerson);
             //默认选中当前用户
-            
-            
             $("#cancelbtn").click(function(){
                 layer.close(layerindex);
                 return false;

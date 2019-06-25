@@ -70,6 +70,8 @@
             }
             debugger;
             $('select[name="BankName"]').append(list.join(''));
+            $('select[name="PayType"]').append(list.join(''));
+            
             form.render();
             });
                 //加载退租项数据
@@ -536,9 +538,12 @@
                     <div class="layui-inline">
                         <label class="layui-form-label" style="width:auto;">支付方式</label>
                         <div class="layui-input-inline">
-                            <select name="PayType" lay-filter="PayType">
+                            <select name="PayType" lay-filter="PayType" lay-search>
+                                <option value="支付宝">请选择</option>
                                 <option value="支付宝">支付宝</option>
                                 <option value="微信">微信</option>
+                                <option value="现金">现金</option>
+                               
                             </select>
                         </div>
                     </div>

@@ -317,19 +317,25 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
         }
 
 function InitEvent(pId) {
-    //debugger;
-    $(".m-row").click(function () {
-        //debugger;
+    debugger;
+    $(".m-row").unbind("click");
+    $(".m-row").click(function (e) {
+        debugger;
         //alert($(this).html());
         var idvalue = $(this).attr("id");
-        var classvalue = $(this).attr("class");
-        var index = getIndex(idvalue, classvalue);
-        if (index != 0) {
-            var body = $("#m-wrap-body-" + index);
-            body.slideToggle();
-        } else {
+        if(idvalue=="0"){
             $(".m-wrap-body").slideToggle();
+            e.stopPropagation();
+
+            return false;
         }
+        idvalue=idvalue.replace("m-row-", "");
+        if (idvalue != 0) {
+            var body = $("#m-wrap-body-" + idvalue);
+            body.slideToggle();
+        }
+        e.stopPropagation();
+        return false;
     });
     
     
@@ -352,7 +358,7 @@ function InitEvent(pId) {
 }
 
 function ViewEvent(pId) {
-    $(".m-row").unbind("click");
+  
 
     $(".m-panel-body").not(".layui-icon").dblclick(function () {
         var id = $(this).attr("id").replace("panel-body-", "");

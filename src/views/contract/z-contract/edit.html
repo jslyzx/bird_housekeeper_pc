@@ -66,8 +66,8 @@
                         elem: '#EndTime' //指定元素
                     }); 
                     laydate.render({
-                    elem: '#CreateTime' //指定元素
-                 
+                    elem: '#CreateTime', //指定元素
+                    value:util.toDateString(alldata[1].CreateTime, 'yyyy-MM-dd')
                     });    
                     });
                     form.render('');
@@ -235,8 +235,8 @@
                 }
              
                form.on('select(Recivetype)', function(data){
-                   var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option>';
-                   var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5号</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option>';
+                var hao='<option value="1">1号</option><option value="2">2号</option><option value="3">3号</option><option value="4">4号</option><option value="5">5号</option><option value="6">6号</option><option value="7">7号</option><option value="8">8号</option><option value="9">9号</option><option value="10">10号</option><option value="11">11号</option><option value="12">12号</option><option value="13">13号</option><option value="14">14号</option><option value="15">15号</option><option value="16">16号</option><option value="17">17号</option><option value="18">18号</option><option value="19">19号</option><option value="20">20号</option><option value="21">21号</option><option value="22">22号</option><option value="23">23号</option><option value="24">24号</option><option value="25">25号</option><option value="26">26号</option><option value="27">27号</option><option value="28">28号</option><option value="29">29号</option><option value="30">30号</option><option value="31">31号</option>';
+                   var tian='<option value="0">0天</option><option value="1">1天</option><option value="2">2天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5天</option><option value="6">6天</option><option value="7">7天</option><option value="8">8天</option><option value="9">9天</option><option value="10">10天</option><option value="11">11天</option><option value="12">12天</option><option value="13">13天</option><option value="14">14天</option><option value="15">15天</option><option value="16">16天</option><option value="17">17天</option><option value="18">18天</option><option value="19">19天</option><option value="20">20天</option><option value="21">21天</option><option value="22">22天</option><option value="23">23天</option><option value="24">24天</option><option value="25">25天</option><option value="26">26天</option><option value="27">27天</option><option value="28">28天</option><option value="29">29天</option><option value="30">30天</option><option value="31">31天</option>';
                    if(data.value==2){
                           $("#BeforeDay").empty();
                           $("#BeforeDay").append(hao);
@@ -721,7 +721,7 @@
                             </div>
                             <label class="layui-form-label">日租金</label>
                             <div class="layui-input-inline" style="width: 100px;">
-                             <input type="tel" name="DayRecnet"  autocomplete="off" class="layui-input" id="Recent1">
+                             <input type="tel" name="DayRecnet" value="{{d[1].DayRecnet}}" autocomplete="off" class="layui-input" id="Recent1">
                             </div>
                             </div>
                       </div>
@@ -822,7 +822,7 @@
                             </div>
                             <label class="layui-form-label">签约时间</label>
                             <div class="layui-input-inline">
-                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime" value="{{d[1].CreateTime}}" >
+                                    <input type="tel" name="CreateTime" autocomplete="off" class="layui-input"  id="CreateTime"  >
                             </div>
                     </div>
                     <div class="layui-form-item">

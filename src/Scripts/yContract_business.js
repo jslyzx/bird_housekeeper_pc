@@ -205,12 +205,12 @@ layui.use(['laypage','layer', 'htcsradio','laydate', 'laytpl', 'jquery', 'form',
        }
 }
 function formatterhouse(value) {
-       var adress=value.CellName + "-" + value.BuildingNumber + "栋" + value.RoomId + "室";
-       if(value.HouseName!=""&&value.HouseName!=null){
-           adress+="-"+value.HouseName;
-       }
-       return '<div>' + adress + '</div>'
-   }
+    var adress="";
+    if(value.HouseName!=""&&value.HouseName!=null){
+        adress+=value.HouseName;
+    }
+    return '<div>' + adress + '</div>'
+}
    function formattertime(value) {
     
        return '<div>' +util.toDateString(value.BeginTime.replace(/-/g, '/'),'yyyy年MM月dd日')	  + "→" + util.toDateString(value.EndTime.replace(/-/g, '/'),'yyyy年MM月dd日') + '</div>';

@@ -1,5 +1,5 @@
 ﻿function LoadData(id,tableid,layerindex,btnOption){
-    layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form','element'], function () {
+    layui.use(['laydate', 'laypage', 'htcsLG','layer','htcsradio', 'laytpl', 'jquery', 'form','element'], function () {
     var laytpl = layui.laytpl;
     var doc = layui.htcsLG;
     var url = "api/Bill/Querybillbyid";
@@ -28,7 +28,9 @@
             elem: '#PayTime' //指定元素
             ,value: myDate
         });
-       
+        //永昌
+        //var mymod = layui.htcsradio;
+        //mymod.initbank("PayType",alldata[1].CreatePerson);
         debugger
         var userid=layui.data('layuiAdmin').userid;
         $("#TranSactor").val(userid);

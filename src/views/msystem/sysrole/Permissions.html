@@ -27,7 +27,7 @@
                     debugger;
                     zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data.numberData);
                     $.fn.zTree.init($("#treeDemo"), setting, data.numberData);
-                    $("#save").click(function () {
+                    $("#savepress").click(function () {
                         debugger;
                         $("#test").html(JSON.stringify(zTreeObj.getCheckedNodes(true)));
                         var saveurl="api/Sysrole/Savepreetion";
@@ -71,7 +71,7 @@
         <div class="form-bottom">
         <div class="form-wrap">
                     <button class="layui-btn layui-btn layui-btn-primary" id="cancel" lay-filter="cancel">取消</button>
-                    <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                    <button class="layui-btn" id="savepress"  lay-submit="">保存</button>
          </div>
        </div>
     </div>

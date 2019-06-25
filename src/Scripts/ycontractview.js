@@ -184,6 +184,7 @@ if (layEvent=== 'fukuan') { //处理账单
                   Teant.BatethDay =alldata[1].Teant.BatethDay;
                   Teant.Social=alldata[1].Teant.Social;        
               }
+            
               alldata.push(Teant);
                   laytpl(getTpl).render(alldata, function (html) {
                   view.innerHTML = html;
@@ -240,6 +241,9 @@ if (layEvent=== 'fukuan') { //处理账单
               Create();
               EventOther();
               viewbtn();
+              //免租期事件
+              debugger;
+             initrecentfreevalue(alldata[1].tRentFree);
           });
           });
           function initzafei(){
@@ -265,6 +269,80 @@ if (layEvent=== 'fukuan') { //处理账单
             }
         });
     }
+    function initrecentfreevalue(arr){
+        $.each(arr,function(index,value){
+            var dom= '<div class="layui-form-item rentfreerow" id="'+"idfield"+index+'"><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel" lay-verify="required" autocomplete="off" class="layui-input Begin gray" disabled placeholder="开始时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel"   autocomplete="off"  class="layui-input End gray" disabled  placeholder="结束时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:100px"><input type="tel"  lay-verify="required" autocomplete="off" class="layui-input Amount gray" disabled  placeholder="减免金额"></div></div></div>';
+            debugger;
+            $(".wraprecent").append(dom);
+            //赋值
+            var id="#idfield"+index;
+            $(id+" .Begin").val(util.toDateString(value.Begin.replace(/-/g, '/'), 'yyyy-MM-dd'));
+            $(id+" .End").val(util.toDateString(value.End.replace(/-/g, '/'), 'yyyy-MM-dd'));
+            $(id+" .Amount").val(value.Amount+'元');
+            var len=$(".rentfreerow").length;
+            $("#recentfree").val(len); 
+            event();     
+        })
+        initrecentfree();
+    }
+    function initrecentfree(){
+          event();
+          var dom= '<div class="layui-form-item rentfreerow"><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel" lay-verify="required" autocomplete="off" class="layui-input Begin"  placeholder="开始时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel"   autocomplete="off"  class="layui-input End"  placeholder="结束时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:100px"><input type="tel"  lay-verify="required" autocomplete="off" class="layui-input Amount"  placeholder="减免金额"></div></div><div class="layui-inline"><button type="button" class="layui-btn layui-btn-primary layui-btn-sm delete" ><i class="layui-icon">&#xe640;</i></button></div></div>';
+          $("#add").click(function(){
+            debugger;
+            $(".wraprecent").append(dom);
+            var len=$(".rentfreerow").length;
+            $("#recentfree").val(len); 
+            event();
+          });
+          
+          form.on('select(recentfree)', function(data){
+            debugger;
+             var number=data.value;
+             var len=$(".rentfreerow").length;
+            
+             if(number>len){
+               var result=number-len;
+              
+               for (i = 0; i < result; i++) {
+              
+               $(".wraprecent").append(dom);
+               
+             }
+             }
+             if(number<len){
+                 var gtdom=':gt('+(number-1)+')';
+                  $(".rentfreerow").filter(gtdom).remove()
+             }
+             if(number==0){
+                  $(".rentfreerow").remove()
+             }
+             event();
+          });  
+           
+}      
+function event(){
+          
+          $('.Begin').each(function(){
+            laydate.render({
+           elem:this
+          });
+          }) 
+          $('.End').each(function(){
+            laydate.render({
+            elem:this
+          });
+          }) 
+          $(".delete").click(function(){
+           debugger;
+           var dom= $(this).parent().parent('.rentfreerow');
+           dom.remove();
+           var len=$(".rentfreerow").length;
+           $("#recentfree").val(len); 
+           form.render('');  
+          })
+          form.render('');  
+         }
     function inityajin(){
             debugger;
             var name ="";
@@ -372,7 +450,7 @@ if (layEvent=== 'fukuan') { //处理账单
                     });
                 }
                 if (data ===BtnviewOption.tooledit) { 
-                    doc.bindCommonEvents(BtnviewOption,alldata[1],BtnviewOption.tooledit,url);
+                    doc.bindCommonEvents(BtnviewOption,alldata[1].Id,BtnviewOption.tooledit,url);
                 }
                 if (data ===BtnviewOption.tooldelete) { 
                     doc.bindCommonEvents(BtnviewOption,alldata[1],BtnviewOption.tooldelete,url);
@@ -497,7 +575,7 @@ if (layEvent=== 'fukuan') { //处理账单
               area:['800px', '500px'],
               success: function(layero,index){
                   view(this.id).render('upload/index', {
-                      img:$("#Image").val(),
+                      img:$("#zjImage").val(),
                       type:2,
                       layerindex:index
                   });

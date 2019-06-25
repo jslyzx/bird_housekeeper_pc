@@ -48,6 +48,7 @@
     // 保留一下原始的form.render
     var formRender = form.render;
     form.render = function (type, filter, jqObj) {
+      console.log(10);
       var that = this;
       var retObj;
       // if (jqObj && jqObj.length) {
@@ -113,6 +114,7 @@
         return value + ' ' + options.triggerElem;
       }).join(',')
       , function (event) {
+        console.log(1);
         layui.stope(event);
         // return;
         close();
@@ -146,6 +148,7 @@
         var dlPosition = getDlPosition();
 
         titleElem.css({backgroundColor: 'transparent'});
+        console.log(2);
         window.top.layer._indexTemp[modelName] = window.top.layer.open({
           type: 1,
           title: false,
@@ -158,9 +161,10 @@
           offset: [dlPosition.top + 'px', dlPosition.left + 'px'],
           // area: [dlElem.outerWidth() + 'px', dlElem.outerHeight() + 'px'],
           area: dlElem.outerWidth() + 'px',
-          content: '<div class="layui-unselect layui-form-select layui-form-selected"></div>',
+          content: '<div class="layui-unselect layui-form  layui-form-select layui-form-selected"></div>',
           skin: 'layui-option-layer',
           success: function (layero, index) {
+            console.log(3);
             dlElem.css({
               top: 0,
               position: 'relative'
@@ -176,15 +180,18 @@
               layui.stope(event);
             });
             setTimeout(function () {
+              console.log(4);
               // 延迟500毫秒添加事件处理，应对ie浏览器下某一些特定场景下点击select出来option的时候回有一个容器滚动导致直接关闭选项的问题
               // 不包含selectors的选择器的节点
               titleElem.parentsUntil(selectors.join(',')).one('scroll', function (event) {
                 // 用window.top.layer去弹出的选项在其title所在的容器滚动的时候都关闭
+                console.log(41);
                 close();
               });
               // 单独给选择器的节点加上
               titleElem.parents(selectors.join(',')).one('scroll', function (event) {
                 // 用window.top.layer去弹出的选项在其title所在的容器滚动的时候都关闭
+                console.log(42);
                 close();
               });
 
@@ -193,16 +200,19 @@
                 var $Temp = windowTemp.$ || windowTemp.layui.$;
                 if ($Temp) {
                   // 点击document的时候触发
-                  $Temp(windowTemp.document).one('click', function (event) {
-                    close();
-                  });
+                  // $Temp(windowTemp.document).one('click', function (event) {
+                  //   console.log(43);
+                  //   close();
+                  // });
 
                   $Temp(windowTemp.document).one('mousedown', function (event) {
+                    console.log(44);
                     close();
                   });
 
                   // 窗口resize的时候关掉表格中的下拉
                   $Temp(windowTemp).one('resize', function (event) {
+                    console.log(45);
                     close();
                   });
 
@@ -210,6 +220,7 @@
                   $Temp(windowTemp.document).one('scroll', function () {
                     if (top !== self && parent.parent) {
                       // 多级嵌套的窗口就直接关掉了
+                      console.log(46);
                       close();
                     }
                   });
@@ -218,6 +229,8 @@
             }, 500);
           },
           end: function () {
+            console.log(5);
+            debugger;
             typeof options.end === 'function' && options.end.call(this, selectElem);
           }
         });
@@ -234,7 +247,9 @@
       });
     },
     end: function (selectElem) {
+      debugger;
       form.render('select', null, selectElem);
+      layui.multiSelect && layui.multiSelect.init(); 
     }
   });
 

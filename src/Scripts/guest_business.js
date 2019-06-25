@@ -31,12 +31,12 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
   { field: 'Huxing', width: 100, title: '户型' },
   { field: 'Other', width: 100, title: '其他' },
   { field: 'Remark', width: 100, title: '备注' },
-  { width: 100, title: '状态',templet: Statustemp  },
-  
-  { width: 100, title: '紧急程度',templet: Ugenttemp  },
-  { width: 100, title: '价格区间',templet: pricetemp  },
+  { width: 100, title: '状态',templet: Statustemp,field: 'Status'  },
+  { width: 100, title: '紧急程度',templet: Ugenttemp ,field: 'Status' },
+  { width: 100, title: '价格区间',templet: pricetemp ,field: 'Status' },
   { field: 'RectDate', width: 100, title: '租期',templet: zuqi  }
-]], url: config.url,ismuilti: true
+]], url: config.url,ismuilti: true,
+"search":{"Status":2}
     };
         var BtnOption = {
         area: ['1100px', '90%'],
@@ -48,7 +48,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         tooldelete:config.tooldelete,
         url:'guest/view',
         menuid:172
-        ,"realtable":"T_GUST"
+        ,"realtable":"T_GUEST"
     };
     doc.InitButton(BtnOption, guestbtnscribt, tableoption);
      //监听工具栏按钮
@@ -113,13 +113,13 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
         return '<div >' + "未知" + '</div>'
     }
     function Statustemp(value) {
-        if (value.Ugent == 1) {
+        if (value.Status == 1) {
             return '<div >' + "待分配" + '</div>'
         } 
-        if (value.Ugent == 2) {
+        if (value.Status == 2) {
             return '<div >' + "跟进中" + '</div>'
         } 
-        if (value.Ugent == 3) {
+        if (value.Status == 3) {
             return '<div >' + "已完成" + '</div>'
         } 
         return '<div >' + "未知" + '</div>'

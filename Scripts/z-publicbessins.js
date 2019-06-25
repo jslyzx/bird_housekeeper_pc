@@ -452,7 +452,7 @@ function ViewEvent() {
         content:'删除房间后，与该房间相关的合同、账单、及流水记录将被删除，请谨慎操作'
         , btn: [ '确认删除','取消']
         , yes: function (index, layero) {
-            deletehouse(id,"api/House/deletedepentHouse",{"ID":id},function(){
+            deletehouse(id,"api/zHouse/deletedepentHouse",{"ID":id},function(){
                 $("#panel-body-" + id).remove();
             });
         }

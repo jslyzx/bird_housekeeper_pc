@@ -256,6 +256,7 @@ img {
 </script>
 <script id="billeditscript1" type="text/html">
     {{#  var setter = layui.setter;var imgurl = setter.imgurl;var doc = layui.htcsLG; }}
+    <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
     <div class="form-content">
             <input type="text" name="Id" id="Id" autocomplete="off" class="layui-input" value="{{d[1].Id}}" style="display:none" />
             <div class="title">
@@ -529,17 +530,19 @@ img {
                          {{# });   }}                          
                     </div>
           </div>
+          <div class="form-bottom">
+            <div class="form-wrap">
+                <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn1" >取消</button>
+                <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+            </div>
+           </div> 
+        </form> 
 </script>        
-<form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+
     <div id="bill-edit-view1" class="child-view form-wrapper">
-                        </div>
-                  <div class="form-bottom">
-                    <div class="form-wrap">
-                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn1" >取消</button>
-                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
-                    </div>
-                   </div>  
-           </form> 
+    </div>
+                   
+          
               
     <script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
     <link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />  

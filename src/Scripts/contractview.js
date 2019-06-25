@@ -228,16 +228,22 @@ $("#bill-sendmessage-btn").click(function(){
               $("#viewBeforeDay").val(alldata[1].BeforeDay);
               $("#viewyType").val(alldata[1].Type);
               //查询附件个数
-              if(alldata[1].Image!=null){
-                  var arr=new Array();
-                  arr=alldata[1].Image.split(';');
-                  $("#imgnumber").val(arr.length);
-              }
-              if(alldata[1].zjImage!=null){
-                  var arr1=new Array();
-                  arr1=alldata[1].zjImage.split(';');
-                  $("#imgzjnumber").val(arr1.length);
-              }
+              if(alldata[1].Enclosure!=null){
+                $("#Image").val(alldata[1].Enclosure);
+                var arr=new Array();
+                var str=alldata[1].Enclosure; 
+                str=str.substr(0, str.length - 1);  
+                arr=str.split(';');
+                $("#imgnumber").html(arr.length);
+            }
+            if(alldata[1].Teant.Zidcard!=null){
+                $("#zjImage").val(alldata[1].Teant.Zidcard);
+                var arr1=new Array();
+                var str=alldata[1].Teant.Zidcard;
+                str=str.substr(0, str.length - 1);  
+                arr1=str.split(';');
+                $("#imgzjnumber").html(arr1.length);
+            }
               form.render('');
               //初始化杂费
               initzafei();
@@ -467,7 +473,7 @@ $("#addzjimage").click(function () {
     area:['800px', '500px'],
     success: function(layero,index){
         view(this.id).render('upload/index', {
-            img:$("#Image").val(),
+            img:$("#zjImage").val(),
             type:2,
             layerindex:index
         });

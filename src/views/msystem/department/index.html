@@ -25,7 +25,7 @@
     ]];
     tableoption = {
         domid: "#department-table", formid: "#zdepartment-search-form", arr: namearr, url: 'api/Sysrole/Querydepartlist',
-            ismuilti: true,"search":{"Id":-1}
+        ismuilti: true,"search":{"Id":-1}
     };
     BtnOption = {
             area: ['990px', '90%'],
@@ -53,9 +53,9 @@
                 type: 1,
                 title: '分配房源',
                 skin: 'two-layer',
-                shadeClose: true, //开启遮罩关闭
+                shadeClose: false, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
-                area: ['1000px', '90%'],
+                area: ['80%', '100%'],
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,
@@ -140,7 +140,6 @@
                         </div>
                 </div>
                 <div class="layui-col-md10">
-                     
                        <div class="layui-tab layui-tab-card" lay-filter="tabletab">
                               <ul class="layui-tab-title" style="margin-bottom:0;">
                                   <li value="999" class="layui-this">所有</li>

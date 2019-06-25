@@ -52,7 +52,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
                 skin: 'two-layer',
                 shadeClose: true, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
-                area: ['1000px', '90%'],
+                area: ['80%', '90%'],
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,
@@ -86,7 +86,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
                 skin: 'two-layer',
                 shadeClose: true, //开启遮罩关闭
                 maxmin: true, //开启最大化最小化按钮
-                area: ['70%', '90%'],
+                area: ['80%', '100%'],
                 success: function(layero, index) {
                     view(this.id).render(url, {
                         id: data.Id,

@@ -85,6 +85,22 @@
                 $(vdom).val(rid);
                 form.render('select');
             });
+        },
+        initbank:function(dom,rid){
+            var url="api/bankcard/Query";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Name +'">'+ rdata[i].Name +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                if(rid!=""){
+                    $(vdom).val(rid);
+                }
+                form.render('select');
+            });
         }
     };
     function cmdsend(type) {

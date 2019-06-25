@@ -45,7 +45,11 @@
                         $("#imgnumber").html(arr.length);
         }
                      $("#viewcontract").click(function(){
-                         var url="contract/z-contract/view"
+                         debugger;
+                        var url="contract/z-contract/view";
+                         if(data.numberData.Object==1){
+                           url="contract/y-contract/view";
+                         }
                          var editid = "layuibillreceivebtn";
                          var view = layui.view;
                          layer.open({

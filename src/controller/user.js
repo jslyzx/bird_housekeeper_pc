@@ -51,8 +51,11 @@ layui.define('form', function(exports) {
 
         cmdsend(6);
     });
-
+    $body.on('click', '#LAY-user-getsmscode2', function() {
+        cmdsend(1);
+    });
     function cmdsend(type) {
+        debugger;
         var $phone = $('#LAY-user-login-cellphone'),
             phone = $phone.val();
         var subdata = { "Phone": phone, "Type": type };

@@ -51,8 +51,6 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
         if($("#tEndTime").val()!=""){
             search.BeginTime=$("#tEndTime").val();
         }
-       // var url='api/HtcsExcel/contractexcel?search='+JSON.stringify(search); 
-       // $(this).attr("href",url);
         debugger;
       
         var url=apiurl+"HtcsExcel/contractexcel?search="+JSON.stringify(search)+"&access_token="+layui.data('layuiAdmin').access_token; 

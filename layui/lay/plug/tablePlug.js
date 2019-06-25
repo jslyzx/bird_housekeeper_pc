@@ -33,6 +33,7 @@ layui.define(['table'], function (exports) {
     // 保留一下原始的form.render
     var formRender = form.render;
     form.render = function (type, filter, jqObj) {
+      debugger;
       var that = this;
       var retObj;
       if (jqObj) {

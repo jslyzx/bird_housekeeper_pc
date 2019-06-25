@@ -31,7 +31,7 @@
     var laydate;
 
     function LoadData(id, tableid, layerindex,btnOption) {
-        layui.use(['laydate', 'laypage', 'htcsLG', 'layer', 'laytpl', 'jquery', 'form'], function () {
+        layui.use(['laydate', 'laypage', 'htcsLG', 'layer', 'htcsradio','laytpl', 'jquery', 'form'], function () {
             var laytpl = layui.laytpl;
             var doc = layui.htcsLG;
             var url = "api/OwerContract/QuerybyId";
@@ -48,6 +48,9 @@
             var DataObj;
             var getTpl = billtuiscript.innerHTML
                 , view = document.getElementById('bill-tui-view');
+                debugger;
+                var mymod = layui.htcsradio;
+                mymod.initbank("PayType","");
             //加载表头数据
             doc.objectQuery(url, {"Id": id}, function (data) {
                 laytpl(getTpl).render(data.numberData, function (html) {
@@ -418,9 +421,11 @@
                     <div class="layui-inline">
                         <label class="layui-form-label" style="width:auto;">支付方式</label>
                         <div class="layui-input-inline">
-                            <select name="PayType" lay-filter="PayType">
-                                <option value="支付宝">支付宝</option>
-                                <option value="微信">微信</option>
+                            <select name="PayType" id="PayType" lay-filter="PayType" lay-search> 
+                                    <option value="">请选择</option>
+                                    <option value="支付宝">支付宝</option>
+                                    <option value="微信">微信</option>
+                                    <option value="现金">现金</option>
                             </select>
                         </div>
                     </div>

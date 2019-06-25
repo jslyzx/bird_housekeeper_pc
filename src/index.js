@@ -6,12 +6,15 @@
  @License：LPPL
     
  */
- 
+layui.extend({
+  
+});
 layui.extend({
   setter: 'config' //配置文件
   ,admin: 'lib/admin' //核心模块
   ,view: 'lib/view' //核心模块
-}).define(['setter', 'admin'], function(exports){
+  ,tablePlug: '{/}layui/lay/plug/tablePlug'
+}).define(['setter', 'admin', 'tablePlug'], function(exports){
   var setter = layui.setter
   ,element = layui.element
   ,admin = layui.admin
