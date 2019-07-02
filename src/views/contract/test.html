@@ -1,1 +1,183 @@
-<p style="padding-left: 15px;color: snow;">你好</p>
+<script>
+     layui.use(['laydate', 'laypage', 'layer','htcsradio', 'laytpl', 'jquery', 'form','util'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+        form.render('');
+        var laydate = layui.laydate;
+        var mymod = layui.htcsradio;
+        var doc = layui.htcsLG;
+        var util = layui.util;
+        var count=0;
+        laydate.render({
+            elem: '#BeginTime' //指定元素
+            ,done: function(value, date, endDate){
+                createinput(fenjietype,count,vamount,vlistvalue);
+            }
+        });
+        laydate.render({
+            elem: '#EndTime' //指定元素
+            ,done: function(value, date, endDate){
+                createinput(fenjietype,count,vamount,vlistvalue);
+            }
+        });
+        //快捷键
+        $(".btkj").click(function(){
+                    var idvalue=$(this).attr("idvalue");
+                    if($("#BeginTime").val()!=""){
+                        var dt = getDate($("#BeginTime").val());
+                        var newDate = doc.DateAdd("m",Number(idvalue),dt);
+                        newDate = doc.DateAdd("d",-1,dt);
+                        $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
+                        getnewvalue(); 
+                        createinput(fenjietype,count,vamount,vlistvalue);
+                    }
+        });
+        //租金
+        var vamount=$("#Recent").val()/1;
+        //递增值
+        var vlistvalue=$("#listvalue").val()/1;
+        //租金分阶类型
+        var fenjietype=$("#fenjietype").val();
+        //下拉框事件
+        form.on('select(fenjietype)', function(data){
+           debugger;
+           createinput(data.value,count,vamount,vlistvalue);
+           form.render('select');
+        });
+         //监听文本框
+        $(document).on('change','#listvalue',function(){
+            getnewvalue(); 
+            createinput(fenjietype,count,vamount,vlistvalue);
+        });
+        //监听月租金
+        $(document).on('change','#Recent',function(){
+            getnewvalue(); 
+            createinput(fenjietype,count,vamount,vlistvalue);
+        });
+        //获取最新值
+        function getnewvalue(){
+            debugger;
+            vamount=$("#Recent").val()/1;
+            vlistvalue=$("#listvalue").val()/1;
+            fenjietype=$("#fenjietype").val();
+            count=mymod.jsGetYears($("#EndTime").val(),$("#BeginTime").val());
+            
+        }
+        //生产文本框
+        function createinput(type,count,amount,listvalue){
+            getnewvalue(); 
+           $("#listinput").empty();
+           if(type==3||type==0){
+             $("#percent").hide();
+           }else{
+            $("#percent").show();
+           }
+           if(type!=0){
+            var percent=listvalue/100;
+            var lastamount=amount;
+            var stage=0;
+            $("#listlabel").val()
+            for(var i=1;i<=count;i++)
+            {
+             if(i!=1){
+                var listamount=0
+                if(type==1){
+                listamount=lastamount+percent*amount;
+                lastamount=listamount;
+                }
+                if(type==2){
+                 listamount=lastamount+listvalue;
+                 lastamount=listamount;
+                }
+                if(type==3){
+                    listamount=amount;
+                }
+                }else{
+                listamount=amount;
+                }
+                listamount=listamount.toFixed(2)
+             stage= i-1;
+             var rlabel='<label class="layui-form-label">'+getlabel(type,i)+'</label>';
+             var rinput='<div class="layui-input-inline" style="width:100px;"><input type="text" class="layui-input listinput"  name="payee" placeholder=""></div>';
+             $("#listinput").append(rlabel+rinput);
+             $("#listinput input").eq(stage).val(listamount);
+           }
+           if(type==1){
+            $(".listinput").addClass("gray");
+            $(".listinput").attr("disabled",true);
+           }else{
+            $("#listinput input").eq(0).attr("disabled",true);
+           }
+           }
+         }
+         function getlabel(type,year){
+            if(type==1){
+               return "第"+year+'年'+"(¥)";
+            }
+            if(type==2){
+               return "第"+year+'年'+"(¥)";
+            }
+            if(type==3){
+               return "第"+year+'年'+"(¥)";
+            }
+         }
+         function getDate(strDate){    
+                    var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
+                    function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
+                    return date;    
+        }
+     })
+</script>
+<form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+        <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">合同时间</label>
+                    <div class="layui-input-inline" style="width:200px;">
+                        <input type="tel" name="BeginTime" lay-verify="required" autocomplete="off" class="layui-input" id="BeginTime" placeholder="合同开始时间">
+    
+                    </div>
+                    <div class="layui-input-inline" style="width:200px;">
+                        <input type="tel" name="EndTime" lay-verify="EndTime" autocomplete="off" class="layui-input" id="EndTime" placeholder="合同结束时间">
+                    </div>
+                    <div class="layui-btn-group">
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="6">6月</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="12">1年</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="24">2年</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="36">3年</a>
+                            <a class="layui-btn  layui-btn-primary btkj" idvalue="60">5年</a>
+                    </div>
+                </div>
+            </div>
+<div class="layui-form-item" >
+        <label class="layui-form-label">月租金</label>
+        <div class="layui-input-inline" style="width: 100px;">
+            <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" class="layui-input Recent" id="Recent">
+        </div>
+</div>
+<div class="layui-form-item">
+<div class="layui-inline">
+    <label class="layui-form-label">租金分阶</label>
+    <div class="layui-input-inline" style="width:200px;">
+        <select lay-verify="required"  lay-filter="fenjietype" id="fenjietype" >
+            <option value="0">无</option>
+            <option value="1">按比例逐年递增</option>
+            <option value="2">按金额逐年递增</option>
+            <option value="3">按年自定义</option>
+        </select>
+    </div>
+    
+                         
+</div>
+<div class="layui-inline" id="percent">
+        <label class="layui-form-label" id="listlabel">%</label>
+        <div class="layui-input-inline" style="width:100px;">
+         <input type="text" class="layui-input"  id="listvalue" placeholder="">
+        </div> 
+</div>
+</div>
+<div class="layui-form-item" >
+<div class="layui-inline" id="listinput">
+                          
+</div>
+</div>
+</form>

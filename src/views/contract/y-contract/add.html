@@ -6,6 +6,9 @@
          .zafeitit{color:#FFB800;font-weight:500;}
          .zisyajin{display: none;}
          .rizu{display: none;}
+         #listinput{display:none;}
+         .parentlistvalue{display:none;}
+        
      </style>
   <script type="text/html" template >
     {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
@@ -41,12 +44,24 @@
                     //执行一个laydate实例
                     laydate.render({
                         elem: '#BatethDay' //指定元素
+                        ,done: function(value, date, endDate){
+                           getnewvalue(); 
+                           createinput(fenjietype,count,vamount,vlistvalue);
+                         }
                     });
                     laydate.render({
                         elem: '#BeginTime' //指定元素
+                        ,done: function(value, date, endDate){
+                            getnewvalue(); 
+                            createinput(fenjietype,count,vamount,vlistvalue);
+                         }
                     });
                     laydate.render({
                         elem: '#EndTime' //指定元素
+                        ,done: function(value, date, endDate){
+                           getnewvalue(); 
+                           createinput(fenjietype,count,vamount,vlistvalue);
+                         }
                     });
                     laydate.render({
                     elem: '#CreateTime' //指定元素
@@ -56,6 +71,7 @@
                     Create();
                     EventOther();
                     initrecentfree();
+                    initgrading();
                     form.render('');
                     });
                     
@@ -140,6 +156,8 @@
                         var newDate = doc.DateAdd("m",Number(idvalue),dt);
                         newDate = doc.DateAdd("d",-1,dt);
                         $("#EndTime").val(util.toDateString(newDate,"yyyy-MM-dd"));
+                        getnewvalue(); 
+                        createinput(fenjietype,count,vamount,vlistvalue);
                     }
                 });
                 function getDate(strDate){    
@@ -319,6 +337,7 @@
         var yajin=[];
         //免租期
         var arr=[];
+        var gradearr=[];
         $(".rentfreerow").each(function(index,value){
                   var field={};
                   var domBegin=$(value).children().find('.Begin');
@@ -329,7 +348,14 @@
                   field.Amount=domAmount.val();
                   arr.push(field);
         });
-
+        //分段合同
+        $(".listinput").each(function(index,value){
+                  debugger;
+                  var field={};
+                  field.Year=index+1;
+                  field.Amount=value.value;
+                  gradearr.push(field);
+        });
         //杂费
         $.each($(".zafeicontent .zafeilist"), function (index, item) {
         debugger;
@@ -372,7 +398,7 @@
         "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type,"CreateTime":datafield.CreateTime,"CreatePerson":datafield.CreatePerson,  "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
         "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,"payee": datafield.payee,"bank": datafield.bank,"accounts": datafield.accounts,
         "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Social": datafield.Social, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType,"Document": datafield.Document,"Zidcard":datafield.zjImage  },
-        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image,"tRentFree":arr
+        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image,"tRentFree":arr,"Grading":gradearr
          };
          var url = doc.baseurl + "/api/Contract/SaveData";
          var saveoption={
@@ -389,6 +415,121 @@
       doc.Submit(saveoption);
       return false;
          });
+        //租期分段
+        debugger;
+        var mymod = layui.htcsradio;
+        var count=0;
+        //租金
+        var vamount=$("#Recent").val()/1;
+        //递增值
+        var vlistvalue=$("#listvalue").val()/1;
+        //租金分阶类型
+        var fenjietype=$("#fenjietype").val();
+        function initgrading(){
+        $("#percent").hide();
+        //下拉框事件
+        form.on('select(fenjietype1)', function(data){
+           debugger;
+           getnewvalue(); 
+           createinput(data.value,count,vamount,vlistvalue);
+           form.render('select');
+        });
+         //监听文本框
+        $(document).on('change','#listvalue',function(){
+            getnewvalue(); 
+            createinput(fenjietype,count,vamount,vlistvalue);
+        });
+        //监听月租金
+        $(document).on('change','#Recent',function(){
+            getnewvalue(); 
+            createinput(fenjietype,count,vamount,vlistvalue);
+        });
+        }
+        function getDate(strDate){    
+                    var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
+                    function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
+                    return date;    
+        }
+        function getlabel(type,year){
+            if(type==1){
+               return "第"+year+'年'+"(¥)";
+            }
+            if(type==2){
+               return "第"+year+'年'+"(¥)";
+            }
+            if(type==3){
+               return "第"+year+'年'+"(¥)";
+            }
+         }
+        //获取最新值
+        function getnewvalue(){
+            debugger;
+            vamount=$("#Recent").val()/1;
+            vlistvalue=$("#listvalue").val()/1;
+            fenjietype=$("#fenjietype").val();
+            count=mymod.jsGetYears($("#EndTime").val(),$("#BeginTime").val());
+            
+        }
+        //生产文本框
+        function createinput(type,count,amount,listvalue){
+           getnewvalue(); 
+           $("#listinput").empty();
+           if(type!=0){
+            var percent=listvalue/100;
+            var lastamount=amount;
+            var stage=0;
+            $("#listlabel").val();
+            if(count>0&&type!=0){
+                $("#listinput").show();
+            }else{
+                $("#listinput").hide();
+            }
+            for(var i=1;i<=count;i++)
+            {
+                if(i!=1){
+                var listamount=0;
+                if(type==1){
+                listamount=lastamount+percent*amount;
+                lastamount=listamount;
+                }
+                if(type==2){
+                 listamount=lastamount+listvalue;
+                 lastamount=listamount;
+                }
+                if(type==3){
+                 listamount=amount;
+                }
+                }else{
+                 listamount=amount;
+                }
+             listamount=listamount.toFixed(2);
+             stage= i-1;
+             var rlabel='<label class="layui-form-label">'+getlabel(type,i)+'</label>';
+             var rinput='<div class="layui-input-inline" style="width:100px;"><input type="text" class="layui-input listinput"  name="payee" placeholder=""></div>';
+             $("#listinput").append(rlabel+rinput);
+             $("#listinput input").eq(stage).val(listamount);
+            }
+
+            if(type==3||type==0){
+              if(type==0){
+                $(".parentlistvalue").hide();
+              }
+              $("#percent").hide();
+            }else{
+             $("#percent").show();
+             $("#percent").addClass('layui-inline');  
+             $(".parentlistvalue").show();
+            }
+           if(type==1||type==2){
+            $(".listinput").addClass("gray");
+            $(".listinput").attr("disabled",true);
+           }else{
+            $("#listinput input").eq(0).attr("disabled",true);
+            $("#listinput input").eq(0).addClass("gray");
+           }
+         }
+         }
+         //免租期
          function initrecentfree(){
             event();
                var dom= '<div class="layui-form-item rentfreerow"><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel" lay-verify="required" autocomplete="off" class="layui-input Begin"  placeholder="开始时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:160px"><input type="tel"   autocomplete="off"  class="layui-input End"  placeholder="结束时间"></div></div><div class="layui-inline"><div class="layui-input-inline" style="width:100px"><input type="tel"  lay-verify="required" autocomplete="off" class="layui-input Amount"  placeholder="减免金额"></div></div><div class="layui-inline"><button type="button" class="layui-btn layui-btn-primary layui-btn-sm delete" ><i class="layui-icon">&#xe640;</i></button></div></div>';
@@ -585,6 +726,30 @@
                         
                     </div>
                 </div>
+                <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">租金分阶</label>
+                            <div class="layui-input-inline" style="width:200px;">
+                                <select lay-verify="required"  lay-filter="fenjietype1" id="fenjietype" >
+                                    <option value="0">无</option>
+                                    <option value="1">按比例逐年递增</option>
+                                    <option value="2">按金额逐年递增</option>
+                                    <option value="3">按年自定义</option>
+                                </select>
+                            </div>                       
+                        </div>
+                        <div class="layui-inline" id="percent">
+                                <label class="layui-form-label" id="listlabel">%</label>
+                                <div class="layui-input-inline" >
+                                 <input type="text" class="layui-input"  id="listvalue" placeholder="">
+                                </div> 
+                        </div>
+                        </div>
+                        <div class="layui-form-item parentlistvalue">
+                         <div class="layui-inline" id="listinput">
+                                                          
+                         </div>
+                        </div>
                 <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">免租期</label>

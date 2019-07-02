@@ -171,21 +171,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
+                <div class="layui-form-item yuezu">
+                    <div class="layui-inline ">
                         <label class="layui-form-label">类型</label>
                         <div class="layui-input-inline" style="width: 100px;">
-                            <select  id="viewyType"  name="Type">
+                            <select lay-verify="required" id="yType"  name="Type" lay-filter="timeType">
                                 <option value="2">月租</option>
                                 <option value="1">日租</option>
                             </select>
                         </div>
-                        <label class="layui-form-label" >支付时间</label>
+                        <label class="layui-form-label" >付款方式</label>
                         <div class="layui-input-inline" style="width: 100px;">
-                            <input type="tel" disabled   lay-verify="" autocomplete="off" value="{{doc.ns(d[1].Pinlv)}}月1付" class="layui-input"  >
+                            <select lay-verify="required" id="PinLv" name="PinLv" lay-filter="Type">
+                                <option value="">请选择</option>
+                                {{#  layui.each(d[0].pinlv, function(index, item1){ }}
+                                <option value="{{item1.key}}">{{item1.Value}}</option>
+                                {{#  });   }}
+                            </select>
                         </div>
                         <div class="layui-input-inline" style="width: 100px;">
-                            <select lay-verify="required" id="viewDepositType" name="DepositType" disabled>
+                            <select lay-verify="required" id="DepositType" name="DepositType" lay-filter="DepositType">
                                     <option value="1">押一</option>
                                     <option value="2">押二</option>
                                     <option value="3">押三</option>
@@ -193,12 +198,34 @@
                                     <option value="5">押五</option> 
                                     <option value="6">押六</option> 
                                     <option value="0">不设押金</option>
-                                    <option value="99">自定义押金</option>                                    
+                                    <option value="99">自定义押金</option>                                 
                             </select>
                         </div>
-                        
+                        <label class="layui-form-label">月租金</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="tel" name="Recent" lay-verify="required|number" autocomplete="off" value="{{d[1].Recent}}" class="layui-input Recent" id="Recent">
+                        </div>
+                       
                     </div>
                 </div>
+                <div class="layui-form-item rizu">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <select lay-verify="required" id="Type" name="Type" lay-filter="timeType">
+                                    <option value="2">月租</option>
+                                    <option value="1">日租</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <input type="tel" autocomplete="off" class="layui-input gray" placeholder="一次结清">
+                            </div>
+                            <label class="layui-form-label">日租金总额</label>
+                            <div class="layui-input-inline" style="width: 100px;">
+                             <input type="tel" disabled  value="{{d[1].DayRecnet}}" autocomplete="off" class="layui-input gray">
+                            </div>
+                            </div>
+                      </div>
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">支付时间</label>
@@ -216,10 +243,7 @@
                                     <option value="2">2天</option>
                                 </select>
                             </div>                          
-                        <label class="layui-form-label">月租金</label>
-                        <div class="layui-input-inline" style="width: 100px;">
-                            <input type="tel" name="Recent" lay-verify="required|number" disabled autocomplete="off" class="layui-input gray" value="{{d[1].Recent}}" >
-                        </div>
+                      
                     </div>
                 </div>
                 
