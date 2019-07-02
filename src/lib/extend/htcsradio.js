@@ -101,8 +101,68 @@
                 }
                 form.render('select');
             });
+        },
+        // JS日期系列：根据出传入的日期 ，得到当前日期与传入日期的差，返回的格式是“y年m月”
+	   // 传入参数strKeyDate要求格式为“yyyy年mm月dd日”这样的日期字符串，如果不是自行先转换，或者调整下方“传入的日期，将其产分为年、月、日”的拆分方法
+	   // 后续再增加相关的如日期判断等JS关于日期处理的相关方法
+	   jsGetYears(begin,strKeyDate){
+        debugger;
+		// 需要返回的值，分别是：年数、月数、返回的字符串
+	    var returnYears= 0;
+	    var returnMonths = 0;
+	    var yearmonth = -1;
+	    // 传入的日期，将其产分为年、月、日
+	    var str =getDate(strKeyDate);
+	    var keyYear = str.getFullYear();
+	    var keyMonth = str.getMonth()+1;
+	    var keyDay = str.getDate();
+	 	// 当天日期，将其产分为年、月、日
+	    var now =getDate(begin);
+	    var nowYear = now.getFullYear();
+	    var nowMonth = now.getMonth() + 1;
+	    var nowDay = now.getDate();
+	    // 分别计算年、月、日的差
+	    var yearDiff = nowYear - keyYear;
+	    var monthDiff = nowMonth - keyMonth;
+	    var dayDiff = (nowDay - keyDay)+1;
+	    // 以下是得到当前日期与传入日期的差的过程，返回的格式是“y年m月”；如果传入日期大于当前日期，则返回“-1”（大家也可以自行修改之）
+	    if(yearDiff < 0){
+	    	return yearmonth;
+	    }
+
+	    if(yearDiff == 0 && monthDiff < 0){
+	    	return yearmonth;
+	    }
+
+	    if(yearDiff == 0 && monthDiff == 0 && dayDiff < 0){
+	    	return yearmonth;
+	    }
+	    	
+	    returnYears = yearDiff;
+	    if(monthDiff < 0){
+	    	returnYears = returnYears - 1;
+	    	monthDiff = 12 + monthDiff;
+	    }
+	    returnMonths = monthDiff
+	    if(dayDiff < 0){
+	    	returnMonths = returnMonths -1;
         }
+        if(dayDiff> 0){
+	    	returnMonths = returnMonths +dayDiff/30;
+	    }	    
+        yearmonth = returnYears;
+        if(returnMonths>0){
+            yearmonth=yearmonth+returnMonths/12;
+        }
+	  	// 返回日期差，格式是“y年m月”
+	    return Math.ceil(yearmonth);
+    }
     };
+    function getDate(strDate){    
+        var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
+        function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
+        return date;    
+    }
     function cmdsend(type) {
         var $phone = $('#LAY-user-login-cellphone'),
             phone = $phone.val();

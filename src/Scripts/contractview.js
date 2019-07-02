@@ -156,6 +156,7 @@ $("#bill-sendmessage-btn").click(function(){
         $.each(getselect,function(index,value){
            var phone={};
            phone.Phone=value.Phone;
+           phone.name=value.TeantName;
            arrphone.push(phone);
         });
         //调用发送短信接口
@@ -245,6 +246,8 @@ $("#bill-sendmessage-btn").click(function(){
                 $("#imgzjnumber").html(arr1.length);
             }
               form.render('');
+              debugger;
+              rizutype(alldata[1].Type);
               //初始化杂费
               initzafei();
               //初始化押金
@@ -276,6 +279,46 @@ $("#bill-sendmessage-btn").click(function(){
             Eventzafei(type,id,yajin);
             }
         });
+    }
+    function rizutype(value){
+        if(value==1){
+        $(".yuezu").hide();
+        $(".rizu").show();
+        //不验证
+        $("#Type").removeAttr("lay-verify");
+        $("#PinLv").removeAttr("lay-verify");
+        $("#DepositType").removeAttr("lay-verify");
+        $("#Recent").removeAttr("lay-verify");
+         //验证
+        $("#Recent1").attr("lay-verify","required");
+        $("#Type").val(1);
+        //常规押金可编辑
+        $("#cyajin").removeClass("gray");
+        $("#cyajin").attr("disabled",false);
+    }
+    //月租
+    if(value==2){
+        $(".yuezu").show();
+        $(".rizu").hide();
+          //不验证
+        $("#Recent1").removeAttr("lay-verify"); 
+        //验证
+        $("#Recent").attr("lay-verify","required");
+        $("#Type").attr("lay-verify","required");
+        $("#DepositType").attr("lay-verify","required");
+        $("#PinLv").attr("lay-verify","required");
+        $("#yType").val(2);
+        //常规押金不可编辑
+        var yaji=$("#DepositType").val();
+        if(yaji!=99){
+            $("#cyajin").addClass("gray");
+            $("#cyajin").attr("disabled",true);
+        }else{
+            $("#cyajin").removeClass("gray");
+           $("#cyajin").attr("disabled",false);
+        }
+    }
+    form.render('');
     }
     function inityajin(){
             var name ="";

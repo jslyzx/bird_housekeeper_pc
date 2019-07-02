@@ -252,6 +252,9 @@ body .htcs-tcclass .layui-layer-btn .layui-layer-btn0{    display: inline-block;
     display: block;
     box-sizing: border-box;
     font-size: 13px;
+    overflow: hidden;
+
+
 }
 
 .area-list .area-item-active {

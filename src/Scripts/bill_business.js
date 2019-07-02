@@ -271,6 +271,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
                var phone={};
                phone.Phone=value.Phone;
                arrphone.push(phone);
+               phone.name=value.TeantName;
             });
             //调用发送短信接口
             var duanxinurl="api/Bill/pcuizu";

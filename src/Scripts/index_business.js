@@ -330,6 +330,7 @@
             $.each(getselect,function(index,value){
                var phone={};
                phone.Phone=value.Phone;
+               phone.name=value.TeantName;
                arrphone.push(phone);
             });
             //调用发送短信接口
@@ -733,6 +734,7 @@
             $.each(getselect,function(index,value){
                var phone={};
                phone.Phone=value.Phone;
+               phone.name=value.TeantName;
                arrphone.push(phone);
             });
             //调用发送短信接口
