@@ -36,7 +36,6 @@
                      doc.objectQuery(xqurl, {"Id":id }, function (data) {
                         alldata.push(data.numberData);
                         doc.objectQuery('api/bankcard/Query', { }, function (data1) {
-                       
                         var Teant={};
                         if(alldata[1].Teant!=null){
                         Teant.Document=alldata[1].Teant.Document;
@@ -83,7 +82,7 @@
               
                     $("#yType").val(alldata[1].Type); 
                     $("#bank").val(alldata[1].bank); 
-                          
+                    $("#fenjietype").val(alldata[1].gradingtype); 
                     //查询附件个数
                     if(alldata[1].Enclosure!=null){
                         $("#Image").val(alldata[1].Enclosure);
@@ -113,6 +112,9 @@
                     EventOther();
                     //免租期事件
                     initrecentfreevalue(alldata[1].tRentFree);
+                    //租金分阶
+                    initgradingvalue(alldata[1].Grading,alldata[1].gradingtype,alldata[1].gradingvalue);
+                    initgrading();
                 }); 
             }); 
                 });
@@ -387,6 +389,7 @@
         var yajin=[];
           //免租期
         var arr=[];
+        var gradearr=[];
         $(".rentfreerow").each(function(index,value){
                   var field={};
                   var domBegin=$(value).children().find('.Begin');
@@ -425,7 +428,14 @@
         zafei.IsYajin= 1;
         yajin.push(zafei);
         });
-        
+        //分段合同
+        $(".listinput").each(function(index,value){
+                  debugger;
+                  var field={};
+                  field.Year=index+1;
+                  field.Amount=value.value;
+                  gradearr.push(field);
+        });
         //常规押金
         var cyajin={};
             cyajin.Name='常规押金';
@@ -435,9 +445,9 @@
         var tjdata = {
             "Id":id, "Deposit":datafield.Deposit,
         "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime,"CreateTime":datafield.CreateTime,"CreatePerson":datafield.CreatePerson, "Type": datafield.Type, "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
-        "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,"payee": datafield.payee,"bank": datafield.bank,"accounts": datafield.accounts,
+        "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,"payee": datafield.payee,"bank": datafield.bank,"accounts": datafield.accounts,"subbranch":datafield.subbranch,
         "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Social": datafield.Social, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType,"Document": datafield.Document,"Zidcard":datafield.zjImage  },
-        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image,"tRentFree":arr
+        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image,"tRentFree":arr,"Grading":gradearr,"gradingtype":datafield.gradingtype,"gradingvalue":datafield.gradingvalue
          };
          var url = doc.baseurl + "/api/Contract/SaveData";
          var saveoption={
@@ -469,6 +479,161 @@
                  event();     
              })
              initrecentfree();
+         }
+         //租金分阶初始化
+         function initgradingvalue(arr,type,gradingvalue){
+         $("#percent").hide();
+         $.each(arr,function(index,value){
+             var rlabel='<label class="layui-form-label">'+'第'+value.Year+'年'+'</label>';
+             var rinput='<div class="layui-input-inline" style="width:100px;"><input type="text" class="layui-input listinput"  name="payee" placeholder=""></div>';
+             $("#listinput").append(rlabel+rinput);
+             $("#listinput input").eq(index).val(value.Amount);
+             //赋值
+             if(type==3||type==0){
+             if(type==0){
+              $(".parentlistvalue").hide();
+             }
+             $("#percent").hide();
+             }else{
+             $("#percent").show();
+             $("#percent").addClass('layui-inline');  
+             $(".parentlistvalue").show();
+           
+            }
+            if(type==1||type==2){
+            $(".listinput").addClass("gray");
+            $(".listinput").attr("disabled",true);
+            }else{
+            $("#listinput input").eq(0).attr("disabled",true);
+            $("#listinput input").eq(0).addClass("gray");
+            }
+        });
+        debugger;
+        if(type==0){
+              $(".parentlistvalue").hide();
+              $("#percent").hide();
+        }else{
+             $("#percent").show();
+             $("#percent").addClass('layui-inline');  
+             $(".parentlistvalue").show();
+             $("#listvalue").val(gradingvalue);
+        }
+        }
+        //事件
+        //租期分段
+        debugger;
+        var mymod = layui.htcsradio;
+        var count=0;
+        //租金
+        var vamount=$("#Recent").val()/1;
+        //递增值
+        var vlistvalue=$("#listvalue").val()/1;
+        //租金分阶类型
+        var fenjietype=$("#fenjietype").val();
+        function initgrading(){
+       
+        //下拉框事件
+        form.on('select(fenjietype1)', function(data){
+           debugger;
+           getnewvalue(); 
+           createinput(data.value,count,vamount,vlistvalue);
+           form.render('select');
+        });
+         //监听文本框
+        $(document).on('change','#listvalue',function(){
+            getnewvalue(); 
+            createinput(fenjietype,count,vamount,vlistvalue);
+        });
+        //监听月租金
+        $(document).on('change','#Recent',function(){
+            getnewvalue(); 
+            createinput(fenjietype,count,vamount,vlistvalue);
+        });
+        }
+        function getDate(strDate){    
+                    var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,    
+                    function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');    
+                    return date;    
+        }
+        function getlabel(type,year){
+            if(type==1){
+               return "第"+year+'年'+"(¥)";
+            }
+            if(type==2){
+               return "第"+year+'年'+"(¥)";
+            }
+            if(type==3){
+               return "第"+year+'年'+"(¥)";
+            }
+         }
+        //获取最新值
+        function getnewvalue(){
+            debugger;
+            vamount=$("#Recent").val()/1;
+            vlistvalue=$("#listvalue").val()/1;
+            fenjietype=$("#fenjietype").val();
+            count=mymod.jsGetYears($("#EndTime").val(),$("#BeginTime").val());
+            
+        }
+        //生产文本框
+        function createinput(type,count,amount,listvalue){
+           getnewvalue(); 
+           $("#listinput").empty();
+           if(type!=0){
+            var percent=listvalue/100;
+            var lastamount=amount;
+            var stage=0;
+            $("#listlabel").val();
+            if(count>0&&type!=0){
+                $("#listinput").show();
+            }else{
+                $("#listinput").hide();
+            }
+            for(var i=1;i<=count;i++)
+            {
+                if(i!=1){
+                var listamount=0;
+                if(type==1){
+                listamount=lastamount+percent*amount;
+                lastamount=listamount;
+                }
+                if(type==2){
+                 listamount=lastamount+listvalue;
+                 lastamount=listamount;
+                }
+                if(type==3){
+                 listamount=amount;
+                }
+                }else{
+                 listamount=amount;
+                }
+             listamount=listamount.toFixed(2);
+             stage= i-1;
+             var rlabel='<label class="layui-form-label">'+getlabel(type,i)+'</label>';
+             var rinput='<div class="layui-input-inline" style="width:100px;"><input type="text" class="layui-input listinput"  name="payee" placeholder=""></div>';
+             $("#listinput").append(rlabel+rinput);
+             $("#listinput input").eq(stage).val(listamount);
+            }
+
+            if(type==3||type==0){
+              if(type==0){
+                $(".parentlistvalue").hide();
+              }
+              $("#percent").hide();
+            }else{
+             $("#percent").show();
+             $("#percent").addClass('layui-inline');  
+           
+             $(".parentlistvalue").show();
+            }
+           if(type==1||type==2){
+            $(".listinput").addClass("gray");
+            $(".listinput").attr("disabled",true);
+           }else{
+            $("#listinput input").eq(0).attr("disabled",true);
+            $("#listinput input").eq(0).addClass("gray");
+           }
+         }
          }
          function initrecentfree(){
                event();
@@ -658,6 +823,30 @@ function event(){
                     
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">租金分阶</label>
+                        <div class="layui-input-inline" style="width:200px;">
+                            <select lay-verify="required"  name="gradingtype" lay-filter="fenjietype1" id="fenjietype" >
+                                <option value="0">无</option>
+                                <option value="1">按比例逐年递增</option>
+                                <option value="2">按金额逐年递增</option>
+                                <option value="3">按年自定义</option>
+                            </select>
+                        </div>                       
+                    </div>
+                    <div class="layui-inline" id="percent">
+                            <label class="layui-form-label" id="listlabel">%</label>
+                            <div class="layui-input-inline" >
+                             <input type="text" class="layui-input" name="gradingvalue"  id="listvalue" placeholder="">
+                            </div> 
+                    </div>
+                    </div>
+                    <div class="layui-form-item parentlistvalue">
+                     <div class="layui-inline" id="listinput">
+                                                      
+                     </div>
+                    </div>
                 <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">免租期</label>

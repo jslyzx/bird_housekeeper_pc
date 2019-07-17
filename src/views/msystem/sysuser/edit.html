@@ -1,5 +1,6 @@
 
 <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script src="../../../Scripts/Common/md5.js"></script>
 <link href="../../../Content/formSelects-v4.css" rel="stylesheet" />
 <style>
        .child-view  .layui-table-cell{
@@ -53,12 +54,16 @@
                 form.render('');
             });
             //监听提交
-           form.on('submit(save)', function (data) {
+          form.on('submit(save)', function (data) {
           data.field.Id=id;
           var datafield=data.field;
           var arr=[{"SysRoleId":datafield.roleid}];
           datafield.registrationId=registrationId;
-          datafield.Password=Password;
+          if(datafield.Password!=undefined&&datafield.Password!=null){
+            datafield.Password=hex_md5(datafield.Password).toUpperCase();
+          }else{
+            datafield.Password=Password;
+          }
           datafield.listrole=arr; 
           datafield.deletebilllist=deletebilllist;
           var tjdata =datafield;
@@ -120,7 +125,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-inline" style="width: 200px;">
-                            <input type="tel" name="Mobile" autocomplete="off" class="layui-input" id="Mobile" value="{{d.Mobile}}">
+                            <input type="tel" name="Mobile" autocomplete="off"  class="layui-input" id="Mobile" value="{{d.Mobile}}">
                         </div>
                         <label class="layui-form-label">真实姓名</label>
                         <div class="layui-input-inline" style="width: 200px;">
@@ -133,6 +138,12 @@
                             <label class="layui-form-label" >邮箱</label>
                             <div class="layui-input-inline" style="width: 200px;">
                                 <input type="tel" name="Email" autocomplete="off" class="layui-input" id="Email" value="{{doc.ns(d.Email)}}">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" >新登录密码</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="Password" autocomplete="off"  placeholder="新密码,不修改密码请留空" class="layui-input" id="Password" value="{{doc.ns(d.Email)}}">
                             </div>
                         </div>
                     </div>

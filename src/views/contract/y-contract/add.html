@@ -120,9 +120,6 @@
                         $(id+" .zafeiType").val(type);
                         Eventzafei(type,id,yajin);
                     });
-                
-                    
-                    
                 }
                 
                form.on('select(Recivetype)', function(data){
@@ -396,9 +393,9 @@
         var tjdata = {
              "Deposit":datafield.Deposit,
         "BeginTime": datafield.BeginTime, "EndTime": datafield.EndTime, "Type": datafield.Type,"CreateTime":datafield.CreateTime,"CreatePerson":datafield.CreatePerson,  "PinLv": datafield.PinLv, "FirstPay": datafield.FirstPay,"DepositType":datafield.DepositType, "Recent": datafield.Recent,"PayType":datafield.PayType,"DayRecnet":datafield.DayRecnet,"Remark":datafield.Remark,"HouseId":datafield.HouseId,
-        "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,"payee": datafield.payee,"bank": datafield.bank,"accounts": datafield.accounts,
+        "HouseType":datafield.HouseType,"BeforeDay":datafield.BeforeDay,"Recivetype":datafield.Recivetype,"payee": datafield.payee,"bank": datafield.bank,"accounts": datafield.accounts,"subbranch":datafield.subbranch,
         "Teant": { "Name": datafield.Name, "Sex": datafield.Sex, "BatethDay": datafield.BatethDay, "Phone": datafield.Phone, "Social": datafield.Social, "Work": datafield.Work, "Hobby": datafield.Hobby, "DocumentType": datafield.DocumentType,"Document": datafield.Document,"Zidcard":datafield.zjImage  },
-        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image,"tRentFree":arr,"Grading":gradearr
+        "Otherfee": zafeilist,"Yajin":yajin,"Status":2,"DepositType":datafield.DepositType, "Enclosure":datafield.Image,"tRentFree":arr,"Grading":gradearr,"gradingtype":datafield.gradingtype,"gradingvalue":datafield.gradingvalue
          };
          var url = doc.baseurl + "/api/Contract/SaveData";
          var saveoption={
@@ -481,6 +478,7 @@
             $("#listlabel").val();
             if(count>0&&type!=0){
                 $("#listinput").show();
+                $(".parentlistvalue").show();
             }else{
                 $("#listinput").hide();
             }
@@ -514,11 +512,14 @@
               if(type==0){
                 $(".parentlistvalue").hide();
               }
+              if(type==3){
+                $(".parentlistvalue").show();
+              }
               $("#percent").hide();
             }else{
              $("#percent").show();
              $("#percent").addClass('layui-inline');  
-             $(".parentlistvalue").show();
+            
             }
            if(type==1||type==2){
             $(".listinput").addClass("gray");
@@ -730,7 +731,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">租金分阶</label>
                             <div class="layui-input-inline" style="width:200px;">
-                                <select lay-verify="required"  lay-filter="fenjietype1" id="fenjietype" >
+                                <select lay-verify="required"  name="gradingtype" lay-filter="fenjietype1" id="fenjietype" >
                                     <option value="0">无</option>
                                     <option value="1">按比例逐年递增</option>
                                     <option value="2">按金额逐年递增</option>
@@ -741,7 +742,7 @@
                         <div class="layui-inline" id="percent">
                                 <label class="layui-form-label" id="listlabel">%</label>
                                 <div class="layui-input-inline" >
-                                 <input type="text" class="layui-input"  id="listvalue" placeholder="">
+                                 <input type="text" class="layui-input" name="gradingvalue"  id="listvalue" placeholder="">
                                 </div> 
                         </div>
                         </div>

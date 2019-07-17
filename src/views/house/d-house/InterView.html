@@ -163,7 +163,7 @@ Layout = null;
             layEvent = obj.event,
             url = $(this).data('url');
             if (layEvent === 'zcontract-tuizu-btn') { //退租
-                if(data.Status!=1&&data.Status!=5){
+                if(data.Status!=1&&data.Status!=5&&data.Status!=6&&data.Status!=9&&data.Status!=2){
                     layer.msg("合同状态不为待签约和在租中不能进行退租操作");
                     return;
                 }
@@ -190,7 +190,7 @@ Layout = null;
                 });
             }
             if (layEvent === 'zcontract-xuzu-btn') { //续租
-                if(data.Status!=1&&data.Status!=5){
+                if(data.Status!=1&&data.Status!=5&&data.Status!=6&&data.Status!=9&&data.Status!=2){
                     layer.msg("合同状态不为待签约和在租中不能进行续租操作");
                     return;
                 }
@@ -257,7 +257,7 @@ Layout = null;
                           layEvent = obj.event,
                           url = $(this).data('url');
                           if (layEvent === 'ycontract-tuizu-btn') { //退租
-                              if(data.Status!=1&&data.Status!=5){
+                              if(data.Status!=1&&data.Status!=5&&data.Status!=6&&data.Status!=9&&data.Status!=2){
                                   layer.msg("合同状态不为待签约和在租中不能进行退租操作");
                                   return;
                               }

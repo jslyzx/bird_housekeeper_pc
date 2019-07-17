@@ -196,7 +196,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
           , { field: 'Id'  , width: 100, title: '合同编号' }
           , { field: 'Name', width: 100, title: '租客姓名' }
           , { field: 'Status', width: 110, title: '状态', templet: formatterstatus }
-          , { width: 300, title: '所属房源', templet: formatterhouse }
+          , { width: 300, title: '所属房源', templet: formatterhouse,field: 'Status' }
           , { field: 'ContractTime', width: 270, title: '合同周期', templet: formattertime }
           , { field: 'Deposit', width: 80, title: '押金' }
           , { field: 'Recent', width: 80, title: '租金' }

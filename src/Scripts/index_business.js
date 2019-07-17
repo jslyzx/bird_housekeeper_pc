@@ -228,6 +228,7 @@
             menuid: 108,
             isloadmenu:isloadmenu,
             "realtable": "T_BILL",
+            url:'bill/z-bill/view',//查看界面路径
             formatterbtn:['formatterbtn']
         };
         doc.InitButton(BtnOption, billbtnscribt, tableoption);
@@ -256,7 +257,8 @@
                     view(this.id).render(url, {
                         id: data.Id,
                         tableid: table1,
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });
@@ -311,7 +313,8 @@
                     view(this.id).render(lurl, {
                         id: data.Id,
                         tableid: table1,
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });
@@ -385,7 +388,7 @@
             tooladd: "bill-add-btn",
             tooledit: "bill-edit-btn",
             tooldelete: "bill-delete-btn",
-        
+            url:'bill/z-bill/view',//查看界面路径
             menuid: 108,
             "realtable": "T_BILL",
             formatterbtn:['formatterbtn']
@@ -416,7 +419,8 @@
                     view(this.id).render(url, {
                         id: data.Id,
                         tableid: "index-daifu-table",
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });
@@ -471,7 +475,8 @@
                     view(this.id).render(lurl, {
                         id: data.Id,
                         tableid: "index-daifu-table",
-                        layerindex: index
+                        layerindex: index,
+                        btnOption:BtnOption
                     });
                 }
             });
@@ -788,7 +793,7 @@
         } 
        
         if (day == 0) {
-            return '<span>' + "今日收款" + '</span>';
+            return '<span>' + "今日" + '</span>';
         }
         if (day > 0) {
            
@@ -796,7 +801,7 @@
         }
         if (day < 0) {
             day=0-day;
-            return '<span>' + day + "天后收款" + '</span>';
+            return '<span>' + day + "天后" + '</span>';
         }
     }
     function formastatus(value) {

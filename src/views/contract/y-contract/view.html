@@ -124,7 +124,12 @@
                                 <input type="text" class="layui-input gray" value="{{doc.ns(d[1].accounts)}}" id="accounts" name="accounts" placeholder="选填" disabled>
                             </div>
                         </div>
-                        
+                        <div class="layui-inline">
+                            <label class="layui-form-label">支行</label>
+                            <div class="layui-input-inline" style="width:200px;">
+                                <input type="text" class="layui-input gray" value="{{doc.ns(d[1].subbranch)}}" id="accounts" name="accounts" placeholder="选填" disabled>
+                            </div>
+                        </div>
                     </div>
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>合同信息</legend>
@@ -163,7 +168,31 @@
                         
                     </div>
                 </div>
-                
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">租金分阶</label>
+                        <div class="layui-input-inline" style="width:200px;">
+                            
+                            <select lay-verify="required"  lay-filter="fenjietype1" disabled id="fenjietype" >
+                                <option value="0">无</option>
+                                <option value="1">按比例逐年递增</option>
+                                <option value="2">按金额逐年递增</option>
+                                <option value="3">按年自定义</option>
+                            </select>
+                        </div>                       
+                    </div>
+                    <div class="layui-inline" id="percent">
+                            <label class="layui-form-label" id="listlabel">%</label>
+                            <div class="layui-input-inline" >
+                             <input type="text" class="layui-input gray" disabled  id="listvalue" placeholder="">
+                            </div> 
+                    </div>
+                    </div>
+                    <div class="layui-form-item parentlistvalue">
+                     <div class="layui-inline" id="listinput">
+                                                      
+                     </div>
+                    </div>
                 <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">免租期</label>
@@ -267,13 +296,13 @@
                 </div>
         
             
-            <div class="form-bottom">
+            <!-- <div class="form-bottom">
                
                         <div class="form-wrap" id="btnintableview">
               
                         </div>
               
-            </div>
+            </div> -->
         </div>
         </form>
     </div>

@@ -25,7 +25,7 @@ layui.use(['laypage','layer', 'htcsradio', 'laytpl', 'jquery', 'form', 'htcsLG']
         };
         //doc.InitTable(tableoption);
          BtnOption = {
-            area: ['990px', '90%'],
+            area: ['60%', '50%'],
             tableid: "sysuser-table",
             ismuilti:true,
             btnview: "sysuser-button-view",

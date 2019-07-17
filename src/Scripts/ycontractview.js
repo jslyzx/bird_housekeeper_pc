@@ -184,11 +184,9 @@ if (layEvent=== 'fukuan') { //处理账单
                   Teant.BatethDay =alldata[1].Teant.BatethDay;
                   Teant.Social=alldata[1].Teant.Social;        
               }
-            
               alldata.push(Teant);
                   laytpl(getTpl).render(alldata, function (html) {
                   view.innerHTML = html;
-                  
               //执行一个laydate实例
               laydate.render({
                   elem: '#BatethDay' //指定元素
@@ -214,6 +212,7 @@ if (layEvent=== 'fukuan') { //处理账单
               $("#Image").val(alldata[1].Image);
               $("#zjImage").val(alldata[1].zjImage);
               $("#bank").val(alldata[1].bank); 
+              $("#fenjietype").val(alldata[1].gradingtype); 
               //查询附件个数
                 if(alldata[1].Enclosure!=null){
                     $("#Image").val(alldata[1].Enclosure);
@@ -244,6 +243,8 @@ if (layEvent=== 'fukuan') { //处理账单
               //免租期事件
               debugger;
              initrecentfreevalue(alldata[1].tRentFree);
+             initgradingvalue(alldata[1].Grading,alldata[1].gradingtype,alldata[1].gradingvalue);
+           
           });
           });
           function initzafei(){
@@ -284,6 +285,46 @@ if (layEvent=== 'fukuan') { //处理账单
             event();     
         })
         initrecentfree();
+    }
+    //租金分阶初始化
+    //租金分阶初始化
+    function initgradingvalue(arr,type,gradingvalue){
+        $("#percent").hide();
+        $.each(arr,function(index,value){
+            var rlabel='<label class="layui-form-label">'+'第'+value.Year+'年'+'</label>';
+            var rinput='<div class="layui-input-inline" style="width:100px;"><input type="text" class="layui-input listinput"  name="payee" placeholder=""></div>';
+            $("#listinput").append(rlabel+rinput);
+            $("#listinput input").eq(index).val(value.Amount);
+            //赋值
+            if(type==3||type==0){
+            if(type==0){
+             $(".parentlistvalue").hide();
+            }
+            $("#percent").hide();
+            }else{
+            $("#percent").show();
+            $("#percent").addClass('layui-inline');  
+            $(".parentlistvalue").show();
+          
+           }
+           if(type==1||type==2){
+           $(".listinput").addClass("gray");
+           $(".listinput").attr("disabled",true);
+           }else{
+           $("#listinput input").eq(0).attr("disabled",true);
+           $("#listinput input").eq(0).addClass("gray");
+           }
+       });
+       debugger;
+       if(type==0){
+             $(".parentlistvalue").hide();
+             $("#percent").hide();
+       }else{
+            $("#percent").show();
+            $("#percent").addClass('layui-inline');  
+            $(".parentlistvalue").show();
+            $("#listvalue").val(gradingvalue);
+       }
     }
     function initrecentfree(){
           event();

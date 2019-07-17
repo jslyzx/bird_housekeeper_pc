@@ -219,8 +219,18 @@ layui.define(['table'], function (exports) {
     , isArray = function (obj) {
       // 判断一个变量是不是数组
       return Object.prototype.toString.call(obj) === '[object Array]';
+    },
+    arr_dive= function(aArr,bArr){ //第一个数组减去第二个数组
+      　　if(bArr.length==0){return aArr}
+      　　var diff=[];
+      　　var str=bArr.join("&quot;&quot;");
+      　　for(var e in aArr){
+      　　if(str.indexOf(aArr[e])==-1){
+      　　　　diff.push(aArr[e]);
+      　　　　}
+      　　}
+      　　return diff;
     }
-
     // 针对表格中是否选中的数据处理
     , dataRenderChecked = function (data, tableId, config) {
       if (!data || !tableId) {
@@ -1553,7 +1563,7 @@ layui.define(['table'], function (exports) {
       if (getCacheData) {
         statusTemp.dataCache = [];
         var cacheDataTemp = cacheData[config.id];
-        layui.each(statusTemp.status[CHECK_TYPE_ADDITIONAL].concat(statusTemp.status[CHECK_TYPE_ORIGINAL]), function (index, id) {
+        layui.each($.extend(true, [], tableCheck.getChecked(tableId)), function (index, id) {
           cacheDataTemp[id] && statusTemp.dataCache.push(table.clearCacheKey(cacheDataTemp[id]));
         });
       }

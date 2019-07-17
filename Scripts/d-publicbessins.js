@@ -156,7 +156,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
            
         }
         //编辑和删除楼层事件
-    function Eventhouse(){
+       function Eventhouse(){
         $("#edithousedepend").click(function (index,value) {
             debugger;
             var view = layui.view;
@@ -180,6 +180,7 @@ layui.use(['laypage', 'layer', 'htcsradio', 'laytpl', 'jquery', 'form','htcsLG',
                 }
             });
          });
+        
          //添加楼层
          $("#addhousedepend").click(function (index,value) {
              debugger;
@@ -358,8 +359,26 @@ function InitEvent(pId) {
 }
 
 function ViewEvent(pId) {
-  
-
+   //删除公寓
+   $("#deletehousedepend").click(function (index,value) {
+    debugger;
+    debugger;
+    var id = $(this).attr("id");
+    id=id.replace("deletefloor-", "");
+    layer.open({
+        skin: 'demo-class',
+        title: '删除提示',
+        content:'您确定要删除该公寓吗？删除后与该公寓相对应的信息将被删除！'
+        , btn: [ '确认删除','取消']
+        , yes: function (index, layero) {
+            debugger;
+            deletedehouse(nowid);
+        }
+        , btn2: function (index, layero) {
+            layer.close(index);
+        }
+    });
+ });
     $(".m-panel-body").not(".layui-icon").dblclick(function () {
         var id = $(this).attr("id").replace("panel-body-", "");
         var parentid = $(this).parent(".m-wrap-body").attr("parentid");
@@ -579,6 +598,23 @@ function ViewEvent(pId) {
 }
 function deletefloor(id){
     doc.objectQuery("api/IndependHouse/delelefloor",{"Id":id},function(result){
+        if(result.Code==0){
+            layer.msg(result.Message, {
+                icon: 1,
+                time: 800 //2秒关闭（如果不配置，默认是3秒）
+            });
+            loaddata();
+        }else{
+            layer.msg("删除失败:"+result.Message, {
+                icon: 2,
+                time: 800 //2秒关闭（如果不配置，默认是3秒）
+            });
+        }
+    });
+}
+//删除公寓
+function deletedehouse(id){
+    doc.objectQuery("api/IndependHouse/delele",{"Id":id},function(result){
         if(result.Code==0){
             layer.msg(result.Message, {
                 icon: 1,
