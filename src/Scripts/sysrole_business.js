@@ -49,7 +49,7 @@ table.on('tool(demoEvent)', function(obj) {
             shadeClose: true,//开启遮罩关闭
             //shade: ['0.5'],
             maxmin: true, //开启最大化最小化按钮
-            area:['800px', '80%'],
+            area:['800px', '90%'],
             success: function(layero,index){
                 view(this.id).render(url, {
                     RoleId:data.Id,

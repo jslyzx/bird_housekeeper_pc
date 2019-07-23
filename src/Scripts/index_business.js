@@ -51,7 +51,7 @@
             isloadmenu=false;
             tableid="index-daishou-table";
             $("#daishoubtn").show();
-            Initybill();
+            InitwebiBill(0,"index-daishou-table",isloadmenu);
         }
         if(layid==222){ 
             debugger;
@@ -207,10 +207,10 @@
             domid: ddomid, formid: "#guest-search-form1", arr: [[ //表头
                 { type: 'checkbox' }
               , { field: 'Id', width: 80, title: '编号' }
-              , {  title: '到期时间', templet: formadaoqi,width: 120  }
+              , {  field: 'Id',title: '到期时间', templet: formadaoqi,width: 120  }
               
-              , { title: '收租时间',width: 120,templet:formatterreveice }
-              , { width: 300, title: '房间', field: 'HouseName'}
+              , {field: 'Id', title: '收租时间',width: 120,templet:formatterreveice }
+              , { field: 'Id',width: 300, title: '房间', field: 'HouseName'}
               , { field: 'TeantName', width: 100, title: '租客姓名' }
               , { field: 'Amount', width: 120, title: '金额' }
         ]], height: 580, url: 'api/Bill/Querylist',
@@ -367,10 +367,10 @@
     function Initybill() {
         var tableoption = {
             domid: "#index-daifu-table",
-            formid: "#bill-search-form",
+            formid: "#guest-search-form1",
             arr: [
                 [ //表头
-                    { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '到期时间', templet: formadaoqi, width: 150 }, { title: '收租时间',width: 120,templet:formatterreveice },{ width: 200, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Amount', width: 100, title: '金额' }
+                    { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { field: 'TeantName',title: '到期时间', templet: formadaoqi, width: 150 }, {field: 'TeantName', title: '收租时间',width: 120,templet:formatterreveice },{field: 'TeantName', width: 200, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Amount', width: 100, title: '金额' }
                 ]
             ],
             url: 'api/Bill/Querylist',
@@ -601,9 +601,9 @@
                { field: 'Id'  , width: 100, title: '合同编号' }
               , { field: 'Name', width: 100, title: '租客姓名' }
               , { field: 'Phone', width: 150, title: '租客电话' }
-              , { width: 170, title: '所属房源', templet: formatterhouse }
-              , { field: 'Status', width: 100, title: '状态', templet: formatterstatus }
-              , { field: 'ContractTime', width: 150, title: '到期时间', templet: formattertime }
+              , { width: 170, title: '所属房源', templet: formatterhouse,field: 'ContractTime' }
+              , { field: 'Status', width: 100, title: '状态', templet: formatterstatus,field: 'ContractTime' }
+              , { field: 'ContractTime', width: 150, title: '到期时间', templet: formattertime,field: 'ContractTime' }
               ,{ field: 'Deposit', width: 80, title: '押金' }
               , { field: 'Recent', width: 80, title: '租金' }
            
