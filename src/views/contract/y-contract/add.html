@@ -171,7 +171,7 @@
                        
                         querydata.PageSize = 100;
                         querydata.PageIndex = 1;
-                        doc.objectQuery("api/House/Querybyname", querydata, function (result) {
+                        doc.objectQuery("api/House/Query", querydata, function (result) {
                             debugger;
                             if (result.numberData != null) {
                                 var realresut = [];
@@ -179,7 +179,7 @@
                                 $.each(result.numberData, function (tindex, tvalue) {
                                     var val = {};
                                     val.value = tvalue.Name;
-                                    val.data = tvalue.HouseId;
+                                    val.data = tvalue.Id;
                                     val.HouseType = tvalue.HouseType;
                                     realresut.push(val);
                                 });

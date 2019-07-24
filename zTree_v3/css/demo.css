@@ -1,6 +1,18 @@
+.form-content {
+	height: 700px;     
 
-.form-bottom{background-color:#e2e2e2;width:100%;
-	border-top:1px solid #e2e2e2; height: 60px; bottom: 0;position: absolute;
+    flex: 1;
+    overflow: auto;
+    padding-bottom: 61px;
+}
+.form-bottom
+{background-color: #e2e2e2;
+    width: 100%;
+    border-top: 1px solid #e2e2e2;
+    height: 70px;
+    bottom: 0;
+    position: absolute;
+    z-index: 555;
 }
 .content{height:700px;overflow-y: scroll;}
 .layui-layer-content{position: relative;}
