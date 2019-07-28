@@ -370,7 +370,7 @@
             formid: "#guest-search-form1",
             arr: [
                 [ //表头
-                    { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { field: 'TeantName',title: '到期时间', templet: formadaoqi, width: 150 }, {field: 'TeantName', title: '收租时间',width: 120,templet:formatterreveice },{field: 'TeantName', width: 200, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Amount', width: 100, title: '金额' }
+                    { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { field: 'TeantName',title: '到期时间', templet: formadaoqi, width: 150 }, {field: 'TeantName', title: '收租时间',width: 120,templet:formatterreveice },{field: 'TeantName', width: 200, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '姓名' }, { field: 'Amount', width: 100, title: '金额' }
                 ]
             ],
             url: 'api/Bill/Querylist',
