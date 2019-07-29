@@ -1,0 +1,180 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script src="../../../Scripts/Common/md5.js"></script>
+<link href="../../../Content/formSelects-v4.css" rel="stylesheet" />
+<style>
+       .child-view  .layui-table-cell{
+    overflow:visible !important;
+ }
+ .child-view  thead tr{height: 45px;}
+.child-view tbody tr{height: 55px;}
+ .layui-form-select ul{
+     z-index:999999
+ }
+
+    </style>
+<script>
+     var tuizulist = [];
+      function LoadData(id,tableid,layerindex){
+          debugger;
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;
+            var form = layui.form;
+            var deletebilllist=[];
+            var registrationId="";
+            var table=layui.table;
+            var url =  "api/Sysuser/QueryUser";
+            var formSelects = layui.formSelects;
+            var data = { "Id": id };
+            var allresult = [];
+            var Password="";
+            var clos=[[ //表头
+               { type: 'numbers' , width: 80, title: '编号', }
+               , {
+               field: 'SysRoleId',
+               width: 380,
+               title: '角色名称'
+               ,templet: '#checkboxTplxx',unresize:true} 
+            ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } ]];
+             //加载详情
+             doc.objectQuery(url, data, function (result) {
+                debugger;
+                var realdata = result.numberData;
+                initdepart(realdata.storeid);
+			    initroles(realdata.roleid);   
+                registrationId=realdata.registrationId;
+                Password=realdata.Password;
+                var getTpl = sysuereditscript.innerHTML,
+                view = document.getElementById('sysuer-edit-view');
+                laytpl(getTpl).render(realdata, function (html) {
+                    view.innerHTML = html;
+                });  
+                form.render('');
+            });
+            //监听提交
+          form.on('submit(save)', function (data) {
+          data.field.Id=id;
+          var datafield=data.field;
+          var arr=[{"SysRoleId":datafield.roleid}];
+          datafield.registrationId=registrationId;
+          if(datafield.Password!=undefined&&datafield.Password!=null){
+            datafield.Password=hex_md5(datafield.Password).toUpperCase();
+          }else{
+            datafield.Password=Password;
+          }
+          datafield.listrole=arr; 
+          datafield.deletebilllist=deletebilllist;
+          datafield.type=1;
+          var tjdata =datafield;
+          var saveoption={
+          url:'api/Sysuser/addUser',
+          data:tjdata,
+          tableid:tableid,
+          callBack:function(resultData){
+            debugger;
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+       doc.Submit(saveoption);
+       return false;
+      });
+      function initdepart(value){
+			var url="api/Sysrole/Querydepartlist";
+            var dom="storeid";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {Id:-1}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].name +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                $(vdom).val(value);
+                form.render('select');
+            });
+	 }
+	 function initroles(value){
+			var url="api/Sysrole/Querylistrolenopage";
+            var dom="roleid";
+            var vdom="#"+dom;
+            doc.objectQuery(url,  {"PageSize":100000,"PageIndex":1}, function (data) {
+                var list=[];
+                var rdata=data.numberData;
+                for (var i in rdata) {
+                    list.push('<option value="'+ rdata[i].Id +'">'+ rdata[i].RoleName +'</option>');
+                }
+                $('select[name="'+dom+'"]').append(list.join(''));
+                $(vdom).val(value);
+                form.render('select');
+            });
+	 }
+        });
+}
+</script>
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+        <script id="sysuereditscript" type="text/html">  
+        {{# var doc = layui.htcsLG;}}
+        <form class="layui-form  layui-form-pane hcs-form form-panel" lay-filter="formuser">                
+            <div class="form-content">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">手机</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="Mobile" autocomplete="off"  class="layui-input" id="Mobile" value="{{d.Mobile}}">
+                        </div>
+                        <label class="layui-form-label">真实姓名</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="RealName" lay-verify="required" autocomplete="off" class="layui-input" id="RealName" value="{{doc.ns(d.RealName)}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" >邮箱</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="Email" autocomplete="off" class="layui-input" id="Email" value="{{doc.ns(d.Email)}}">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" >新登录密码</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="tel" name="Password" autocomplete="off"  placeholder="新密码,不修改密码请留空" class="layui-input" id="Password" value="{{doc.ns(d.Email)}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <div id="viewstoreid"></div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >所属部门</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                                <select  id="storeid" name="storeid" lay-search >
+                                        <option value="">请选择</option>
+                                       
+                                </select>
+                        </div>
+                        <label class="layui-form-label" >角色</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                                <select lay-verify="required" id="roleid" name="roleid" lay-search >
+                                        <option value="">请选择</option>
+                                </select>
+                        </div>
+                </div>
+            </div>
+            <div class="form-bottom">
+                    <div class="form-wrap">
+                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-submit="">取消</button>
+                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                    </div>
+          </div>
+        </form>    
+    </script>
+   <div id="sysuer-edit-view" class="form-wrapper"></div>
+  

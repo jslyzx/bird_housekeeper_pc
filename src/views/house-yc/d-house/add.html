@@ -1,0 +1,309 @@
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .hand {
+    cursor: pointer;
+}
+img {
+    vertical-align: middle; border: 0;
+}.house-img {
+    height: 140px;
+}
+.edit-house-info-dialog .house-img-all {
+    width: 100%;
+    height: 100%;
+}
+
+.layui-table-cell {
+    overflow: visible;
+}
+
+.layui-layer-page .layui-layer-content {
+    overflow: hidden;
+}
+
+.layui-form-pane {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 61px;
+}
+
+.layui-form-pane .form-content {
+    flex: 1;
+    overflow: auto;
+}
+
+.layui-form-pane .form-content  .layui-form-item{
+    display: flex;
+    /* flex-flow: row wrap; */
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+</style>
+<script>
+     var imageurl="";
+     function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl', 'jquery', 'form','treeSelect'], function () {
+            var laytpl = layui.laytpl;
+            var doc = layui.htcsLG;
+            var $ = layui.jquery;
+            var form = layui.form;
+            var deletebilllist=[];
+            var table=layui.table;
+            var doc = layui.htcsLG;
+            var setter = layui.setter;
+            var treeSelect = layui.treeSelect;
+            treeSelect.render({
+                    elem: '#tree',
+             
+                    url:setter.baseurl+'api/Sysrole/Querydepartment',
+             data:  {Id: -1},
+             headers: {"access_token": layui.data('layuiAdmin').access_token},
+             type: 'post',
+             placeholder: '请选择',
+             search: true,
+             style: {
+                folder: {
+                    enable: true
+                },
+                line: {
+                    enable: true
+                }
+            },
+            click: function(d){
+                $('[name="storeid"]').val(d.current.Id);
+            },
+            success: function (d) {
+               treeSelect.checkNode('tree', data.numberData.parentid);
+               var treeObj = treeSelect.zTree('tree');
+               treeSelect.refresh('tree');
+            }
+            })
+            //监听提交
+            form.on('submit(save)', function (data) {
+                debugger;
+                if(filter.currentArea==""){
+                    layer.msg("请选择区");
+                    return false;
+                }
+                data.field.CityName=filter.currentCity;
+                data.field.AreamName=filter.currentArea;
+                data.field.BusinessArea=filter.currentCircle;
+                
+                var floors=[];
+                for(var i=1;i<=data.field.AllFloor;i++){
+                    var floor={};
+                    floor.Floor=i;
+                    floors.push(floor);
+                }
+                data.field.floor=floors;
+                var saveoption={
+                    url:'api/IndependHouse/add',
+                    data:data.field,
+                    tableid:tableid,
+                    callBack:function(resultData){
+                        if (resultData.Code == 0) {
+                            layer.close(layerindex);
+                            layui.index.render();
+                        }
+                    }
+                }
+                doc.Submit(saveoption);
+                return false;
+            }); 
+
+            var cityListUrl = 'api/BaseData/QueryCity1';
+            var areaListUrl = 'api/Map/PCQueryArea';
+            getCityList();
+            var filter = {
+                currentCity: '',
+                cityList: [],
+                cityOptions: [],
+                currentArea: '',
+                areaList: [],
+                areaOptions: [],
+                currentCircle: '',
+                circleList: [],
+                circleOptions: []
+            }
+
+            function getCityList () {
+                doc.objectQuery(cityListUrl, {}, function(result) {
+                    console.log(result);
+                    if (result.Code === 0) {
+                        for (let i in result.numberData) {
+                            if(filter.currentCity === '') {
+                                filter.currentCity = result.numberData[i].RegionName;
+                            }
+                            filter.cityList.push({
+                                name: result.numberData[i].RegionName,
+                                id: result.numberData[i].Id
+                            })
+                            filter.cityOptions.push('<option value="'+ result.numberData[i].RegionName +'">'+ result.numberData[i].RegionName +'</option>')
+                        }
+                        $('select[name="CityName"]').html(filter.cityOptions.join('')).val(filter.currentCity);
+                         getAreaList();
+                        form.render('select');
+                    }
+                })
+            }
+            
+            form.on('select(CityName)', function (data) {
+                console.log(data);
+                filter.currentCity = data.value;
+                getAreaList();
+            })
+
+            form.on('select(AreaName)', function (data) {
+                filter.currentArea = data.value;
+                getCircleList();
+            })
+            
+            form.on('select(CircleName)', function (data) {
+                filter.currentCircle = data.value;
+            })
+
+
+            function getAreaList () {
+                doc.objectQuery(areaListUrl, {
+                    name: filter.currentCity
+                }, function (result) {
+                    console.log(result);
+                    filter.areaList = result.numberData[0].districts;
+                    let cityOptions = [];
+                    for (let i in filter.areaList) {
+                        cityOptions.push('<option value="'+ filter.areaList[i].name +'">'+ filter.areaList[i].name +'</option>')
+                    }
+                    $('select[name="AreaName"]').html(cityOptions.join('')).val('');
+                    form.render('select');
+                })
+            }
+
+            function getCircleList () {
+                let circleOptions = [];
+                for (let i in filter.areaList) {
+                    if (filter.currentArea === filter.areaList[i].name) {
+                        filter.circleList = filter.areaList[i].districts;
+                    }
+                }
+                for (let i in filter.circleList) {
+                    circleOptions.push('<option value="'+ filter.circleList[i].name +'">'+ filter.circleList[i].name +'</option>')
+                }
+                $('select[name="CircleName"]').html(circleOptions.join('')).val('');
+                form.render('select');
+            }
+            $("#cancelbtn").click(function(){
+         layer.close(layerindex);
+         return false;
+      });
+        });
+    }
+  
+</script>
+        <script type="text/html" template >
+            {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+        </script>
+        <div class="form-wrapper">
+            <form class="layui-form layui-form-pane hcs-form form-panel" action=""> 
+ 
+                    <div class="form-content"> 
+                   
+                     <div class="layui-form-item address-form"> 
+                        <div class="layui-inline"> 
+                        <label class="layui-form-label">城市</label> 
+                        <!-- <div class="layui-input-inline">  -->
+                            <!-- <input type="tel" name="CityName" autocomplete="off" id="CityName" class="layui-input"   />                       </div>  -->
+                            <select name="CityName" id="CityName" lay-filter="CityName" lay-verify="required" lay-search></select>
+                        <!-- </div> -->
+                        </div>
+                        <div class="layui-inline"> 
+                            <label class="layui-form-label">区域</label> 
+                            <!-- <div class="layui-input-inline">  -->
+                            <!-- <input type="text" name="AreamName" id="AreamName" autocomplete="off" class="layui-input"  /> -->
+                            <select name="AreaName" id="AreaName" lay-filter="AreaName" lay-verify="required"></select>
+                            <!-- </div> -->
+                        </div> 
+                        
+                        <div class="layui-inline"> 
+                            <label class="layui-form-label">商圈</label> 
+                            <!-- <div class="layui-input-inline">  -->
+                            <!-- <input type="text" name="CircleName" id="CircleName" lay-filter="CircleName" autocomplete="off" class="layui-input"  /> -->
+                            <select name="CircleName" id="CircleName" lay-filter="CircleName" ></select>
+                            <!-- </div>  -->
+                        </div> 
+                    </div> 
+                     <div class="layui-form-item"> 
+                        <div class="layui-inline"> 
+                        <label class="layui-form-label">公寓名称</label> 
+                        <div class="layui-input-inline"> 
+                        <input type="text" name="CellName" id="CellName" autocomplete="off" class="layui-input" lay-verify="required"  /> 
+                        </div> 
+                        </div> 
+                      <div class="layui-inline"> 
+                          <label class="layui-form-label">地址</label> 
+                          <div class="layui-input-inline"> 
+                           <input type="text" name="Adress" id="Adress" autocomplete="off" class="layui-input" lay-verify="required"  /> 
+                          </div> 
+                      </div> 
+                     </div> 
+                     <div class="layui-form-item"> 
+                      <div class="layui-inline"> 
+                       <label class="layui-form-label">座/栋/号</label> 
+                       <div class="layui-input-inline"> 
+                        <input type="text" name="BuildingNumber" autocomplete="off" class="layui-input" lay-verify="required|number"   /> 
+                       </div> 
+                    </div> 
+                       <div class="layui-inline"> 
+                        <label class="layui-form-label">单元</label> 
+                        <div class="layui-input-inline"> 
+                         <input type="text" name="Unit" autocomplete="off" class="layui-input"   /> 
+                        </div> 
+                       </div> 
+                      
+                     
+                     </div> 
+                     
+                     <div class="layui-form-item"> 
+                      
+                       <div class="layui-inline"> 
+                            <label class="layui-form-label">楼层总数</label> 
+                            <div class="layui-input-inline"> 
+                             <input type="text" name="AllFloor" autocomplete="off" class="layui-input"  lay-verify="required|number" /> 
+                            </div> 
+                           </div> 
+
+                           <div class="layui-inline"> 
+                                <label class="layui-form-label">每层房间数</label> 
+                                <div class="layui-input-inline"> 
+                                 <input type="text" name="ShiNumber" autocomplete="off" class="layui-input" lay-verify="required|number" /> 
+                                </div> 
+                               </div> 
+                     
+                     </div> 
+                     <div class="layui-form-item"> 
+                     <div class="layui-inline"> 
+                            <label class="layui-form-label">所属部门</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="text"  autocomplete="off"  class="layui-input" id="tree" lay-filter="tree">
+                            </div>
+                            <input type="hidden" name="storeid" id="storeid">
+                      </div>
+                    </div>
+                        </div>
+                    
+                        <div class="form-bottom">
+                            <div class="form-wrap">
+                                <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancel" lay-submit="">取消</button>
+                                <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                            </div>
+                            </div>
+                   </form>
+                </div>
+           
+   
+  

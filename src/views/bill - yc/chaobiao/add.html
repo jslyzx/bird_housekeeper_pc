@@ -1,0 +1,152 @@
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script>
+    function LoadData(id,tableid,layerindex,btnOption){
+    layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form'], function () {
+    var laytpl = layui.laytpl;
+    var doc = layui.htcsLG;
+    var url = "api/chaobiao/Queryxq";
+    var $ = layui.jquery;
+    var form = layui.form;
+    doc.objectQuery(url, { "Id": id }, function (data) {
+        debugger;
+        var getTpl = billeditscript.innerHTML
+   , view = document.getElementById('bill-edit-view');
+        laytpl(getTpl).render(data.numberData, function (html) {
+            view.innerHTML = html;
+        });
+        var laydate = layui.laydate;
+        laydate.render({
+         elem: '#time' ,
+         value: new Date()
+        });
+      
+        form.render('');
+        $("#cancelbtn").click(function(){
+         layer.close(layerindex);
+         return false;
+        });
+    });
+       
+        //监听提交
+        form.on('submit(save)', function (data) {
+        data.field.Id=id;
+        var saveoption={
+          url:'api/chaobiao/addbill',
+          data:data.field,
+          tableid:tableid,
+          btnOption:btnOption,
+          callBack:function(resultData){
+            if (resultData.Code == 0) {
+                layer.close(layerindex);
+            }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+    });
+});
+}
+</script>
+<script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+</script>
+  <script id="billeditscript" type="text/html">
+    <div class="form-wrapper">
+            <form class="layui-form layui-form-pane hcs-form form-panel" action="" id="add-bill-form"> 
+                    <div class="form-content">
+                                    <input type="text" name="Id" id="Id"  autocomplete="off" class="layui-input" style="display:none">
+                                    <div class="wrap">
+                                        <div class="title">
+                                            <h3 class="red">
+                                                基本信息
+                                            </h3>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label" style="text-align:left;width:auto;">房源名称</label>
+                                                <div class="layui-input-inline" style="width:270px;">
+                                                    <input type="tel" name="adress"  autocomplete="off" class="layui-input gray" disabled value="{{d.adress}}">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">租客姓名</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="adress"  autocomplete="off" class="layui-input gray" disabled value="{{d.treatname}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                            
+                                        <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label" style="text-align:left;width:auto;">费用类型</label>
+                                                    <div class="layui-input-inline" style="width: 122px;">
+                                                        <input type="text" name="project" id="project" autocomplete="off" class="layui-input gray" disabled  value="{{d.project}}">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">单价</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="price"  autocomplete="off" id="price" class="layui-input"  value="{{d.price}}">
+                                                    </div>
+                                                </div>   
+                                        </div>  
+                                        <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label" style="text-align:left;width:auto;">上次抄表时间</label>
+                                                    <div class="layui-input-inline" style="width: 122px;">
+                                                        <input type="text" name="lasttime" id="lasttime" autocomplete="off" class="layui-input gray" disabled  value="{{d.lasttime}}">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">上次读数</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="lastdushu"  autocomplete="off" id="lastdushu" class="layui-input gray" disabled value="{{d.lastdushu}}">
+                                                    </div>
+                                                </div>   
+                                        </div>  
+                                        <div class="title">
+                                                <h3 class="red">
+                                                    抄表信息
+                                                </h3>
+                                            </div>
+                                        <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label" style="text-align:left;width:auto;">本次读数</label>
+                                                    <div class="layui-input-inline" style="width: 122px;">
+                                                        <input type="text" lay-verify="required|number"  name="dushu" id="dushu" autocomplete="off" class="layui-input"  >
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">抄表时间</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="time" lay-verify="required"  autocomplete="off" id="time" class="layui-input" >
+                                                    </div>
+                                                </div>   
+                                        </div>  
+                                       <!-- <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                        <label class="layui-form-label">是否分摊</label>
+                                                        <div class="layui-input-inline">
+                                                                <select lay-filter="billlay"  lay-verify="required" required >
+                                                                    
+                                                                          <option value="0">否</option>
+                                                                          <option value="1">是</option>
+                                                                </select>
+                                                        </div>
+                                                </div>   
+                                        </div> -->        
+                                      </div>
+                                    </div>
+                                    <div class="form-bottom">
+                                    <div class="form-wrap">
+                                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancel" lay-submit="">取消</button>
+                                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                                    </div>
+                                    </div>
+                </form>
+    </div>
+</script>
+<div id="bill-edit-view" class="form-wrapper">
+    </div>
+         

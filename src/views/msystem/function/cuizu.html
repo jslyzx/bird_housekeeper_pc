@@ -1,0 +1,91 @@
+
+<title>系统设置</title>
+
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/money.css" rel="stylesheet" />
+<script>
+        layui.use(['laypage', 'layer','htcsLG', 'laytpl', 'jquery', 'form'], function () {
+          var doc = layui.htcsLG;
+          var url = "api/Enterprise/querycompany";
+          var form = layui.form;
+          var laytpl = layui.laytpl;
+          var admin = layui.admin;
+          var $ = layui.$;
+          var setter = layui.setter;
+          var formonline=false;
+          var rentmessage=0;
+          form.render('');
+          doc.objectQuery(url, {}, function (data) {
+           debugger;
+           var realdata=data.numberData;
+           rentmessage=realdata.rentmessage;
+           if(rentmessage==1){
+             formonline=true;
+           }
+           //初始化赋值
+           form.val("formuser", {
+                "rentmessage": formonline
+           })
+           form.render('');  
+             //监听指定开关
+             form.on('switch(rentmessage)', function(data){
+              debugger;
+              if(this.checked==true){
+                rentmessage=1;
+              }else{
+                rentmessage=0;
+              }
+            });
+           //监听提交
+           form.on('submit(save)', function (data) {
+            data.field.Id=realdata.Id;
+            data.field.charge=realdata.charge;
+            data.field.onlinesign=realdata.onlinesign;
+            data.field.rentmessage=rentmessage;
+            var saveoption={
+            url:'api/account/function',
+            data:data.field,
+            tableid:"",
+            callBack:function(){
+              
+           }
+         }
+         doc.Submit(saveoption);
+         return false;
+          });
+          });
+        })
+</script>
+
+<div class="layui-row layui-col-space10 rowtop">
+    <div class="layui-col-md1 text-center">
+            <ul class="setting-catagery-list">
+                    <li><a lay-href="msystem/function/index"  >支付设置</a></li>
+                    <li><a lay-href="msystem/function/cuizu" class="current"> 催租设置</a></li>
+             </ul>
+    </div>
+    <div class="layui-col-md11">
+            <div class="layui-card">
+              <div class="layui-card-header">催租设置</div>
+              <div class="layui-card-body" pad15>
+                <form class="layui-form layui-form-pane hcs-form" action="" lay-filter="formuser">
+                <div class="layui-form" lay-filter="">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:180px;">催租设置</label>
+                    <div class="layui-input-inline" style="width:300px;">
+                            <input type="checkbox" name="rentmessage"  lay-filter="rentmessage" lay-skin="switch" lay-text="开启|关闭"  >
+                    </div>
+                    <label>开启后,催租短信将在账单应支付日的前一天自动发送。</label>
+                  </div>
+                  <div class="layui-form-item">
+                          <div class="layui-input-inline">
+                                    <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存配置</button>        </div>
+                  </div>
+                 </div>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+  </div>
+

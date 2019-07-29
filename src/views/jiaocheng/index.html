@@ -1,0 +1,67 @@
+
+<title>系统设置</title>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/money.css" rel="stylesheet" />
+<link href="../../../../Content/jiaocheng.css" rel="stylesheet" />
+<div class="page-help-list yxr-ui row">
+        <div class="layui-row layui-col-space10 rowtop ">
+                <div class="layui-col-md1 text-center">
+                    <ul class="setting-catagery-list">
+                        <li><a lay-href="jiaocheng/" class="current">系统入门</a></li>
+                    
+                        
+                    </ul>
+                </div>
+                <div class="layui-col-md11">
+                        <ul class="video-list  margin">
+                            <li class="col-1-5 bofang" data-url="http://106.14.96.37:86/001.mp4">
+                                <div>
+                                <i class="iconfont icon-right play-icon">
+                                      <img src="../../../Images/播放.png"/>
+                                </i>
+                            <div class="title ellipsis text-center"><span>房源操作</span>
+                            </div>
+                            <div class="cover" title="房源操作"></div>
+                            </div>
+                           </li>
+                           <li class="col-1-5 bofang" data-url="http://106.14.96.37:86/002.mp4">
+                            <div>
+                            <i class="iconfont icon-right play-icon">
+                                  <img src="../../../Images/播放.png"/>
+                            </i>
+                           <div class="title ellipsis text-center"><span>权限和账号管理</span>
+                        </div>
+                        <div class="cover" title="权限和账号管理"></div>
+                        </div>
+                       </li>
+                        </ul>
+                </div>
+             
+              </div>
+</div>
+  <script type="text/javascript">
+    layui.use(['jquery'], function() {
+        var $ = layui.$;
+        $(".bofang").click(function(){
+            debugger;
+            var url=$(this).attr("data-url");
+            var editid = "layuibillreceivebtn";
+            var view = layui.view;
+            layer.open({
+                id: editid,
+                type: 1,
+                title: '播放',
+                skin: 'two-layer',
+                shadeClose: true, 
+                maxmin: true, 
+                area: ['90%', '90%'],
+                success: function(layero, index) {
+                    view(this.id).render('jiaocheng/xq', {
+                        url: url,
+                       
+                    });
+                }
+            });
+        })
+    });
+    </script>

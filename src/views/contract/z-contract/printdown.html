@@ -1,0 +1,58 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .wrapguding{display:none;}
+    .zafeitit{color:#FFB800;font-weight:500;}
+    .zisyajin{display: none;}
+    .form-wrapper{height: 780px;}
+    @media screen and (max-width: 1366px) {
+       .form-wrapper{height: 540px;}
+    }
+</style>
+   
+  <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+  </script>
+  <script>
+      function LoadData(id,tableid,layerindex,btnOption){
+        layui.use(['laydate', 'laypage', 'layer','htcsradio','htcsLG', 'laytpl', 'jquery', 'form'], function () {
+                var laytpl = layui.laytpl;
+                var doc = layui.htcsLG;
+                var url1 = "api/template/morenQuery";
+                var $ = layui.jquery;
+                var apiurl =layui.setter.baseurl;
+                doc.objectQuery(url1,{"Id":id}, function (data) {
+                  debugger;
+                  var html=data.numberData.content;
+                  $(".view").html(html);
+                  $("#btnPrint").click(function(){  
+                  debugger;
+                  $(".view").printArea(); 
+                  }); 
+                 
+               });
+               $("#down").click(function(){  
+                  debugger;
+                  var url=apiurl+"HtcsExcel/downword?Id="+id; 
+                  window.location.href=url;
+               }); 
+      })
+    }   
+</script>
+<div class="form-wrapper">
+    <div class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+        <div class="form-content">
+            <div class="view">
+
+            </div>
+            </div>
+    <div class="form-bottom">
+        <div class="form-wrap" id="btnintableview">
+                <button class="layui-btn layui-btn" id="btnPrint" >打印</button>
+                <button class="layui-btn" id="down" >下载</button>
+        </div>
+    </div>
+    </div>
+</div>
+<script src="../../../../Scripts/jquery-1.10.2.js"></script>
+<script src="../../../../Scripts/Common/jquery.PrintArea.js"></script>

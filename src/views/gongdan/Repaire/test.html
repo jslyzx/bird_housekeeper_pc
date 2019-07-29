@@ -1,0 +1,108 @@
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<script src="../../../../Scripts/jquery-1.10.2.js"></script>
+
+</style>
+<script>
+    var bxTypeList = [],bxIndex = 0,table,tabbleid="repairelistaddtable",doc;
+      function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'laytpl', 'form'], function () {
+            var laytpl = layui.laytpl;
+            doc = layui.htcsLG;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var  houseid=0;
+            var url="api/hRepaire/Queryxq"
+            var url1 ="api/BaseData/Queryfgy";
+            table=layui.table;
+            var alldata=[];
+            var repaireid;
+            var deletebilllist=[];
+                 //选择房源
+               $('#Adress').devbridgeAutocomplete({
+                    lookup: function (query, done) {
+                        var querydata = {};
+                        querydata.Name = query;
+                        querydata.PageSize = 100;
+                        querydata.PageIndex = 1;
+                        doc.objectQuery("api/House/Querybyname", querydata, function (result) {
+                            if (result.numberData != null) {
+                                var realresut = [];
+                                $.each(result.numberData, function (tindex, tvalue) {
+                                    var val = {};
+                                    val.value = tvalue.Name;
+                                    val.data = tvalue.HouseId;
+                                    realresut.push(val);
+                                });
+                                var dresult = {
+                                    suggestions: realresut
+                                };
+                                done(dresult);
+                            }
+                        })
+                    },
+                    minChars: 1,
+                    onSelect: function (suggestion) {
+                        isSearch = true; 
+                        houseid=suggestion.data;
+                    },
+                    triggerSelectOnValidInput:false,
+                    result: function (event, data, formatted) {
+                        // 必须阻止事件的默认行为，否则autocomplete默认会把ui.item.value设为输入框的value值
+                        event.preventDefault();     
+                    },
+                    showNoSuggestionNotice: true,
+                    noSuggestionNotice: function () {
+
+                        return '<span>找不到小区,可手动添加</span>'
+
+                    },
+                    groupBy: 'category'
+                });   
+               
+            });
+             
+          
+ 
+
+ 
+           
+           
+          
+           
+           
+         
+      }
+      LoadData(0,0,0);
+</script>
+
+<body>
+ 
+        
+      
+      
+        <form class="layui-form layui-form-pane hcs-form" action="">
+                <select lay-verify="required" id="DepositType" name="DepositType" lay-filter="DepositType">
+                        <option value="1">押一</option>
+                        <option value="2">押二</option>
+                        <option value="3">押三</option>
+                        <option value="4">押四</option>                                    
+                </select>
+        <div class="form-content">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">报修地址</label>
+                    <div class="layui-input-inline" style="width:300px;">
+                        <input type="tel" name="Adress" autocomplete="off" value=""  class="layui-input" id="Adress">
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+      
+    </form>
+
+<div id="repaire"></div>
+</body>
+<script src="../../../../Scripts/Common/jquery.autocomplete.js"></script>
+<link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />

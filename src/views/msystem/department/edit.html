@@ -1,0 +1,122 @@
+
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+<script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+<script id="editzafeiscript" type="text/html">
+ {{# var doc = layui.htcsLG;}}
+ <form class="layui-form layui-form-pane hcs-form form-panel" action="" id="add-bill-form">         
+      <div class="form-content">
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门名称</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="tel" name="name" autocomplete="off"  value="{{doc.ns(d.name)}}" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">所属部门</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="text"  autocomplete="off"  class="layui-input" id="tree" lay-filter="tree">
+                        </div>
+                        <input type="hidden" name="parentid" id="parentid">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门电话</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="text" name="phone" autocomplete="off" value="{{doc.ns(d.phone)}}" class="layui-input" id="phone">
+                        </div>
+                        <label class="layui-form-label">所属地址</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="text" name="adress" lay-verify="required" value="{{doc.ns(d.adress)}}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>  
+        </div>
+         <div class="form-bottom">
+             <div class="form-wrap">
+                <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+             </div>
+         </div>
+     </form>
+ 
+</script>
+<div id="edit-zafei-view" class="form-wrapper">
+</div>
+
+
+<script>
+
+function LoadData(id,tableid,layerindex){
+        layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form','treeSelect'], function () {
+        var laytpl = layui.laytpl;
+        var doc = layui.htcsLG;
+        var url = "api/Sysrole/queryepartmentid";
+        var $ = layui.jquery;
+        var form = layui.form;
+        var treeSelect = layui.treeSelect;
+        var setter = layui.setter;
+        doc.objectQuery(url, {"Id":id}, function (data) {
+             debugger;
+             var getTpl = editzafeiscript.innerHTML
+           , view = document.getElementById('edit-zafei-view');
+             laytpl(getTpl).render(data.numberData, function (html) {
+                 view.innerHTML = html;
+             });
+             $("#parentid").val(data.numberData.parentid);
+             treeSelect.render({
+             elem: '#tree',
+             key:data.numberData.parentid,
+             value:data.numberData.parentname,
+             url:setter.baseurl+'api/Sysrole/Querydepartment',
+             data:  {Id: -1},
+             headers: {"access_token": layui.data('layuiAdmin').access_token},
+             type: 'post',
+             placeholder: '请选择',
+             search: true,
+             style: {
+                folder: {
+                    enable: true
+                },
+                line: {
+                    enable: true
+                }
+            },
+            click: function(d){
+                $('[name="parentid"]').val(d.current.Id);
+            },
+            success: function (d) {
+               treeSelect.checkNode('tree', data.numberData.parentid);
+               var treeObj = treeSelect.zTree('tree');
+               treeSelect.refresh('tree');
+            }
+            });
+             //监听提交
+           form.on('submit(save)', function (data) {
+            var parentid=$("#parentid").val();
+                if(parentid==undefined){
+                    layer.alert('请选择所属部门', {icon: 5});
+                    return;
+                }
+           data.field.Id=id;
+           var saveoption={
+           url:'api/Sysrole/adddepartment',
+           data:data.field,
+           tableid:tableid,
+           callBack:function(result){
+            if(result.Code==0){
+                layer.close(layerindex);
+                loadtree(); 
+              
+             }
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+ });   
+})
+            
+         });
+}       
+</script>

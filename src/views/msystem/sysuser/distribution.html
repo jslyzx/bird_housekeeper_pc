@@ -1,0 +1,325 @@
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .child-view{
+    padding: 20px 10px;
+    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+    </style>
+<script>
+    var tuizulist = [];
+      function LoadData(id,tableid,layerindex){
+        layui.extend({
+        	tablePlug: '{/}layui/lay/plug/tablePlug'
+        }).use(['laypage', 'layer', 'laytpl', 'jquery', 'form', 'setter','multiSelect', 'tablePlug'], function () {
+        	var setter = layui.setter;
+    		var baseurl = setter.baseurl;
+            var laytpl = layui.laytpl;
+            var $ = layui.jquery;
+            var form = layui.form;
+            var checkarr=[];
+            var table=layui.table;
+            var url =  "api/House/Queryhouse";
+            var submitUrl = "api/Procedure/zhuanyifgy";
+            var doc = layui.htcsLG;
+            var tablePlug = layui.tablePlug;
+            var filterUrl = 'api/Formatter/QueryPCCell1';
+            var multiSelect = layui.multiSelect;
+            debugger;
+            //三级联动数据
+            var leftFilter = {
+            currentProvince: '',
+            currentCity: '',
+            currentArea: '',
+            provinceOptions: [],
+            cityOptions: [],
+            areaOptions: [],
+            provinceList: [],
+            cityList: [],
+            areaList: []
+        }
+        initFilter();
+        function initFilter(){
+        doc.objectQuery(filterUrl, {"Type": '0'}, function (data) {
+          var provinceList = data.numberData;
+          var cityList = [];
+          var provinceOptions = [];
+          var currentProvince = leftFilter.currentProvince;
+          for (var i in provinceList) {
+              cityList = provinceList[i].mallCityList; 
+              provinceOptions.push('<option value="'+ provinceList[i].provinceName +'">'+ provinceList[i].provinceName +'</option>');
+          }
+          leftFilter.provinceOptions = provinceOptions;
+          leftFilter.cityList = cityList;
+          leftFilter.provinceList = provinceList;
+          selectProvince();
+          $('select[name="CityName"]').append(leftFilter.provinceOptions.join(''));
+          $('select[name="AreaName"]').append(leftFilter.cityOptions.join(''));
+          form.render('');
+      })
+    }
+
+    form.on('select(CityName)', function (data) {
+        leftFilter.currentProvince = data.value;
+        for (let i in leftFilter.provinceList) {
+            if (leftFilter.currentProvince === leftFilter.provinceList[i].provinceName) {
+                leftFilter.cityList = leftFilter.provinceList[i].mallCityList;
+            }
+        }
+        selectProvince();
+        $('select[name="AreaName"]').html(leftFilter.cityOptions.join(''));
+        form.render('');
+        $('#zcontract-search-form button[lay-filter="searchply"]').click();
+    })
+
+    form.on('select(AreaName)', function (data) {
+        debugger;
+        leftFilter.currentCity = data.value;
+        for (let i in leftFilter.cityList) {
+            if (leftFilter.currentCity === leftFilter.cityList[i].cityName) {
+                leftFilter.areaList = leftFilter.cityList[i].mallAreaList;
+            }
+        }
+        selectCity();
+        $('select[name="CellName2"]').html(leftFilter.areaOptions.join(''));
+        form.render('');
+        debugger;
+        multiSelect.init(); 
+        $('#zcontract-search-form button[lay-filter="searchply"]').click();
+    })
+
+    form.on('select(CellName)', function (data) {
+      debugger;
+      var vals = []
+      $('.layui-form-checked span').each(function() {
+        vals.push($(this).text());
+      })
+      $('#CellName').val(vals.join(','));
+      $('#zcontract-search-form button[lay-filter="searchply"]').click();
+    })
+    form.on('select(storename)', function (data) {
+      debugger;
+      $('#zcontract-search-form button[lay-filter="searchply"]').click();
+    })
+    
+    form.on('submit(searchply)', function(data) {
+       debugger;
+       var search = JSON.parse(JSON.stringify(data.field));
+       table.reload("distribution-table", { where: search });
+       return false;
+    });
+    function selectProvince () {
+            var provinceList = leftFilter.provinceList;
+            var currentProvince =  leftFilter.currentProvince;
+            var cityList = leftFilter.cityList;
+            var cityOptions = [];
+            var currentCity = '';
+            var areaList = [];
+            areaList = getAreaList();
+            cityOptions.push('<option value="">请选择</option>');
+            for (var i in cityList) {
+                cityOptions.push('<option value="'+ cityList[i].cityName +'">'+ cityList[i].cityName +'</option>')
+            }
+            leftFilter.areaList = areaList;
+            leftFilter.cityOptions = cityOptions;
+            selectCity();
+    }
+
+    function getAreaList () {
+            var cityList = leftFilter.cityList;
+            var areaList = [];
+            for (var i in cityList) {
+                areaList = [].concat(areaList, cityList[i].mallAreaList || []);
+            }
+            return areaList;
+    }
+
+    function selectCity () {
+            var areaList = leftFilter.areaList;
+            var cityList = leftFilter.cityList;
+            var areaOptions = [];
+            var currentArea = '';
+            areaOptions.push('<option value="">请选择</option>');
+            for (var i in areaList) {
+                areaOptions.push('<option value="'+ areaList[i].areaName +'">'+ areaList[i].areaName +'</option>')
+            }
+            leftFilter.areaOptions = areaOptions;
+    }
+            var cols=[[ //表头
+                 { type: 'checkbox'}
+                ,{ field: 'id', width: 80, title: '编号' }
+              , { field: 'CityName', width: 180, title: '城市' }
+              , { field: 'CellName', width: 180, title: '小区' }
+              , { field: 'Name', width: 280, title: '地址'}
+              , {field: 'RecentType', width: 100, title: '房源类型', templet: houseType}
+              , {field: 'storename', width: 120, title: '分配状态', templet: disStatus}
+            ]];
+            doc.objectQuery('api/House/checkQueryhousedepart', {"HouseKeeper":id}, function (result) {  
+                debugger; 
+                tablePlug.tableCheck.init('distribution-table',result.numberData,'id');
+                table.render({
+            	id: 'distribution-table',
+            	elem: '#distribution-table',
+            	url: baseurl + url,
+            	cols: cols,
+            	height: 'full-220',
+            	method: 'post',
+            	toolbar: '#toolbarDemo',
+            	where: {
+            		"access_token": layui.data('layuiAdmin').access_token
+            	},
+            	request: {
+            		pageName: 'pageindex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            	},
+            	responseHandler: function(data) {
+
+                    return {
+                        "total": data.numberCount, //总页数
+                        "rows": data.numberData //数据
+                    };
+                },
+            	response: {
+                    statusName: 'Code' //数据状态的字段名称，默认：code
+                        ,
+                    statusCode: 0 //成功的状态码，默认：0
+                        ,
+                    msgName: 'Message' //状态信息的字段名称，默认：msg
+                        ,
+                    countName: 'numberCount' //数据总数的字段名称，默认：count
+                        ,
+                    dataName: 'numberData' //数据列表的字段名称，默认：data
+                },
+                queryParams: function queryPara(param) {
+                    param.offset = param.offset / 10 + 1;
+                    var temp = { //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        PageSize: param.limit, //页面大小
+                        PageIndex: param.offset, //页码
+                    };
+                    var object = $.extend({}, temp, options.search);
+                    return object;
+                },
+                
+                page: true,
+                checkStatus: {},
+                primaryKey: 'id'
+            });
+            table.on('toolbar(distribution-table)', function(obj){
+                var layEvent = obj.event;
+                debugger;
+            	if(layEvent === 'distribute'){
+            		var arr = table.checkStatus('distribution-table', true).dataCache;
+            		var ids = arr.map(function(obj){return obj.id}).join(',');
+            		var tjdata = {
+            			Ids: ids,
+                        Other1: id,
+                        Spname:'sp_zhuanyi'
+            		}
+      				$.ajax({
+      					url: baseurl + submitUrl,
+		                type: "POST",
+		                async: false,
+		                data: tjdata,
+		                headers: {
+		                    access_token: layui.data('layuiAdmin').access_token
+		                },
+		                dataType: 'json',
+		                success: function(resultData){
+		                	if (resultData.Code == 0) {
+				                
+				                layer.msg(resultData.Message, {
+						            icon: 1,
+						            time: 800//2秒关闭（如果不配置，默认是3秒）
+						        },function(){
+						        	layer.close(layerindex);
+						        	table.reload(tableid);
+						        });
+				            }
+		                }
+      				})
+         			return false; 
+            	}
+            });
+            });
+            
+        });
+      }
+
+      function disStatus(value){
+      	if (!value.HouseKeeperName) {
+            return '<div>' + "未分配" + '</div>'
+        }else{
+        	return '<div>' + value.HouseKeeperName + '</div>'
+        }
+      }
+
+      function houseType(value){
+      	if (value.RecentType == 2) {
+            return '<div>' + "合租" + '</div>'
+        } 
+        if (value.RecentType == 1) {
+            return '<div>' + "整租" + '</div>'
+        } 
+        if (value.RecentType == 3) {
+            return '<div>' + "独栋" + '</div>'
+        }
+      }
+</script>
+<script type="text/html" template>
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+</script>
+<script id="departdistributionscript" type="text/html">
+</script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container layui-inline">
+    <span class="layui-btn" lay-event="distribute">分配</span>
+  </div>
+</script>
+<div class="m-search othersearch">
+        <form class="layui-form hcs-form" action=""  id="zcontract-search-form" lay-filter="searchply">
+                   <div class="m-search-item">
+                        <label class="layui-form-label" style="width: auto;">市</label>
+                        <div class="layui-input-inline" style="width: 120px;">
+                            <select lay-filter="CityName" name="CityName">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="m-search-item">
+                        <label class="layui-form-label" style="width: auto;">区</label>
+                        <div class="layui-input-inline" style="width: 120px;">
+                            <select lay-filter="AreaName" name="AreaName">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="m-search-item">
+                        <label class="layui-form-label" style="width: auto;">小区</label>
+                        <div class="layui-input-inline" style="width: 150px;">
+                            <select lay-filter="CellName" name="CellName2" multiple="multiple">
+                                <option value="">请选择</option>
+                            </select>
+                            <input type="hidden" name="CellNames" id="CellName">
+                        </div>
+                    </div>
+                    <div class="m-search-item">
+                            <select name="storename"  lay-filter="storename">
+                                    <option value="">分配状态</option>
+                                    <option value="未分配">未分配</option>
+                                    <option value="已分配">已分配</option>
+                             </select>
+                    </div>
+                    <div class="m-search-item" style="width:200px;">
+                            <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="房源,房管员" >
+                   </div>
+                <div class="m-search-item">
+                    <button class="layui-btn" lay-submit="" lay-filter="searchply">搜索</button>
+                </div>
+            
+            <div style="clear:both;"></div>
+        </form>
+</div>
+<div id="depart-distribution-view" class="child-view form-wrapper">
+    <table id="distribution-table" lay-filter="distribution-table"></table>
+</div>

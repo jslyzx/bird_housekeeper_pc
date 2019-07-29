@@ -1,0 +1,113 @@
+
+   <link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+   
+   <script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex)}}
+   </script>
+   
+       <form class="layui-form hcs-form form-wrapper" action="">
+           <div class="form-content">
+            <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:auto;">所在市</label>
+                    <div class="layui-input-inline" style="width: auto;">
+                        <select lay-filter="CityName" name="CityName" lay-search></select>
+                    </div> 
+            </div>
+            <div class="layui-form-item">
+                    <div class="layui-inline">
+                    <label class="layui-form-label" style="width:auto;">大区名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="AreaName" lay-verify="required" autocomplete="off" class="layui-input" placeholder="名称" id="AreaName">
+                    </div>
+                    </div>
+            </div>
+            </div>
+           <div class="form-bottom">
+               <div class="form-wrap">
+                   <button class="layui-btn layui-btn-primary" id="cancelbtn" >取消</button>
+                   <button class="layui-btn"  lay-filter="save" lay-submit="">保存</button>
+               </div>
+           </div>
+       </form>
+   
+  
+
+<script>
+
+function LoadData(id,tableid,layerindex){
+           layui.use(['laypage', 'layer', 'htcsLG','laytpl', 'jquery', 'form'], function () {
+           var laytpl = layui.laytpl;
+           var doc = layui.htcsLG;
+           var url = "api/Menu/Querymenu";
+           var url1 = "api/store/Queryid";
+           var $ = layui.jquery;
+           var form = layui.form;
+           var cityListUrl = 'api/BaseData/QueryCity1';
+           form.render('');
+           doc.tjgd();
+         
+           doc.objectQuery(url1, {"Id":id}, function (data) {
+            $("#cancelbtn").click(function(){
+           layer.close(layerindex);
+           });
+            getCityList();
+            var filter = {
+                currentCity: '',
+                cityList: [],
+                cityOptions: [],
+                currentArea: '',
+                areaList: [],
+                areaOptions: [],
+                currentCircle: '',
+                circleList: [],
+                circleOptions: []
+            }
+            filter.currentCity=data.numberData.CityName;
+            $("#AreaName").val(data.numberData.Name);
+            function getCityList () {
+                doc.objectQuery(cityListUrl, {}, function(result) {
+                  
+                    if (result.Code === 0) {
+                        for (let i in result.numberData) {
+                            if(filter.currentCity === '') {
+                                filter.currentCity = result.numberData[i].RegionName;
+                            }
+                            filter.cityList.push({
+                                name: result.numberData[i].RegionName,
+                                id: result.numberData[i].Id
+                            })
+                            filter.cityOptions.push('<option value="'+ result.numberData[i].RegionName +'">'+ result.numberData[i].RegionName +'</option>')
+                        }
+                        $('select[name="CityName"]').html(filter.cityOptions.join(''));
+                        debugger;
+                        $('select[name="CityName"]').val(filter.currentCity);
+                        form.render('select');
+                    }
+                })
+            }
+            form.on('select(CityName)', function (data) {
+          
+                filter.currentCity = data.value;
+            })
+            form.on('submit(save)', function (data) {
+            data.field.Id=id;
+         var saveoption={
+         url:'api/area/save',
+         data:data.field,
+         tableid:tableid,
+         callBack:function(){
+            layer.close(layerindex);
+       }
+     }
+     doc.Submit(saveoption);
+     return false;
+   });
+           })
+          
+           //监听提交
+      
+   
+  
+       });
+   }       
+   </script>

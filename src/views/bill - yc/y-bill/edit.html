@@ -1,0 +1,281 @@
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<link href="../../../../Content/hsc-form.css" rel="stylesheet" />
+<style>
+    .layui-table-cell{
+   overflow:visible !important;
+}
+#bill-edit-view thead tr{height: 45px;}
+#bill-edit-view tbody tr{height: 55px;}
+.layui-form-select ul{
+	z-index:999999
+}
+.layui-tab-content *{overflow: visible!important}
+.layui-form-select dl{overflow-y: auto!important}
+</style>
+<script>
+    var selectdata=[];
+    function LoadData(id,tableid,layerindex,btnOption){
+    layui.use(['laydate', 'laypage', 'htcsLG','layer', 'laytpl', 'jquery', 'form'], function () {
+    var laytpl = layui.laytpl;
+    var doc = layui.htcsLG;
+    var url = "api/Bill/Querybillbyid";
+    var $ = layui.jquery;
+    var form = layui.form;
+    var table=layui.table;
+    var deletebilllist=[];
+    var getTpl = billeditscript.innerHTML
+   , view = document.getElementById('bill-edit-view');
+    //加载表头数据
+    doc.objectQuery(url, { "Id": id }, function (data) {
+        laytpl(getTpl).render(data.numberData, function (html) {
+            view.innerHTML = html;
+        });
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#PayTime' //指定元素
+        });
+        var laydate = layui.laydate;
+        laydate.render({
+         elem: '#BeginTime1' //指定元素
+                    });
+        laydate.render({
+         elem: '#EndTime1' //指定元素
+                    });  
+                    laydate.render({
+         elem: '#ShouldReceive1' //指定元素
+        });
+        $("#Remark").val(data.numberData.Remark);
+        form.render('');
+    var url="api/Bill/billlist";
+    var clos=[[ //表头
+               { type: 'numbers' , width: 80, title: '编号', }
+               , { field: 'BillType', width: 200, title: '费用类型',templet: '#checkboxTplxx',unresize:true }
+               , { field: 'Amount', width: 120, title: '金额' ,templet: '#jine'}
+               ,{ width:150, align:'center', toolbar: '#barDemo',title: '操作' } 
+               ]];
+    var idopt={"BillId":id};
+    var options={"id":id,"idopt":idopt, "url":url,"tableid":"#billlistedittable","clos":clos,toolbar: '#barDemo1'};
+    doc.childtable(options);
+    $("#cancelbtn").click(function(){
+         layer.close(layerindex);
+         return false;
+      });
+    });
+    doc.objectQuery("api/Zafei/Zafeilist",{},function(data1){ 
+        selectdata=data1.numberData;
+    }); 
+   
+   
+ //头工具栏事件
+ table.on('toolbar(innerTable)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    switch(obj.event){
+      case 'add':
+         var oldData =  table.cache["billlistedittable"];  
+         var data1={"Id":0,"Amount":"","BillId":0,"BillType":"","Id":0};
+          oldData.push(data1);  
+          table.reload('billlistedittable',{  
+              data : oldData ,
+              limit:oldData.length 
+        });
+        doc.tjgd();
+        form.render('');
+      break;
+    };
+  });
+ 
+    EventBtn();
+//子表的事件和监听
+function EventBtn()
+{
+//监听提交
+form.on('submit(save)', function (data) {
+        debugger;
+        var oldData =  table.cache["billlistedittable"]; 
+        var datafield=data.field;
+        datafield.list=oldData; 
+        datafield.deletebilllist=deletebilllist;
+        var tjdata =datafield;
+        var saveoption={
+        url:'api/Bill/save',
+        data:tjdata,
+        tableid:tableid,
+        btnOption:btnOption,
+        callBack:function(resultData){
+        if (resultData.Code == 0) {
+                layer.close(layerindex);
+        }
+        }
+       }
+      doc.Submit(saveoption);
+      return false;
+});
+  //监听下拉框
+  form.on('select(billlay)', function(obj){
+  debugger;
+  var oldData =  table.cache["billlistedittable"];  
+  var id=$(obj.elem).attr("Idvalue")-1;
+  var _obj={"numbers":id,"BillType":$(obj.elem).find("option:selected").text(),"BillCode":obj.value};
+  //重载更新后数据
+  doc.updateobj(oldData,_obj,["BillType","BillCode"]);
+  table.reload('billlistedittable',{  
+  data : oldData  
+  });
+  });
+  $(document).on('change','.RowAmount',function(){
+    debugger;
+    var oldData = table.cache["billlistedittable"];
+    var id = $(this).attr("Idvalue") - 1;
+    var _obj = {"numbers": id, "Amount": $(this).val()};
+    //重载更新后数据
+    doc.updateobj(oldData, _obj, ["Amount"]);
+});
+  //监听删除按钮
+  table.on('tool(innerTable)', function(obj){ 
+  debugger;
+  var data = obj.data; //获得当前行数据
+  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+  var tr = obj.tr; //获得当前行 tr 的DOM对象
+  if(layEvent === 'del'){ //删除
+     obj.del();
+    if(data.Id!=0){
+        deletebilllist.push(data);
+    }
+  }
+  
+});
+
+       
+}
+function formatterstatus(value) {
+        if (value == 1) {
+            return '<div><span style="padding:10px;background-color:#1bb974;color:#ffffff;border-radius:5px;">在租中</span></div>'
+        } else {
+            return '<div><span style="padding:10px;background-color:#ff4b5e;color:#ffffff;border-radius:5px;">已预订</span></div>';
+        }
+        
+    }
+function formattertime(value) {
+   
+        return '<div>' + value.BeginTime + "→" + value.EndTime + '</div>';
+    }
+});
+}
+function ns(value){
+    if(value==undefined){
+        return "";
+    }
+    return value;
+  }
+  function nsint(value){
+      if(value==undefined){
+          return 0;
+      }
+      return value;
+  }
+
+</script>
+<!--工具条-->
+<script type="text/html" id="barDemo1">
+    <a class="layui-btn layui-btn-xs" lay-event="add">添加</a>
+</script>
+<!--结束-->
+<script type="text/html" template >
+    {{#  LoadData(d.params.id,d.params.tableid,d.params.layerindex,d.params.btnOption)}}
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="checkboxTplxx">
+    <select lay-filter="billlay" Idvalue="{{d.LAY_INDEX}}" lay-verify="required" required >
+            <option value="d.BillType">{{d.BillType}}</option>     
+            {{#    layui.each(selectdata, function(index, item1){if(item1.Name!=d.BillType){                }} 
+              <option value="{{item1.Name}}">{{item1.Name}}</option>
+            {{# } });  }}
+    </select>
+</script>
+<script type="text/html" id="jine">
+    <input type="text" name="Amount"  required  lay-verify="required" Idvalue="{{d.LAY_INDEX}}" value="{{d.Amount}}"  autocomplete="off" class="layui-input RowAmount">
+  </script>
+<div>
+<script id="billeditscript" type="text/html">
+    {{#   var util = layui.util;}}
+   
+    <form class="layui-form  layui-form-pane hcs-form form-panel" action="" >
+      <div class="form-content">
+                            <input type="text" name="Id" id="Id"  autocomplete="off" class="layui-input" value="{{d.Id}}" style="display:none">
+                            <div class="wrap">
+                                <div class="title">
+                                    <h3 class="red">
+                                        基本信息
+                                    </h3>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="text-align:left;width:auto;">账单房源</label>
+                                        <div class="layui-input-inline" style="width:270px;">
+                                           
+                                            <input type="tel" name="House"  autocomplete="off" class="layui-input gray" value="{{ns(d.HouseName)}}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">租客姓名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text"  name="TeantName"   autocomplete="off" class="layui-input gray" value="{{ns(d.TeantName)}}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="text-align:left;width:auto;">账单周期</label>
+                                        <div class="layui-input-inline" style="width: 122px;">
+                                            <input type="text" name="BeginTime" id="BeginTime1" autocomplete="off" class="layui-input" value="{{util.toDateString(d.BeginTime, 'yyyy-MM-dd')}}">
+                                        </div>
+                                        <div class="layui-form-mid">到</div>
+                                        <div class="layui-input-inline" style="width:122px;">
+                                            <input type="text" name="EndTime" id="EndTime1" autocomplete="off" class="layui-input" value="{{util.toDateString(d.EndTime, 'yyyy-MM-dd')}}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">应付款时间</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="ShouldReceive" id="ShouldReceive1"  autocomplete="off" class="layui-input" value="{{d.ShouldReceive}}" >
+                                        </div>
+                                    </div>   
+                                </div>
+                                <div class="layui-form-item">
+                                  <label class="layui-form-label">备注</label>
+                                  <div class="layui-input-inline">
+                                        <textarea name="Remark" id="Remark" placeholder="请输入内容" value="" class="layui-textarea"></textarea>
+                                   </div> 
+                                </div>            
+                              </div>
+                              <div class="layui-tab layui-tab-card" style="margin-top:0;">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">编辑</li>
+                                      
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                           
+                                            <table id="billlistedittable" lay-filter="innerTable"></table>
+                                        </div>
+                                       
+                                    </div>
+                                </div>      
+                            </div>
+                            <div class="form-bottom">
+                                    <div class="form-wrap">
+                                        <button class="layui-btn layui-btn layui-btn-primary" id="cancelbtn" lay-filter="cancelbtn">取消</button>
+                                        <button class="layui-btn" id="save" lay-filter="save" lay-submit="">保存</button>
+                                    </div>
+                            </div>
+        </form>
+    </div>
+        </script>
+       <div id="bill-edit-view" class="form-wrapper">
+        </div>
+     
+          
+          

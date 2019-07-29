@@ -1,0 +1,220 @@
+<title>合租房源</title>
+<link href="../../../../Content/Home.css" rel="stylesheet" />
+<script type="text/html" template>
+    <script src="../../../../Scripts/jquery-1.10.2.js"></script>
+  </script>
+
+<style>
+    .layui-content{
+        height: calc(100% - 30px);
+    }
+   .m-top:hover{
+        border-left-width: 7px;
+    }
+    .hover-menu{
+        display: none;
+        position: absolute;
+        line-height: 20px;
+        right: 8px;
+        bottom: -15px;
+        z-index: 999;
+    }
+    .m-top:hover .hover-menu{
+        display: block;
+    }
+    .hover-menu .drop-menu{
+        display: none;
+        position: absolute;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 2px;
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        background-clip: padding-box;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        list-style: none;
+        text-align: left;
+        font-size: 13px;
+        top: auto;
+        bottom: 100%;
+        min-width: 140px;
+        right: 0;
+        background-color: #fff;
+    }
+    .hover-menu .drop-menu li a{
+        display: block;
+    }
+</style>
+
+<body style="background-color:#ffffff;">
+    <script id="demo" type="text/html">
+        <div class="m-comtent">
+            {{# var util = layui.util; var index=0;layui.each(d, function(index, item){index++; }}
+            <div class="m-wrap" id="m-wrap-{{index}}">
+                <div class="m-panel-title" id="m-panel-title-{{index}}">
+                    <div class="panel-name">  
+                        <span class="m-title" id="m-title-{{index}}" >{{item.Floor}}楼</span>
+                    </div>
+                    <span class="m-row" id="m-row-{{index}}">
+                        <i class="layui-icon" style="font-size:27px;">&#xe61a;</i>
+                    </span>
+                    <div class="layui-btn-group caidan-btn">
+                        <button class="layui-btn layui-btn-primary layui-btn-sm addhouse" parentid="{{item.ParentId}}" id="addhouse-{{item.Id}}">
+                            <i class="layui-icon">&#xe608;</i> 添加房间
+                        </button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm edithouse" id="edithouse-{{item.Id}}">
+                            <i class="layui-icon">&#xe642;</i> 编辑
+                        </button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm deletefloor" id="deletefloor-{{item.Id}}">
+                            <i class="layui-icon">&#xe640;</i> 删除楼层
+                        </button>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+                <div class="m-wrap-body" id="m-wrap-body-{{item.Id}}" parentid="{{item.Id}}">
+                    {{# if(item.list.length > 0){layui.each(item.list, function(indextop,itemtop) {}}
+                    {{# if(itemtop.Status==2){ }}
+                    <div class="m-panel-body" id="panel-body-{{itemtop.ID}}">
+                        <div class="m-top m-zt-y" id="m-top">
+                            <ul>
+                                <li>
+                                    <span class="zfylx">{{formatter1(itemtop.sign)}}</span><span class="housename" style="">{{itemtop.Name}}</span>
+                                </li>
+                                <li><span>{{formatter(itemtop.Price,"暂未定价")}}</span></li>
+                                <li><span>{{formatter(itemtop.Huxing,"户型")}}</span><span>{{formatter(itemtop.Measure,"面积")}}</span><span>{{formatter(itemtop.Orientation,"朝向")}}</span></li>
+                                <li><span>已租</span><span>{{itemtop.recent}}元/月</span><span>({{itemtop.teantname}})</span>  <span> 退:{{util.toDateString(itemtop.endtime.replace(/-/g, '/'), 'yyyy/MM/dd')}}</span></li>
+                            </ul>
+                            <div class="hover-menu">
+                                <div class="layui-btn-group">
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm viewdepent" id="viewdepent-{{itemtop.ID}}" data-tip="预览">
+                                    <i class="layui-icon">&#xe615;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm listdepent" id="listdepent-{{itemtop.ID}}" data-tip="合同列表">
+                                    <i class="layui-icon">&#xe63c;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm more-opes" data-tip="更多操作">
+                                    <i class="layui-icon">&#xe65f;</i>
+                                  </button>
+                                  <ul class="drop-menu">
+                                      <li class="editdepent" id="editdepent-{{itemtop.ID}}"><a href="javascript:;">编辑房间</a></li>
+                                      <li class="deletedepent" id="deletedepent-{{itemtop.ID}}"><a href="javascript:;">删除房间</a></li>
+                                  </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{# }else{ }}
+                    <div class="m-panel-body" id="panel-body-{{itemtop.ID}}">
+                        <div class="m-top m-zt-k" id="m-top">
+                            <ul>
+                                <li>
+                                    <span class="fylx">{{formatter1(itemtop.sign)}}</span><span class="housename">{{itemtop.Name}}</span>
+                                </li>
+                                <li><span>{{formatter(itemtop.Price,"暂未定价")}}</span></li>
+                                <li><span>{{formatter(itemtop.Huxing,"户型")}}</span><span>{{formatter(itemtop.Measure,"面积")}}</span><span>{{formatter(itemtop.Orientation,"朝向")}}</span></li>
+                                <li><span>空置</span><span class="m-red">{{itemtop.Idletime}}天</span></li>
+                            </ul>
+                            <div class="hover-menu">
+                                <div class="layui-btn-group">
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm viewdepent" id="viewdepent-{{itemtop.ID}}" data-tip="预览">
+                                    <i class="layui-icon">&#xe615;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm listdepent" id="listdepent-{{itemtop.ID}}" data-tip="合同列表">
+                                    <i class="layui-icon">&#xe63c;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm addcontract" id="addcontract-{{itemtop.ID}}" data-tip="添加合同">
+                                    <i class="layui-icon">&#xe770;</i>
+                                  </button>
+                                  <button class="layui-btn layui-btn-primary layui-btn-sm more-opes" data-tip="更多操作">
+                                    <i class="layui-icon">&#xe65f;</i>
+                                  </button>
+                                  <ul class="drop-menu">
+                                      <li class="editdepent" id="editdepent-{{itemtop.ID}}"><a href="javascript:;">编辑房间</a></li>
+                                      <li class="deletedepent" id="deletedepent-{{itemtop.ID}}"><a href="javascript:;">删除房间</a></li>
+                                  </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{# } }}
+                    {{# })} }}
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <hr class="layui-bg-green">
+            {{# })}}
+        </div>
+    </script>
+    <div class="layui-content">
+        <div class="left-filter-bar">
+            <form class="layui-form">
+                <div class="filter-top">
+                    <select name="province" lay-filter="province"></select>
+                    <select name="city" lay-filter="city"></select>
+                </div>
+                <div class="filter-bottom area-list"></div>
+            </form>
+        </div>
+        <div class="right-content">
+            <div class="m-search">
+                <form class="layui-form hcs-form" action="">
+                        <div class="m-search-item" >
+                                <input type="text" name="Id" autocomplete="off" class="layui-input" placeholder="房源编号" id="Id">
+                         </div>
+                            <div class="m-search-item" style="width:300px;">
+                                    <input type="text" name="Content" autocomplete="off" class="layui-input" placeholder="房间号" id="CellName">
+                                </div>
+                                         <div class="m-search-item">
+                                                <select name="Idletime" lay-verify="" lay-filter="Idletime">         
+                                                    <option value="">空置天数</option>
+                                                    <option value="1">小于10天</option>
+                                                    <option value="2">11到20天</option>
+                                                    <option value="3">21到30天</option>
+                                                    <option value="4">大于30天</option>
+                                                </select>
+                                             </div>      
+                                             <div class="m-search-item">
+                                                    <select name="sign" lay-verify="" lay-filter="sign">         
+                                                        <option value="">房源标记</option>
+                                                        <option value="1">到期</option>
+                                                        <option value="2">违约</option>
+                                                        <option value="3">转租</option>
+                                                        <option value="4">新房</option>
+                                                        <option value="5">协议退房</option>
+                                                    </select>
+                                             </div>     
+                    <div class="m-search-item">
+                        <button class="layui-btn" lay-submit="" lay-filter="search">搜索</button>
+                        <span class="searchresult"><span id="tao">0</span>套</span>
+                    </div>
+                    
+                    <div class="m-search-item" style="margin-left:15px;">
+                        <span class="layui-btn layui-btn-primary"
+                        href="" id="excel" >导出</span>
+                    </div>
+                   
+                                  
+                </form>
+                <form class="layui-form hcs-form layui-form-justify">
+                    <div class="m-search-item">
+                     
+                        <a class="layui-btn" id="edithousedepend">编辑当前公寓</a>
+                        <a class="layui-btn" id="addhousedepend">添加楼层</a>
+                    </div>
+                    <div class="layui-right-nav">
+                        <div id="house-othersrarch"></div>
+                        <div id="0">
+                            <i class="layui-icon" style="font-size:27px;">&#xe61a;</i>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+            <div id="view" ></div>
+            <div id="fy"></div>
+        </div>
+    </div>
+</body>
+<script type="text/html" template>
+    <script src="../../../../Scripts/d-publicbessins.js"></script>
+</script>
+<div id="view" style="background-color: red"></div>
