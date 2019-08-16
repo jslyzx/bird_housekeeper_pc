@@ -21,6 +21,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate','util'], function () {
 ,btnview:"guest-button-view",toolview:"repaire-edit-btn",tooladd:"repaire-add-btn",tooledit:"repaire-edit-btn",tooldelete:"repaire-delete-btn",tabfield:"Status"};
     var tableoption = {
         tabfield:config.tabfield,
+      
         tablebtnid: '#repairebtnintable',
         domid: config.tableid, formid:config.formid, arr: [[ //表头
     { type: 'checkbox' }

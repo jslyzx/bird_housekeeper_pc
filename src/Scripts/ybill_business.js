@@ -22,7 +22,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util'], function(
         formid: "#bill-search-form",
         arr: [
             [ //表头
-                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '应付时间', templet: formadaoqi, width: 150 }, { title: '账单周期', width: 200, templet: formatterzhouqi }, { width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '姓名' }, { field: 'Phone', width: 120, title: '电话' }, { field: 'Amount', width: 100, title: '金额' }, {  templet: formasign, width:200, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
+                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { field: 'Id', title: '应付时间', templet: formadaoqi, width: 150 }, { field: 'Id', title: '账单周期', width: 200, templet: formatterzhouqi }, { field: 'Id', width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '姓名' }, {  field: 'Phone', width: 120, title: '电话' }, { field: 'Amount', width: 100, title: '金额' }, {   field: 'Id',templet: formasign, width:200, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
             ]
         ],
         url: 'api/Bill/Querylist',

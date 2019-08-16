@@ -27,10 +27,10 @@ function LoadData(id,tableid,layerindex){
   formid: "#bill-search-form",
   arr: [
       [ //表头
-          { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { title: '处理时间', templet: formadaoqi, width: 150 }, { width: 100, title: '状态', templet: formastatus }, { title: '处理时间', width: 150, templet: formatterreveice }, { title: '账单周期', width: 200, templet: formatterzhouqi } , { field: 'Amount', width: 100, title: '金额' },{  templet: formatype, width: 80, title: '类型' }, {  templet: formasign, width:100, title: '标记' }
+          { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, {field: 'Id', title: '处理时间', templet: formadaoqi, width: 150 }, { field: 'Id',width: 100, title: '状态', templet: formastatus }, { field: 'Id',title: '处理时间', width: 150, templet: formatterreveice }, {field: 'Id', title: '账单周期', width: 200, templet: formatterzhouqi } , { field: 'Amount', width: 100, title: '金额' },{field: 'Id',  templet: formatype, width: 80, title: '类型' }, { field: 'Id', templet: formasign, width:100, title: '标记' }
       ]
   ],
-  height: 620,
+  height:  '500',
   url: 'api/Bill/Querylist',
   ismuilti: true,
   'tabletab':'billtabletab',

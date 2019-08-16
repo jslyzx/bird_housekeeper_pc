@@ -135,7 +135,7 @@ layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelec
         formid: "#bill-search-form",
         arr: [
             [ //表头
-                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { field: 'Remark',title: '应收时间', templet: formadaoqi, width: 150 }, { field: 'Remark',title: '账单周期', width: 200, templet: formatterzhouqi }, { field: 'Remark',width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, { field: 'Remark', templet: formasign, width:120, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
+                { type: 'checkbox' }, { field: 'Id', width: 100, title: '编号' }, { field: 'Id', field: 'Remark',title: '应收时间', templet: formadaoqi, width: 150 }, {  field: 'Id',field: 'Remark',title: '账单周期', width: 200, templet: formatterzhouqi }, { field: 'Id', field: 'Remark',width: 250, title: '房间', field: 'HouseName' }, { field: 'TeantName', width: 100, title: '租客姓名' }, { field: 'Phone', width: 120, title: '租客电话' }, { field: 'Amount', width: 100, title: '金额' }, { field: 'Remark', templet: formasign, width:120, title: '标记' },{  field: 'Remark', width:100, title: '备注' }
             ]
         ],
         url: 'api/Bill/Querylist',

@@ -292,7 +292,6 @@
                         }
                         if(options.formatterbtn.length>0){
                             var formatter="";
-                        
                             $.each(options.formatterbtn,function(index,value){
                                 formatter="{{ "+value+"(d,'"+item.BtnNo+"','"+item.BtnName+"')}}";
                             });

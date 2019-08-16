@@ -207,8 +207,8 @@ layui.use(['laypage','layer', 'htcsradio', 'laydate','laytpl', 'jquery', 'form',
         ismuilti: true,"tabfield":"Status",tablebtnid: '#btnintable'
     };
     var BtnOption = {
-        area: ['1200px', '90%'],
-        editarea: ['1200px', '90%'],
+        area: ['1200px', '95%'],
+        editarea: ['1200px', '95%'],
         tableid: "zcontract-index-table",
         ismuilti:true,
         url:'contract/z-contract/view',//查看界面路径
