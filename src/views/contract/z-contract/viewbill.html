@@ -1,0 +1,62 @@
+
+<script>
+     function LoadData(paraCreate){
+        layui.use(['table', 'htcsradio', 'htcsLG', 'laydate', 'form', 'util','multiSelect'], function(){
+          var table = layui.table;
+          var setter = layui.setter;
+          var baseurl = setter.baseurl;
+          var url=baseurl+"api/Contract/previewbill";
+          paraCreate.access_token=layui.data('layuiAdmin').access_token ;
+         
+          table.render({
+            elem: '#bill-main-table'
+            ,method: 'post'
+            ,url:url
+            ,cellMinWidth: 80 
+            ,cols:[[
+             { field: 'ShouldReceive',title: '应付日期', width: 150 },
+             { field: 'Remark',title: '账单周期', templet: formatterzhouqi, width: 150 },
+             { field: 'stage', width: 100, title: '期数' }, 
+             {title: '已收' , type: 'checkbox' }
+           ]],
+           response: {
+                            statusName: 'Code' //数据状态的字段名称，默认：code
+                                ,
+                            statusCode: 0 //成功的状态码，默认：0
+                                ,
+                            msgName: 'Message' //状态信息的字段名称，默认：msg
+                                ,
+                            countName: 'numberCount' //数据总数的字段名称，默认：count
+                                ,
+                            dataName: 'numberData' //数据列表的字段名称，默认：data
+                        },
+                        responseHandler: function(data) {
+        
+        return {
+            "total": data.numberCount, //总页数
+            "rows": data.numberData //数据
+        };
+        },
+           where:paraCreate
+          });
+          function formatterzhouqi(value) {
+                // debugger;
+                if (value.BeginTime == null || value.EndTime == null) {
+                    return '<div>' + '</div>'
+                }
+                if (value.BeginTime == "0001-01-01 00:00:00" || value.EndTime == "0001-01-01 00:00:00") {
+                    return '<div>' + '</div>'
+                }
+                // debugger;
+                var begintime = util.toDateString(value.BeginTime.replace(/-/g, '/'), 'yyyy/MM/dd');
+                var endtime = util.toDateString(value.EndTime.replace(/-/g, '/'), 'yyyy/MM/dd');
+                return '<div>' + begintime + " - " + endtime + '</div>';
+            }
+        });
+    }
+        </script>
+
+<script type="text/html" template>
+    {{#  LoadData(d.params.paraCreate)}}
+  </script>
+<table id="bill-main-table" lay-filter="demoEvent"></table>
